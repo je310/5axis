@@ -1,0 +1,249 @@
+﻿Build started 29/10/2013 23:23:06.
+     1>Project "E:\iirlichkt\irrlicht-1.8\examples\07.Collision\Collision_vc10.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Creating "Debug\07.Collision.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I..\..\include /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _VC80_UPGRADE=0x0710 /D _MBCS /Gm- /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /openmp /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
+         main.cpp
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(188): warning C4305: 'initializing' : truncation from 'double' to 'float'
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(602): warning C4305: 'argument' : truncation from 'double' to 'const irr::f32'
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(603): warning C4305: 'argument' : truncation from 'double' to 'const irr::f32'
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(694): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(695): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(701): warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(705): warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(734): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(734): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(734): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(843): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(843): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(844): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(844): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(850): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(850): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(851): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(851): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(857): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(857): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(858): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(858): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(893): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(893): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(893): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(896): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(896): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(896): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(1005): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(1006): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(1009): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(1010): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(1022): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(1028): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(1065): warning C4018: '<' : signed/unsigned mismatch
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(1071): warning C4018: '<' : signed/unsigned mismatch
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(810): warning C4101: 'bill2' : unreferenced local variable
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(809): warning C4101: 'bill' : unreferenced local variable
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(891): warning C4101: 'selectedSceneNode' : unreferenced local variable
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(1141): warning C4996: 'std::basic_string<_Elem,_Traits,_Ax>::copy': Function call with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on how to use Visual C++ 'Checked Iterators'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Ax=std::allocator<char>
+                 ]
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\xstring(1556) : see declaration of 'std::basic_string<_Elem,_Traits,_Ax>::copy'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Ax=std::allocator<char>
+                 ]
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(1149): warning C4996: 'std::basic_string<_Elem,_Traits,_Ax>::copy': Function call with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on how to use Visual C++ 'Checked Iterators'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Ax=std::allocator<char>
+                 ]
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\xstring(1556) : see declaration of 'std::basic_string<_Elem,_Traits,_Ax>::copy'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Ax=std::allocator<char>
+                 ]
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(1154): warning C4996: 'std::basic_string<_Elem,_Traits,_Ax>::copy': Function call with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on how to use Visual C++ 'Checked Iterators'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Ax=std::allocator<char>
+                 ]
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\xstring(1556) : see declaration of 'std::basic_string<_Elem,_Traits,_Ax>::copy'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Ax=std::allocator<char>
+                 ]
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(1162): warning C4996: 'std::basic_string<_Elem,_Traits,_Ax>::copy': Function call with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on how to use Visual C++ 'Checked Iterators'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Ax=std::allocator<char>
+                 ]
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\xstring(1556) : see declaration of 'std::basic_string<_Elem,_Traits,_Ax>::copy'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Ax=std::allocator<char>
+                 ]
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(1167): warning C4996: 'std::basic_string<_Elem,_Traits,_Ax>::copy': Function call with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on how to use Visual C++ 'Checked Iterators'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Ax=std::allocator<char>
+                 ]
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\xstring(1556) : see declaration of 'std::basic_string<_Elem,_Traits,_Ax>::copy'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Ax=std::allocator<char>
+                 ]
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(1180): warning C4996: 'std::basic_string<_Elem,_Traits,_Ax>::copy': Function call with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on how to use Visual C++ 'Checked Iterators'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Ax=std::allocator<char>
+                 ]
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\xstring(1556) : see declaration of 'std::basic_string<_Elem,_Traits,_Ax>::copy'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Ax=std::allocator<char>
+                 ]
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(1185): warning C4996: 'std::basic_string<_Elem,_Traits,_Ax>::copy': Function call with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on how to use Visual C++ 'Checked Iterators'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Ax=std::allocator<char>
+                 ]
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\xstring(1556) : see declaration of 'std::basic_string<_Elem,_Traits,_Ax>::copy'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Ax=std::allocator<char>
+                 ]
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(1198): warning C4996: 'std::basic_string<_Elem,_Traits,_Ax>::copy': Function call with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on how to use Visual C++ 'Checked Iterators'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Ax=std::allocator<char>
+                 ]
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\xstring(1556) : see declaration of 'std::basic_string<_Elem,_Traits,_Ax>::copy'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Ax=std::allocator<char>
+                 ]
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(1203): warning C4996: 'std::basic_string<_Elem,_Traits,_Ax>::copy': Function call with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on how to use Visual C++ 'Checked Iterators'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Ax=std::allocator<char>
+                 ]
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\xstring(1556) : see declaration of 'std::basic_string<_Elem,_Traits,_Ax>::copy'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Ax=std::allocator<char>
+                 ]
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(1211): warning C4996: 'std::basic_string<_Elem,_Traits,_Ax>::copy': Function call with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on how to use Visual C++ 'Checked Iterators'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Ax=std::allocator<char>
+                 ]
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\xstring(1556) : see declaration of 'std::basic_string<_Elem,_Traits,_Ax>::copy'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Ax=std::allocator<char>
+                 ]
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(1216): warning C4996: 'std::basic_string<_Elem,_Traits,_Ax>::copy': Function call with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on how to use Visual C++ 'Checked Iterators'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Ax=std::allocator<char>
+                 ]
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\xstring(1556) : see declaration of 'std::basic_string<_Elem,_Traits,_Ax>::copy'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Ax=std::allocator<char>
+                 ]
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(1224): warning C4996: 'std::basic_string<_Elem,_Traits,_Ax>::copy': Function call with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on how to use Visual C++ 'Checked Iterators'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Ax=std::allocator<char>
+                 ]
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\xstring(1556) : see declaration of 'std::basic_string<_Elem,_Traits,_Ax>::copy'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Ax=std::allocator<char>
+                 ]
+     1>e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(1229): warning C4996: 'std::basic_string<_Elem,_Traits,_Ax>::copy': Function call with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on how to use Visual C++ 'Checked Iterators'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Ax=std::allocator<char>
+                 ]
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\xstring(1556) : see declaration of 'std::basic_string<_Elem,_Traits,_Ax>::copy'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Ax=std::allocator<char>
+                 ]
+     1>e:\iirlichkt\irrlicht-1.8\include\vector3d.h(452): warning C4244: 'argument' : conversion from 'const double' to 'const irr::f32', possible loss of data
+                 e:\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(468) : see reference to function template instantiation 'irr::core::vector3d<T> irr::core::operator *<double,irr::f32>(const S,const irr::core::vector3d<T> &)' being compiled
+                 with
+                 [
+                     T=irr::f32,
+                     S=double
+                 ]
+       Link:
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"..\..\bin\Win32-VisualStudio\07.Collision.exe" /NOLOGO /LIBPATH:"..\..\lib\Win32-visualstudio" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\07.Collision.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"E:\iirlichkt\irrlicht-1.8\bin\Win32-VisualStudio\07.Collision.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /IMPLIB:"..\..\bin\Win32-VisualStudio\07.Collision.lib" /MACHINE:X86 Debug\main.obj
+         LINK : ..\..\bin\Win32-VisualStudio\07.Collision.exe not found or not built by the last incremental link; performing full link
+         Collision_vc10.vcxproj -> E:\iirlichkt\irrlicht-1.8\examples\07.Collision\..\..\bin\Win32-VisualStudio\07.Collision.exe
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"..\..\bin\Win32-VisualStudio\07.Collision.exe;#1" /manifest Debug\07.Collision.exe.intermediate.manifest
+       FinalizeBuildStatus:
+         Deleting file "Debug\07.Collision.unsuccessfulbuild".
+         Touching "Debug\07.Collision.lastbuildstate".
+     1>Done Building Project "E:\iirlichkt\irrlicht-1.8\examples\07.Collision\Collision_vc10.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:05.89
