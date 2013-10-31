@@ -1,67 +1,83 @@
-﻿Build started 31/10/2013 18:44:00.
+﻿Build started 31/10/2013 21:01:59.
      1>Project "C:\Users\Josh\Dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.Collision\Collision_vc10.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Touching "Release\07.Collision.unsuccessfulbuild".
        ClCompile:
-         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I..\..\include /Zi /nologo /W3 /WX- /O2 /Ob1 /Oy- /D WIN32 /D NDEBUG /D _CONSOLE /D _VC80_UPGRADE=0x0710 /D _MBCS /GF /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /openmp- /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I..\..\include /Zi /nologo /W3 /WX- /O2 /Ob1 /Oy- /D WIN32 /D NDEBUG /D _CONSOLE /D _VC80_UPGRADE=0x0710 /D _MBCS /GF /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /openmp- /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt collision.cpp main.cpp rotation.cpp
+         collision.cpp
+     1>collision.cpp(111): warning C4305: 'argument' : truncation from 'double' to 'const irr::f32'
+     1>collision.cpp(112): warning C4305: 'argument' : truncation from 'double' to 'const irr::f32'
          main.cpp
-     1>main.cpp(188): warning C4305: 'initializing' : truncation from 'double' to 'float'
-     1>main.cpp(602): warning C4305: 'argument' : truncation from 'double' to 'const irr::f32'
-     1>main.cpp(603): warning C4305: 'argument' : truncation from 'double' to 'const irr::f32'
-     1>main.cpp(724): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
-     1>main.cpp(725): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
-     1>main.cpp(731): warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
-     1>main.cpp(735): warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
-     1>main.cpp(765): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
-     1>main.cpp(765): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
-     1>main.cpp(765): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
-     1>main.cpp(874): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
-     1>main.cpp(874): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
-     1>main.cpp(875): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
-     1>main.cpp(875): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
-     1>main.cpp(881): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
-     1>main.cpp(881): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
-     1>main.cpp(882): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
-     1>main.cpp(882): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
-     1>main.cpp(888): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
-     1>main.cpp(888): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
-     1>main.cpp(889): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
-     1>main.cpp(889): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
-     1>main.cpp(925): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
-     1>main.cpp(925): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
-     1>main.cpp(925): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
-     1>main.cpp(928): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
-     1>main.cpp(928): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
-     1>main.cpp(928): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
-     1>main.cpp(1037): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
-     1>main.cpp(1038): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
-     1>main.cpp(1042): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
-     1>main.cpp(1043): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
-     1>main.cpp(1055): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>main.cpp(1061): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>main.cpp(1095): warning C4018: '<' : signed/unsigned mismatch
-     1>main.cpp(1100): warning C4018: '<' : signed/unsigned mismatch
-     1>main.cpp(1106): warning C4018: '<' : signed/unsigned mismatch
-     1>main.cpp(841): warning C4101: 'bill2' : unreferenced local variable
-     1>main.cpp(840): warning C4101: 'bill' : unreferenced local variable
-     1>main.cpp(923): warning C4101: 'selectedSceneNode' : unreferenced local variable
-     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\include\vector3d.h(452): warning C4244: 'argument' : conversion from 'const double' to 'const irr::f32', possible loss of data
-                 main.cpp(468) : see reference to function template instantiation 'irr::core::vector3d<T> irr::core::operator *<double,irr::f32>(const S,const irr::core::vector3d<T> &)' being compiled
-                 with
-                 [
-                     T=irr::f32,
-                     S=double
-                 ]
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\printnode.h(109): warning C4305: 'initializing' : truncation from 'double' to 'float'
+     1>main.cpp(103): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
+     1>main.cpp(104): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
+     1>main.cpp(110): warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
+     1>main.cpp(114): warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
+     1>main.cpp(144): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
+     1>main.cpp(144): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
+     1>main.cpp(144): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
+     1>main.cpp(240): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>main.cpp(240): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>main.cpp(241): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>main.cpp(241): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>main.cpp(247): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>main.cpp(247): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>main.cpp(248): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>main.cpp(248): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>main.cpp(254): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>main.cpp(254): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>main.cpp(255): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>main.cpp(255): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>main.cpp(289): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
+     1>main.cpp(289): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
+     1>main.cpp(289): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
+     1>main.cpp(292): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
+     1>main.cpp(292): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
+     1>main.cpp(292): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
+     1>main.cpp(331): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
+     1>main.cpp(332): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>main.cpp(336): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
+     1>main.cpp(337): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>main.cpp(349): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>main.cpp(355): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>main.cpp(384): warning C4018: '<' : signed/unsigned mismatch
+     1>main.cpp(389): warning C4018: '<' : signed/unsigned mismatch
+     1>main.cpp(395): warning C4018: '<' : signed/unsigned mismatch
+     1>main.cpp(220): warning C4101: 'bill2' : unreferenced local variable
+     1>main.cpp(219): warning C4101: 'bill' : unreferenced local variable
+     1>main.cpp(287): warning C4101: 'selectedSceneNode' : unreferenced local variable
+         rotation.cpp
+         Generating Code...
        Link:
-         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"..\..\bin\Win32-VisualStudio\07.Collision.exe" /NOLOGO /LIBPATH:"..\..\lib\Win32-visualstudio" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Release\07.Collision.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /PDB:"C:\Users\Josh\Dropbox\4th year project\iirlichkt\irrlicht-1.8\bin\Win32-VisualStudio\07.Collision.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /IMPLIB:"..\..\bin\Win32-VisualStudio\07.Collision.lib" /MACHINE:X86 Release\main.obj
-         Collision_vc10.vcxproj -> C:\Users\Josh\Dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.Collision\..\..\bin\Win32-VisualStudio\07.Collision.exe
-       Manifest:
-         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"..\..\bin\Win32-VisualStudio\07.Collision.exe;#1" /manifest Release\07.Collision.exe.intermediate.manifest
-       FinalizeBuildStatus:
-         Deleting file "Release\07.Collision.unsuccessfulbuild".
-         Touching "Release\07.Collision.lastbuildstate".
-     1>Done Building Project "C:\Users\Josh\Dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.Collision\Collision_vc10.vcxproj" (build target(s)).
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"..\..\bin\Win32-VisualStudio\07.Collision.exe" /NOLOGO /LIBPATH:"..\..\lib\Win32-visualstudio" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Release\07.Collision.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /PDB:"C:\Users\Josh\Dropbox\4th year project\iirlichkt\irrlicht-1.8\bin\Win32-VisualStudio\07.Collision.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /IMPLIB:"..\..\bin\Win32-VisualStudio\07.Collision.lib" /MACHINE:X86 Release\collision.obj
+         Release\cubes.obj
+         Release\linkedlist.obj
+         Release\linkedlist.obj
+         Release\main.obj
+         Release\readGcode.obj
+         Release\rotation.obj
+     1>linkedlist.obj : error LNK2005: "public: __thiscall list::~list(void)" (??1list@@QAE@XZ) already defined in collision.obj
+     1>linkedlist.obj : error LNK2005: "public: void __thiscall list::addNode(struct list::node *)" (?addNode@list@@QAEXPAUnode@1@@Z) already defined in collision.obj
+     1>linkedlist.obj : error LNK2005: "public: void __thiscall list::deleteNode(struct list::node *)" (?deleteNode@list@@QAEXPAUnode@1@@Z) already defined in collision.obj
+     1>linkedlist.obj : error LNK2005: "public: void __thiscall list::deleteList(struct list::node *)" (?deleteList@list@@QAEXPAUnode@1@@Z) already defined in collision.obj
+     1>linkedlist.obj : error LNK2005: "public: struct list::node * __thiscall list::initNode(struct Triangle)" (?initNode@list@@QAEPAUnode@1@UTriangle@@@Z) already defined in collision.obj
+     1>Release\linkedlist.obj : warning LNK4042: object specified more than once; extras ignored
+     1>main.obj : error LNK2005: "public: __thiscall list::~list(void)" (??1list@@QAE@XZ) already defined in collision.obj
+     1>main.obj : error LNK2005: "public: void __thiscall list::addNode(struct list::node *)" (?addNode@list@@QAEXPAUnode@1@@Z) already defined in collision.obj
+     1>main.obj : error LNK2005: "public: void __thiscall list::deleteNode(struct list::node *)" (?deleteNode@list@@QAEXPAUnode@1@@Z) already defined in collision.obj
+     1>main.obj : error LNK2005: "public: void __thiscall list::deleteList(struct list::node *)" (?deleteList@list@@QAEXPAUnode@1@@Z) already defined in collision.obj
+     1>main.obj : error LNK2005: "public: struct list::node * __thiscall list::initNode(struct Triangle)" (?initNode@list@@QAEPAUnode@1@UTriangle@@@Z) already defined in collision.obj
+     1>main.obj : error LNK2005: "class list (* TriangArr)[150][150]" (?TriangArr@@3PAY1JG@JG@Vlist@@A) already defined in collision.obj
+     1>rotation.obj : error LNK2005: "class irr::core::vector3d<float> __cdecl getClosestPointOnLine(class irr::core::vector3d<float> const &,class irr::core::vector3d<float> const &,class irr::core::vector3d<float> const &)" (?getClosestPointOnLine@@YA?AV?$vector3d@M@core@irr@@ABV123@00@Z) already defined in main.obj
+     1>rotation.obj : error LNK2005: "void __cdecl revolveNodeInWorldSpace(class irr::scene::ISceneNode *,float,class irr::core::vector3d<float> const &,class irr::core::vector3d<float> const &)" (?revolveNodeInWorldSpace@@YAXPAVISceneNode@scene@irr@@MABV?$vector3d@M@core@3@1@Z) already defined in main.obj
+     1>rotation.obj : error LNK2005: "void __cdecl invrevolveNodeInWorldSpace(class irr::scene::ISceneNode *,float,class irr::core::vector3d<float> const &,class irr::core::vector3d<float> const &)" (?invrevolveNodeInWorldSpace@@YAXPAVISceneNode@scene@irr@@MABV?$vector3d@M@core@3@1@Z) already defined in main.obj
+     1>rotation.obj : error LNK2005: "void __cdecl rotateNodeInLocalSpace(class irr::scene::ISceneNode *,float,class irr::core::vector3d<float> const &)" (?rotateNodeInLocalSpace@@YAXPAVISceneNode@scene@irr@@MABV?$vector3d@M@core@3@@Z) already defined in main.obj
+     1>rotation.obj : error LNK2005: "void __cdecl invrotateNodeInLocalSpace(class irr::scene::ISceneNode *,float,class irr::core::vector3d<float> const &)" (?invrotateNodeInLocalSpace@@YAXPAVISceneNode@scene@irr@@MABV?$vector3d@M@core@3@@Z) already defined in main.obj
+     1>rotation.obj : error LNK2005: "void __cdecl moveNodeInLocalSpace(class irr::scene::ISceneNode *,class irr::core::vector3d<float> const &)" (?moveNodeInLocalSpace@@YAXPAVISceneNode@scene@irr@@ABV?$vector3d@M@core@3@@Z) already defined in main.obj
+     1>rotation.obj : error LNK2005: "void __cdecl revolveNodeInLocalSpace(class irr::scene::ISceneNode *,float,class irr::core::vector3d<float> const &,class irr::core::vector3d<float> const &)" (?revolveNodeInLocalSpace@@YAXPAVISceneNode@scene@irr@@MABV?$vector3d@M@core@3@1@Z) already defined in main.obj
+     1>..\..\bin\Win32-VisualStudio\07.Collision.exe : fatal error LNK1169: one or more multiply defined symbols found
+     1>Done Building Project "C:\Users\Josh\Dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.Collision\Collision_vc10.vcxproj" (build target(s)) -- FAILED.
 
-Build succeeded.
+Build FAILED.
 
-Time Elapsed 00:00:07.34
+Time Elapsed 00:00:03.20
