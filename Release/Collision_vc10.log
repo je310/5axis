@@ -1,52 +1,55 @@
-﻿Build started 31/10/2013 18:44:00.
+﻿Build started 15/02/2014 16:10:39.
      1>Project "C:\Users\Josh\Dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.Collision\Collision_vc10.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
-         Touching "Release\07.Collision.unsuccessfulbuild".
+         Creating "Release\07.Collision.unsuccessfulbuild" because "AlwaysCreate" was specified.
        ClCompile:
-         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I..\..\include /Zi /nologo /W3 /WX- /O2 /Ob1 /Oy- /D WIN32 /D NDEBUG /D _CONSOLE /D _VC80_UPGRADE=0x0710 /D _MBCS /GF /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /openmp- /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I"C:\Users\Josh\Dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.Collision" /I..\..\include /Zi /nologo /W3 /WX- /O2 /Ob1 /Oy- /D WIN32 /D NDEBUG /D _CONSOLE /D _VC80_UPGRADE=0x0710 /D _MBCS /GF /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /openmp /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
          main.cpp
-     1>main.cpp(188): warning C4305: 'initializing' : truncation from 'double' to 'float'
-     1>main.cpp(602): warning C4305: 'argument' : truncation from 'double' to 'const irr::f32'
-     1>main.cpp(603): warning C4305: 'argument' : truncation from 'double' to 'const irr::f32'
-     1>main.cpp(724): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
-     1>main.cpp(725): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
-     1>main.cpp(731): warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
-     1>main.cpp(735): warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
-     1>main.cpp(765): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
-     1>main.cpp(765): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
-     1>main.cpp(765): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
-     1>main.cpp(874): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
-     1>main.cpp(874): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
-     1>main.cpp(875): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
-     1>main.cpp(875): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
-     1>main.cpp(881): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
-     1>main.cpp(881): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
-     1>main.cpp(882): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
-     1>main.cpp(882): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
-     1>main.cpp(888): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
-     1>main.cpp(888): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
-     1>main.cpp(889): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
-     1>main.cpp(889): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
-     1>main.cpp(925): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
-     1>main.cpp(925): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
-     1>main.cpp(925): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
-     1>main.cpp(928): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
-     1>main.cpp(928): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
-     1>main.cpp(928): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
-     1>main.cpp(1037): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
-     1>main.cpp(1038): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
-     1>main.cpp(1042): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
-     1>main.cpp(1043): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
-     1>main.cpp(1055): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>main.cpp(1061): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>main.cpp(1095): warning C4018: '<' : signed/unsigned mismatch
-     1>main.cpp(1100): warning C4018: '<' : signed/unsigned mismatch
-     1>main.cpp(1106): warning C4018: '<' : signed/unsigned mismatch
-     1>main.cpp(841): warning C4101: 'bill2' : unreferenced local variable
-     1>main.cpp(840): warning C4101: 'bill' : unreferenced local variable
-     1>main.cpp(923): warning C4101: 'selectedSceneNode' : unreferenced local variable
+     1>main.cpp(197): warning C4305: 'initializing' : truncation from 'double' to 'float'
+     1>main.cpp(611): warning C4305: 'argument' : truncation from 'double' to 'const irr::f32'
+     1>main.cpp(612): warning C4305: 'argument' : truncation from 'double' to 'const irr::f32'
+     1>main.cpp(878): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(234) : see declaration of 'fopen'
+     1>main.cpp(887): warning C4018: '<' : signed/unsigned mismatch
+     1>main.cpp(916): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
+     1>main.cpp(917): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
+     1>main.cpp(923): warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
+     1>main.cpp(927): warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
+     1>main.cpp(967): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
+     1>main.cpp(967): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
+     1>main.cpp(967): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
+     1>main.cpp(1082): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>main.cpp(1082): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>main.cpp(1083): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>main.cpp(1083): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>main.cpp(1089): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>main.cpp(1089): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>main.cpp(1090): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>main.cpp(1090): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>main.cpp(1096): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>main.cpp(1096): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>main.cpp(1097): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>main.cpp(1097): warning C4244: 'argument' : conversion from 'int' to 'irr::f32', possible loss of data
+     1>main.cpp(1133): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
+     1>main.cpp(1133): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
+     1>main.cpp(1133): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
+     1>main.cpp(1136): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
+     1>main.cpp(1136): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
+     1>main.cpp(1136): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
+     1>main.cpp(1244): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
+     1>main.cpp(1245): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>main.cpp(1249): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
+     1>main.cpp(1250): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>main.cpp(1262): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>main.cpp(1268): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>main.cpp(1302): warning C4018: '<' : signed/unsigned mismatch
+     1>main.cpp(1307): warning C4018: '<' : signed/unsigned mismatch
+     1>main.cpp(1313): warning C4018: '<' : signed/unsigned mismatch
+     1>main.cpp(1049): warning C4101: 'bill2' : unreferenced local variable
+     1>main.cpp(1048): warning C4101: 'bill' : unreferenced local variable
+     1>main.cpp(1131): warning C4101: 'selectedSceneNode' : unreferenced local variable
      1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\include\vector3d.h(452): warning C4244: 'argument' : conversion from 'const double' to 'const irr::f32', possible loss of data
-                 main.cpp(468) : see reference to function template instantiation 'irr::core::vector3d<T> irr::core::operator *<double,irr::f32>(const S,const irr::core::vector3d<T> &)' being compiled
+                 main.cpp(477) : see reference to function template instantiation 'irr::core::vector3d<T> irr::core::operator *<double,irr::f32>(const S,const irr::core::vector3d<T> &)' being compiled
                  with
                  [
                      T=irr::f32,
@@ -54,6 +57,7 @@
                  ]
        Link:
          c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"..\..\bin\Win32-VisualStudio\07.Collision.exe" /NOLOGO /LIBPATH:"..\..\lib\Win32-visualstudio" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Release\07.Collision.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /PDB:"C:\Users\Josh\Dropbox\4th year project\iirlichkt\irrlicht-1.8\bin\Win32-VisualStudio\07.Collision.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /IMPLIB:"..\..\bin\Win32-VisualStudio\07.Collision.lib" /MACHINE:X86 Release\main.obj
+         Release\stl.obj
          Collision_vc10.vcxproj -> C:\Users\Josh\Dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.Collision\..\..\bin\Win32-VisualStudio\07.Collision.exe
        Manifest:
          C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"..\..\bin\Win32-VisualStudio\07.Collision.exe;#1" /manifest Release\07.Collision.exe.intermediate.manifest
@@ -64,4 +68,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:07.34
+Time Elapsed 00:00:03.88

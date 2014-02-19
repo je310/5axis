@@ -9,13 +9,18 @@
 #include <vector>
 #include <triangle3d.h>
 #include <omp.h>
+#include "stl.cpp"
+#include "glm/glm.hpp"
+
 //#define USESILLYCHECK
 #define vis
+#define coll
 
 #define BuildSize 150
 #define Boxsize		1
 #define drawat		150
 #define numbox  BuildSize/Boxsize
+
 //#define MULTI
 using namespace irr;
 
@@ -23,6 +28,9 @@ using namespace irr;
 #pragma comment(lib, "Irrlicht.lib")
 #endif
 #include <IMesh.h>
+#include <IColladaMeshWriter.h>
+#include <IMeshWriter.h>
+#include <EMeshWriterEnums.h>
 
 struct Tline{
 	core::vector3df start;
@@ -74,6 +82,7 @@ public:
 };
 
 list TriangArr[numbox][numbox][numbox];
+
 
 
 class Printnode : public scene::ISceneNode
@@ -705,6 +714,189 @@ void revolveNodeInLocalSpace(scene::ISceneNode* node, f32 degs, const core::vect
     rotateNodeInLocalSpace(node, degs, axis);
     moveNodeInLocalSpace(node, -pivot);
 }
+
+struct v3 { 
+    float x, y, z; 
+    v3(float _x=0, float _y=0, float _z=0) : x(_x), y(_y), z(_z) {} 
+    float dotproduct(const v3 &v) const { return x*v.x + y*v.y + z*v.z; }
+    void transform(const glm::mat4 &mat) { glm::vec4 v = glm::vec4(x, y, z, 1.0f), vt; vt = mat*v; x=vt.x; y=vt.y; z=vt.z;}
+    v3& operator-=(const v3 &pt) { x-=pt.x; y-=pt.y; z-=pt.z; return *this;    }
+    v3 operator-(const v3 &pt) { return v3(x-pt.x, y-pt.y, z-pt.z); }
+    v3 operator+(const v3 &pt) { return v3(x+pt.x, y+pt.y, z+pt.z); }
+    v3 operator/(float a) { return v3(x/a, y/a, z/a); }
+    v3 operator*(float a) { return v3(x*a, y*a, z*a); }
+    float normalize() const { return sqrt(x*x+y*y+z*z); } 
+};
+v3 operator-(const v3 &a, const v3 &b) {return v3(a.x-b.x, a.y-b.y, a.z-b.z); }
+v3 operator+(const v3 &a, const v3 &b) {return v3(a.x+b.x, a.y+b.y, a.z+b.z); }
+
+struct LineSegment {
+    LineSegment(v3 p0=v3(), v3 p1=v3()) { v[0]=p0; v[1]=p1; }
+    v3 v[2];
+};
+class Plane { 
+public:
+    Plane() : mDistance(0) {}
+    float distance() const { return mDistance; }
+    float distanceToPoint(const v3 &vertex) const {    return vertex.dotproduct(mNormal) - mDistance; }
+    void setNormal(v3 normal) { mNormal = normal; }
+    void setDistance(float distance) { mDistance = distance; }
+protected:
+    v3        mNormal;    // normalized Normal-Vector of the plane
+    float   mDistance;  // shortest distance from plane to Origin
+};
+struct Triangle2    { 
+    Triangle2(v3 n, v3 v0, v3 v1, v3 v2) : normal(n) { v[0]=v0; v[1]=v1; v[2]=v2; } 
+    Triangle2& operator-=(const v3 &pt) { v[0]-=pt; v[1]-=pt; v[2]-=pt; return *this;}
+    void transform(const glm::mat4 &mat) { v[0].transform(mat); v[1].transform(mat); v[2].transform(mat);}
+    // @return -1 = all triangle is on plane back side
+    //          0 = plane intersects the triangle
+    //          1 = all triangle is on plane front side
+    //         -2 = error in function
+    int intersectPlane(const Plane &plane, LineSegment &ls) const {
+        // a triangle has 3 vertices that construct 3 line segments
+        size_t cntFront=0, cntBack=0;
+        for (size_t j=0; j<3; ++j) {
+            float distance = plane.distanceToPoint(v[j]);
+            if (distance<0) ++cntBack;
+            else ++cntFront;
+        }
+        if (3 == cntBack) {
+            return -1;
+        }
+        else if (3 == cntFront) {
+            return 1;
+        }
+        size_t lines[] = {0,1,1,2,2,0}; // CCW Triangle2
+        std::vector<v3> intersectPoints;
+        for (size_t i=0; i<3; ++i) {
+            const v3 &a = v[lines[i*2+0]];
+            const v3 &b = v[lines[i*2+1]];
+            const float da = plane.distanceToPoint(a);
+            const float db = plane.distanceToPoint(b);
+            if (da*db<0) {
+                const float s = da/(da-db); // intersection factor (between 0 and 1)
+                v3 bMinusa = b-a;
+                intersectPoints.push_back(a+bMinusa*s);
+            }
+            else if (0==da) { // plane falls exactly on one of the three Triangle2 vertices
+                if (intersectPoints.size()<2)
+                    intersectPoints.push_back(a);
+            }
+            else if (0==db) { // plane falls exactly on one of the three Triangle2 vertices
+                if (intersectPoints.size()<2)
+                    intersectPoints.push_back(b);
+            }
+        }
+        if (2==intersectPoints.size()) {
+            // Output the intersecting line segment object
+            ls.v[0]=intersectPoints[0];
+            ls.v[1]=intersectPoints[1];
+            return 0;
+        }
+        return -2;        
+    }
+    v3 v[3], normal; 
+};
+class Triangle2Mesh { 
+public:
+    Triangle2Mesh() : bottomLeftVertex(999999,999999,999999), upperRightVertex(-999999,-999999,-999999) {}
+    size_t size() const { return mesh.size(); }
+    // move 3D Model coordinates to be center around COG(0,0,0)
+    void normalize() {
+        v3 halfBbox = (upperRightVertex - bottomLeftVertex)/2.0f;
+        v3 start = bottomLeftVertex + halfBbox;
+        for (size_t i=0; i<mesh.size(); ++i) {
+            Triangle2 &triangle = mesh[i];
+            triangle -= start;
+        }
+        bottomLeftVertex = halfBbox*-1.0f;
+        upperRightVertex = halfBbox;
+    }
+    void push_back(const Triangle2 &t) {
+        mesh.push_back(t);
+        for (size_t i=0; i<3; ++i) {
+            if (t.v[i].x < bottomLeftVertex.x) bottomLeftVertex.x = t.v[i].x;
+            if (t.v[i].y < bottomLeftVertex.y) bottomLeftVertex.y = t.v[i].y;
+            if (t.v[i].z < bottomLeftVertex.z) bottomLeftVertex.z = t.v[i].z;
+            if (t.v[i].x > upperRightVertex.x) upperRightVertex.x = t.v[i].x;
+            if (t.v[i].y > upperRightVertex.y) upperRightVertex.y = t.v[i].y;
+            if (t.v[i].z > upperRightVertex.z) upperRightVertex.z = t.v[i].z;
+        }
+    }
+    v3 meshAABBSize() const {
+        return v3(upperRightVertex.x-bottomLeftVertex.x, upperRightVertex.y-bottomLeftVertex.y, upperRightVertex.z-bottomLeftVertex.z);
+    }
+    std::vector<Triangle2>& getMesh() { return mesh; }
+    const std::vector<Triangle2>& getMesh() const { return mesh; }
+    v3 getBottomLeftVertex() const { return bottomLeftVertex; }
+    v3 getUpperRightVertex() const { return upperRightVertex; }
+    // Mesh COG point should be at (0,0,0)
+    int transform(const glm::mat4 &mat) {
+        for (size_t i=0; i<mesh.size(); ++i) {
+            Triangle2 &triangle = mesh[i];
+            triangle.transform(mat);
+        }
+        return 0;
+    }
+protected:
+    std::vector<Triangle2> mesh; 
+    v3 bottomLeftVertex, upperRightVertex;
+};
+
+// read the given STL file name (ascii or binary is set using ‘isBinaryFormat’)
+// and generate a Triangle2 Mesh object in output parameter ‘mesh’
+int stlToMeshInMemory(const char *stlFile, Triangle2Mesh *mesh, bool isBinaryFormat) {    
+    if (!isBinaryFormat) {
+        std::ifstream in(stlFile);
+        if (!in.good()) return 1;
+        char title[80];
+        std::string s0, s1;
+        float n0, n1, n2, f0, f1, f2, f3, f4, f5, f6, f7, f8;
+        in.read(title, 80);
+        while (!in.eof()) {
+            in >> s0;                                // facet || endsolid
+            if (s0=="facet") {
+                in >> s1 >> n0 >> n1 >> n2;            // normal x y z
+                in >> s0 >> s1;                        // outer loop
+                in >> s0 >> f0 >> f1 >> f2;         // vertex x y z
+                in >> s0 >> f3 >> f4 >> f5;         // vertex x y z
+                in >> s0 >> f6 >> f7 >> f8;         // vertex x y z
+                in >> s0;                            // endloop
+                in >> s0;                            // endfacet
+                // Generate a new Triangle2 with Normal as 3 Vertices
+                Triangle2 t(v3(n0, n1, n2), v3(f0, f1, f2), v3(f3, f4, f5), v3(f6, f7, f8));
+                mesh->push_back(t);
+            }
+            else if (s0=="endsolid") {
+                break;
+            }
+        }
+        in.close();
+    }
+    else {
+        FILE *f = fopen(stlFile, "rb");
+        if (!f) return 1;
+        char title[80];
+        int nFaces;
+        fread(title, 80, 1, f);
+        fread((void*)&nFaces, 4, 1, f);
+        float v[12]; // normal=3, vertices=3*3 = 12
+        unsigned short uint16; 
+        // Every Face is 50 Bytes: Normal(3*float), Vertices(9*float), 2 Bytes Spacer
+        for (size_t i=0; i<nFaces; ++i) {
+            for (size_t j=0; j<12; ++j) {
+                fread((void*)&v[j], sizeof(float), 1, f);
+            }
+            fread((void*)&uint16, sizeof(unsigned short), 1, f); // spacer between successive faces
+            Triangle2 t(v3(v[0], v[1], v[2]), v3(v[3], v[4], v[5]), v3(v[6], v[7], v[8]), v3(v[9], v[10], v[11]));
+            mesh->push_back(t);
+        }
+        fclose(f);
+    }    
+    mesh->normalize(); 
+    return 0;
+}
     
 
 
@@ -736,6 +928,16 @@ int main()
 	if(hit == true){
 		hit =false;
 	}
+
+	Triangle2Mesh mesh;
+
+	float    sliceSize = 1.0f;
+    char    modelFileName[1024] = "test.stl";    
+    bool    isBinaryFormat = true;
+
+	if (stlToMeshInMemory(modelFileName, &mesh, isBinaryFormat)!=0)
+        return 1;
+    fprintf(stderr, "Mesh has %d triangles\n", mesh.size());
 
 
 
@@ -798,6 +1000,12 @@ int main()
 	
 	head->setPosition(core::vector3df(5,5,1));
 	head->updateAbsolutePosition();
+
+	io::IWriteFile *out = device->getFileSystem()->createAndWriteFile("newone.stl");
+
+	scene::IMeshWriter *writer = 0;
+	writer = smgr->createMeshWriter(scene::EMWT_STL);
+	writer->writeMesh(out,head->getMesh());
 
 
 	video::SMaterial material;
@@ -934,9 +1142,8 @@ int main()
 		Tline vertline;
 #ifdef coll
 #ifdef MULTI
-		#pragma omp parallel
-		{
-		#pragma omp for
+		#pragma omp  for
+//		{
 #endif
 		for(int i = 0; i <VertexCount; i++){
 				std::vector<core::vector3df> mycubes2;
@@ -951,7 +1158,7 @@ int main()
 
 		}
 #ifdef MULTI	
-		}
+	//	}
 
 #endif
 #endif
