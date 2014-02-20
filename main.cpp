@@ -2,7 +2,6 @@
 #include <irrlicht.h>
 #include "driverChoice.h"
 //#include "octree.h"
-#include <fstream>
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -11,10 +10,12 @@
 #include <omp.h>
 #include "stl.cpp"
 #include "glm/glm.hpp"
-
+#include <IMesh.h>
+#include <fstream>
+#include <stdint.h>
 //#define USESILLYCHECK
 #define vis
-#define coll
+//#define coll
 
 #define BuildSize 150
 #define Boxsize		1
@@ -715,6 +716,11 @@ void revolveNodeInLocalSpace(scene::ISceneNode* node, f32 degs, const core::vect
     moveNodeInLocalSpace(node, -pivot);
 }
 
+void rotateNodeInWorldSpace(scene::ISceneNode* node, f32 degs, const core::vector3df& axis,const core::vector3df& pivot){
+		revolveNodeInWorldSpace(node, degs, axis, pivot);
+		rotateNodeInLocalSpace(node, degs,axis);
+		}
+
 struct v3 { 
     float x, y, z; 
     v3(float _x=0, float _y=0, float _z=0) : x(_x), y(_y), z(_z) {} 
@@ -897,7 +903,183 @@ int stlToMeshInMemory(const char *stlFile, Triangle2Mesh *mesh, bool isBinaryFor
     mesh->normalize(); 
     return 0;
 }
-    
+
+core::vector3df findworldcoord(core::vector3df in, float Adeg, float Bdeg, float zsmall){
+	core::vector3df out;
+	in.Z = in.Z  + zsmall;
+	core::vector2df vectopiv = core::vector2df(0 - in.X, 50 - in.Z);
+	vectopiv.rotateBy(Adeg,core::vector2df(0, 50));
+	//todo add in the b rotation 
+	out = core::vector3df(-vectopiv.X, in.Y, 50-vectopiv.Y); // in this case I am projecting into 2d so y = z! 
+	return out;
+}
+
+core::vector3df findmodeloffset(scene::IAnimatedMeshSceneNode* model, float Adeg, float Bdeg, float smallz){ // this function finds the mid point of the model on the bottom face, this is where slic3r puts the middle of the model, use this to correct for slic3r moving my peices around.
+	scene::IMeshBuffer *pBuffer;
+    pBuffer = model->getMesh()->getMeshBuffer(0);
+	float zoffset = 10000;
+	float xmin = 10000; 
+	float xmax= -10000; 
+	float ymin = 10000; 
+	float ymax = -10000; 
+	int VertexCount = pBuffer->getVertexCount();
+	video::S3DVertex *vertices = (video::S3DVertex *)pBuffer->getVertices();
+	for(int i = 0; i< VertexCount; i++){
+		if(findworldcoord(vertices[i].Pos,Adeg,Bdeg,smallz).Z < zoffset){
+			zoffset = findworldcoord(vertices[i].Pos,Adeg,Bdeg,smallz).Z;
+		}
+		if(findworldcoord(vertices[i].Pos,Adeg,Bdeg,smallz).X < xmin){
+			xmin = findworldcoord(vertices[i].Pos,Adeg,Bdeg,smallz).X;
+		}
+		if(findworldcoord(vertices[i].Pos,Adeg,Bdeg,smallz).X > xmax){
+			xmax = findworldcoord(vertices[i].Pos,Adeg,Bdeg,smallz).X;
+		}
+		if(findworldcoord(vertices[i].Pos,Adeg,Bdeg,smallz).Y < ymin){
+			ymin = findworldcoord(vertices[i].Pos,Adeg,Bdeg,smallz).Y;
+		}
+		if(findworldcoord(vertices[i].Pos,Adeg,Bdeg,smallz).Y > ymax){
+			ymax = findworldcoord(vertices[i].Pos,Adeg,Bdeg,smallz).Y;
+		}
+	}
+	core::vector3df out;
+	out.Z = zoffset;
+	out.X = (xmin + xmax)/2;
+	out.Y = (ymin + ymax)/2;
+	return out;
+}
+
+struct trianginfo{
+	core::vector3df v1;
+	core::vector3df v2;
+	core::vector3df v3;
+	core::vector3df normal;
+};
+
+core::vector3df getnormal(core::vector3df v1,core::vector3df v2,core::vector3df v3){
+	core::vector3df v12  = v2 - v1;
+	core::vector3df v13  = v3 - v1;
+	return v12.crossProduct(v13).normalize();
+}
+
+float ReverseFloat( const float inFloat )
+{
+   float retVal;
+   char *floatToConvert = ( char* ) & inFloat;
+   char *returnFloat = ( char* ) & retVal;
+
+   // swap the bytes into a temporary buffer
+   returnFloat[0] = floatToConvert[3];
+   returnFloat[1] = floatToConvert[2];
+   returnFloat[2] = floatToConvert[1];
+   returnFloat[3] = floatToConvert[0];
+
+   return retVal;
+}
+
+uint32_t Reverseuint32( const uint32_t inuint32 ) //credit to http://stackoverflow.com/questions/2782725/converting-float-values-from-big-endian-to-little-endian
+{
+   uint32_t retVal;
+   char *floatToConvert = ( char* ) & inuint32;
+   char *returnuint = ( char* ) & retVal;
+
+   // swap the bytes into a temporary buffer
+   returnuint[0] = floatToConvert[3];
+   returnuint[1] = floatToConvert[2];
+   returnuint[2] = floatToConvert[1];
+   returnuint[3] = floatToConvert[0];
+
+   return retVal;
+}
+
+void writestl(scene::IMeshBuffer* mesh, std::string path){ //this now outputs the stl as per the input,
+	char * memblock;
+	std::vector<trianginfo> mytriangles;
+	std::ofstream myfile;
+	myfile.open ("output.stl");
+	u32 indexcount = mesh->getIndexCount();
+	u16 *indices =  mesh->getIndices();
+	u32 vertexcount = mesh->getVertexCount();
+	video::S3DVertex *vertices = (video::S3DVertex *)mesh->getVertices();
+	trianginfo currenttriang;
+	for(int i = 0 ; i <indexcount; i=i+3){
+		currenttriang.normal = getnormal(vertices[indices[i]].Pos,vertices[indices[i+1]].Pos,vertices[indices[i+2]].Pos);
+		currenttriang.v3 = vertices[indices[i]].Pos;
+		currenttriang.v2 = vertices[indices[i+1]].Pos;
+		currenttriang.v1 = vertices[indices[i+2]].Pos;
+		mytriangles.push_back(currenttriang);
+	}
+	int numberofchars = 80 + 4 + mytriangles.size()*((4*3*4)+2);
+	memblock = new char [numberofchars];
+	for(int i = 0; i<80; i++){
+		memblock[i] = (u8)0x00;
+	}
+	for(int i = 80; i<numberofchars; i++){
+		memblock[i] = (u8)0;
+	}
+	memblock[0] = 's';
+	memblock[1] = 't';
+	memblock[2] = 'a';
+	memblock[3] = 'r';
+	memblock[4] = 0xcdcdef01;
+	uint32_t size = mytriangles.size();
+	//size = Reverseuint32(size);
+	memcpy(memblock + 80,&size,4);
+	float switchfloat;
+	for(int i = 0; i<  mytriangles.size(); i++){
+		//the normal
+		switchfloat =(float)mytriangles.at(i).normal.X;
+		memcpy(memblock+50*i+84,&switchfloat,4);
+		switchfloat =(float)mytriangles.at(i).normal.Y;
+		memcpy(memblock+50*i+88,&switchfloat,4);
+		switchfloat =(float)mytriangles.at(i).normal.Z;
+		memcpy(memblock+50*i+92,&switchfloat,4);
+
+		switchfloat =(float)mytriangles.at(i).v1.X;
+		memcpy(memblock+50*i+96,&switchfloat,4);
+		switchfloat =(float)mytriangles.at(i).v1.Y;
+		memcpy(memblock+50*i+100,&switchfloat,4);
+		switchfloat =(float)mytriangles.at(i).v1.Z;
+		memcpy(memblock+50*i+104,&switchfloat,4);
+
+		switchfloat =(float)mytriangles.at(i).v2.X;
+		memcpy(memblock+50*i+108,&switchfloat,4);
+		switchfloat =(float)mytriangles.at(i).v2.Y;
+		memcpy(memblock+50*i+112,&switchfloat,4);
+		switchfloat =(float)mytriangles.at(i).v2.Z;
+		memcpy(memblock+50*i+116,&switchfloat,4);
+
+		switchfloat =(float)mytriangles.at(i).v3.X;
+		memcpy(memblock+50*i+120,&switchfloat,4);
+		switchfloat =(float)mytriangles.at(i).v3.Y;
+		memcpy(memblock+50*i+124,&switchfloat,4);
+		switchfloat =(float)mytriangles.at(i).v3.Z;
+		memcpy(memblock+50*i+128,&switchfloat,4);
+
+	}
+	myfile.write(memblock,numberofchars);
+}
+
+void mirrorx(scene::IAnimatedMeshSceneNode* obj){ // this is neccessary due to for some reason the import in irrlicht mirrors in the x axis. I must use this after all stl read ins. 
+	scene::IMeshBuffer *pBuffer= obj->getMesh()->getMeshBuffer(0);
+	u32 vertexcount = pBuffer->getVertexCount();
+	video::S3DVertex *vertices = (video::S3DVertex *)pBuffer->getVertices();
+	u32 indexcount = pBuffer->getIndexCount();
+	u16 *indices =  pBuffer->getIndices();
+	for(int i=0; i < vertexcount; i++){
+		vertices[i].Pos.X = -vertices[i].Pos.X;
+		//vertices[i].Normal = -vertices[i].Normal;
+	}
+	u16 temp;
+	for(int i = 0 ; i <indexcount; i=i+3){
+		//currenttriang.normal = getnormal(vertices[indices[i]].Pos,vertices[indices[i+1]].Pos,vertices[indices[i+2]].Pos);
+		temp = indices[i];
+		indices[i] = indices[i+1];
+		indices[i+1] = temp;
+		//mytriangles.push_back(currenttriang);
+	}
+	return;
+}
+
 
 
 int main()
@@ -997,26 +1179,53 @@ int main()
 
 	head->setMaterialType(video::EMT_SOLID);
 	head->setMaterialFlag(video::EMF_LIGHTING, true);
-	
+	//head->setMaterialTexture(0, driver->getTexture("../../media/wall.jpg"));
+	smgr->getMeshManipulator()->setVertexColors(head->getMesh(), video::SColor(255,0,0,255));
 	head->setPosition(core::vector3df(5,5,1));
 	head->updateAbsolutePosition();
 
+
+	//section that loads the test model stls 
+	scene::IAnimatedMeshSceneNode* zcore = 0;
+	zcore = smgr->addAnimatedMeshSceneNode(smgr->getMesh("stl/(Z1)core.stl"),
+						0, ID_IsNotPickable);
+	zcore->setMaterialType(video::EMT_SOLID);
+	zcore->setMaterialFlag(video::EMF_LIGHTING, true);
+	smgr->getMeshManipulator()->setVertexColors(zcore->getMesh(), video::SColor(255,145,0,123));
+	pBuffer = zcore->getMesh()->getMeshBuffer(0);
+
+
+
 	io::IWriteFile *out = device->getFileSystem()->createAndWriteFile("newone.stl");
 
-	scene::IMeshWriter *writer = 0;
+	scene::IAnimatedMeshSceneNode* thing = 0;
+	thing = smgr->addAnimatedMeshSceneNode(smgr->getMesh("stl/test.stl"),
+						0, ID_IsNotPickable);
+	mirrorx(thing);
+	thing->setMaterialType(video::EMT_TRANSPARENT_ALPHA_CHANNEL);
+	smgr->getMeshManipulator()->setVertexColors(thing->getMesh(), video::SColor(99,145,0,123));
+	scene::IMeshWriter *writer;
 	writer = smgr->createMeshWriter(scene::EMWT_STL);
-	writer->writeMesh(out,head->getMesh());
+	scene::IMesh *mymesh =  thing->getMesh();
+	pBuffer = thing->getMesh()->getMeshBuffer(0);
+	bool success = writer->writeMesh(out,mymesh);
+	writestl(pBuffer, "shit");
 
+	core::vector3df midpointtest = findmodeloffset(thing, 0,0, 0);
+	thing->setPosition(thing->getAbsolutePosition()-midpointtest);
 
 	video::SMaterial material;
 
-
+	float smallz = 1000;
 	std::vector<video::S3DVertex> vertvect;
 	int VertexCount = pBuffer->getVertexCount();
 	video::S3DVertex *vertices = (video::S3DVertex *)pBuffer->getVertices();
 	video::S3DVertex *trans	= new video::S3DVertex();
 	for(int i = 0; i< VertexCount; i++){
 		vertvect.push_back(vertices[i]);
+		if(vertices[i].Pos.Z < smallz){
+			smallz = vertices[i].Pos.Z;
+		}
 	}
 
 	for(int i =0; i <VertexCount; i++){
@@ -1028,42 +1237,56 @@ int main()
 			}
 		}
 	}
+	zcore->setPosition(zcore->getAbsolutePosition() - core::vector3df(0,0,smallz));
+
+	scene::IAnimatedMeshSceneNode* y1core = 0;
+	y1core = smgr->addAnimatedMeshSceneNode(smgr->getMesh("stl/(Y1)core.stl"),
+						0, ID_IsNotPickable);
+	y1core->setMaterialType(video::EMT_SOLID);
+	y1core->setMaterialFlag(video::EMF_LIGHTING, true);
+	smgr->getMeshManipulator()->setVertexColors(y1core->getMesh(), video::SColor(0,145,124,123));
+	y1core->setPosition(y1core->getAbsolutePosition() - core::vector3df(0,0,smallz));
+
+	scene::IAnimatedMeshSceneNode* y2core = 0;
+	y2core = smgr->addAnimatedMeshSceneNode(smgr->getMesh("stl/(Y2)core.stl"),
+						0, ID_IsNotPickable);
+	y2core->setMaterialType(video::EMT_SOLID);
+	y2core->setMaterialFlag(video::EMF_LIGHTING, true);
+	smgr->getMeshManipulator()->setVertexColors(y2core->getMesh(), video::SColor(26,145,0,123));
+	y2core->setPosition(y2core->getAbsolutePosition() - core::vector3df(0,0,smallz));
+	
+	rotateNodeInWorldSpace(y2core,90,core::vector3df(0,1,0), core::vector3df(0,0,50));
+	rotateNodeInWorldSpace(y1core,-90,core::vector3df(0,1,0), core::vector3df(0,0,50));
+
+	//core::vector3df midpoint = findmodeloffset(y2core, 90,0, smallz);
+	
 
 	material.Lighting = true;
 	selector = smgr->createTriangleSelector(head);
 	head->setTriangleSelector(selector);
 	selector->drop();
+	smallz = -25;
 
-
-	scene::IAnimatedMeshSceneNode * obj = smgr->addAnimatedMeshSceneNode(smgr->getMesh("../../media/cube.stl"),0, IDFlag_IsPickable | IDFlag_IsHighlightable);
-	if (obj){
-		obj->setPosition(core::vector3df(0,0,223));
-		obj->setMaterialTexture(0, driver->getTexture("../../media/wall.bmp"));
-		obj->setMaterialFlag(video::EMF_LIGHTING, false);
-	}
-	selector = smgr->createTriangleSelector(obj);
-	obj->setTriangleSelector(selector);
-	selector->drop();
-		
-	scene::IBillboardSceneNode * bill;
-	scene::IBillboardSceneNode * bill2;
-	//for(int i = 0; i< VertexCount  ; i++){
-	//	bill = smgr->addBillboardSceneNode(head);
-	//	bill->setMaterialType(video::EMT_TRANSPARENT_ADD_COLOR );
-	//	bill->setMaterialTexture(0, driver->getTexture("../../media/particle.bmp"));
-	//	bill->setMaterialFlag(video::EMF_LIGHTING, false);
-	//	bill->setMaterialFlag(video::EMF_ZBUFFER, false);
-	//	bill->setSize(core::dimension2d<f32>(20.0f, 20.0f));
-	//	bill->setID(ID_IsNotPickable); // This ensures that we don't accidentally ray-pick it
-	//	bill->setPosition(vertices[i].Pos);
-	//}
-	//material.setTexture(0, 0);
 	//material.Lighting = false;
 
 	// Add a light, so that the unselected nodes aren't completely dark.
-	scene::ILightSceneNode * light = smgr->addLightSceneNode(0, core::vector3df(-60,100,400),
-		video::SColorf(1.0f,1.0f,1.0f,1.0f), 600.0f);
+	float lightstr = 70;
+
+	scene::ILightSceneNode * light = smgr->addLightSceneNode(0, core::vector3df(0,0,0),
+		video::SColorf(1.0f,1.0f,1.0f,1.0f), lightstr);
 	light->setID(ID_IsNotPickable); // Make it an invalid target for selection.
+
+	scene::ILightSceneNode * light2 = smgr->addLightSceneNode(0, core::vector3df(150,150,150),
+		video::SColorf(1.0f,1.0f,1.0f,1.0f), lightstr);
+	light2->setID(ID_IsNotPickable); // Make it an invalid target for selection.
+
+	scene::ILightSceneNode * light3 = smgr->addLightSceneNode(0, core::vector3df(0,150,150),
+		video::SColorf(1.0f,1.0f,1.0f,1.0f), lightstr);
+	light3->setID(ID_IsNotPickable); // Make it an invalid target for selection.
+
+	scene::ILightSceneNode * light4 = smgr->addLightSceneNode(0, core::vector3df(150,150,0),
+		video::SColorf(1.0f,1.0f,1.0f,1.0f),lightstr);
+	light4->setID(ID_IsNotPickable); // Make it an invalid target for selection.
 
 	// Remember which scene node is highlighted
 	scene::ISceneNode* highlightedSceneNode = 0;
@@ -1075,6 +1298,7 @@ int main()
 
 	int inscount = 0;
 
+#ifdef GRID
 	std::vector<Tline> grid;
 	Tline gridline;
 	for(int j = 0; j<=15; j++){
@@ -1098,6 +1322,7 @@ int main()
 			grid.push_back(gridline);
 		}
 	}
+#endif
 	
 
 	scene::ISceneNode * Printed  = smgr->addAnimatedMeshSceneNode(smgr->getMesh("../../media/cube.stl"),0, IDFlag_IsPickable | IDFlag_IsHighlightable);
@@ -1256,7 +1481,7 @@ int main()
 					//core::vector3df  nextnextmove;
 					//nextnextmove = core::vector3df (instructions.at(inscount).X,instructions.at(inscount).Y,instructions.at(inscount).Z);
 					if(inscount ==0 ){
-						myLine.end= nextmove;
+						myLine.end= nextmove  ;
 						myLine.start = prevmove;
 						allLines.push_back(myLine);
 						Printnode *print =new Printnode(Printed, smgr,IDFlag_IsPickable ,prevmove,nextmove,core::vector3df(0,0,1),0.5,0.2);
@@ -1285,8 +1510,9 @@ int main()
 #ifdef vis		
 		bigcount++;
 		if(bigcount % drawat == 0){
-		
-		//revolveNodeInLocalSpace(head,3,core::vector3df(0,1,0),core::vector3df(-5,5,0));
+		//rotateNodeInWorldSpace(y2core,1,core::vector3df(0,1,0), core::vector3df(0,0,50));
+		//revolveNodeInWorldSpace(y2core, 1, core::vector3df(0,1,0), core::vector3df(0,0,50));
+		//rotateNodeInLocalSpace(y2core, 1,core::vector3df(0,1,0) );
 		driver->beginScene(true, true, 0);
 		if(receiver.IsKeyDown(irr::KEY_KEY_R) && nextpressR ==0){
 			nextpressR = 1;
@@ -1298,12 +1524,14 @@ int main()
 		
 		if(!receiver.IsKeyDown(irr::KEY_KEY_Q)){
 			if(nextpressR2){
-
+#ifdef GRID
 			for(int i = 0; i<grid.size();i++){
 				driver->setTransform(video::ETS_WORLD,  core::matrix4());
-				driver->draw3DLine(grid.at(i).start,grid.at(i).end,video::SColor(20,50,210,100));
-			}
 
+				driver->draw3DLine(grid.at(i).start,grid.at(i).end,video::SColor(20,50,210,100));
+
+			}
+#endif
 			for(int i = allLines.size()-1000; i<allLines.size();i++){
 				driver->setTransform(video::ETS_WORLD,  core::matrix4());
 				driver->draw3DLine(allLines.at(i).start,allLines.at(i).end,video::SColor(200,50,210,200));
