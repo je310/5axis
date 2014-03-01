@@ -16,3 +16,7 @@
 *.opensdf
 *.suo
 *.vcx*
+*.pdb
+*.cd
+*.obj
+*.log
