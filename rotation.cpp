@@ -88,4 +88,25 @@ void revolveNodeInLocalSpace(scene::ISceneNode* node, f32 degs, const core::vect
 void rotateNodeInWorldSpace(scene::ISceneNode* node, f32 degs, const core::vector3df& axis,const core::vector3df& pivot){
 		revolveNodeInWorldSpace(node, degs, axis, pivot);
 		rotateNodeInLocalSpace(node, degs,axis);
-		}
+}
+
+void mirrorx(scene::IAnimatedMeshSceneNode* obj){ // this is neccessary due to for some reason the import in irrlicht mirrors in the x axis. I must use this after all stl read ins. 
+	scene::IMeshBuffer *pBuffer= obj->getMesh()->getMeshBuffer(0);
+	u32 vertexcount = pBuffer->getVertexCount();
+	video::S3DVertex *vertices = (video::S3DVertex *)pBuffer->getVertices();
+	u32 indexcount = pBuffer->getIndexCount();
+	u16 *indices =  pBuffer->getIndices();
+	for(int i=0; i < vertexcount; i++){
+		vertices[i].Pos.X = -vertices[i].Pos.X;
+		//vertices[i].Normal = -vertices[i].Normal;
+	}
+	u16 temp;
+	for(int i = 0 ; i <indexcount; i=i+3){
+		//currenttriang.normal = getnormal(vertices[indices[i]].Pos,vertices[indices[i+1]].Pos,vertices[indices[i+2]].Pos);
+		temp = indices[i];
+		indices[i] = indices[i+1];
+		indices[i+1] = temp;
+		//mytriangles.push_back(currenttriang);
+	}
+	return;
+}

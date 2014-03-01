@@ -18,4 +18,6 @@ void moveNodeInLocalSpace(scene::ISceneNode* node, const core::vector3df& distVe
 void revolveNodeInLocalSpace(scene::ISceneNode* node, f32 degs, const core::vector3df& axis, const core::vector3df& pivot);
 
 void rotateNodeInWorldSpace(scene::ISceneNode* node, f32 degs, const core::vector3df& axis,const core::vector3df& pivot);
+
+void mirrorx(scene::IAnimatedMeshSceneNode* obj);
 #endif
