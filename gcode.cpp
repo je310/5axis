@@ -178,3 +178,11 @@ void clear(char buffer[20]){
 	memset( buffer, '\0', sizeof(char)*20 );
 	return;
 }
+
+
+void slice(char* stl){
+	char callslicer[50]  = "slic3r --load stl/config.ini stl/";
+	strcat(callslicer,stl);
+	strcat(callslicer,".stl");
+	system (callslicer);
+}

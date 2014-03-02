@@ -19,5 +19,8 @@ std::vector<instruction> ReadInGCode(instruction savedVals, char* argv);
 void clear(char buffer[20]);
 
 
+void slice(char* stl);
+
+
 
 #endif

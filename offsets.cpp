@@ -55,3 +55,20 @@ core::vector3df findmodeloffset(scene::IAnimatedMeshSceneNode* model, float Adeg
 	out.Y = (ymin + ymax)/2;
 	return out;
 }
+
+
+float findlowestvert (scene::IAnimatedMeshSceneNode* thing){
+	float smallz = 1000;
+	scene::IMeshBuffer *pBuffer= thing->getMesh()->getMeshBuffer(0);;
+	std::vector<video::S3DVertex> vertvect;
+	int VertexCount = pBuffer->getVertexCount();
+	video::S3DVertex *vertices = (video::S3DVertex *)pBuffer->getVertices();
+	video::S3DVertex *trans	= new video::S3DVertex();
+	for(int i = 0; i< VertexCount; i++){
+		vertvect.push_back(vertices[i]);
+		if(vertices[i].Pos.Z < smallz){
+			smallz = vertices[i].Pos.Z;
+		}
+	}
+	return smallz;
+}

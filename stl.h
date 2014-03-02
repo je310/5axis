@@ -4,6 +4,7 @@
 #include <vector>
 #include <fstream>
 #include <stdint.h>
+
 using namespace irr;
 
 struct trianginfo{
@@ -15,6 +16,11 @@ struct trianginfo{
 
 void writestl(scene::IMeshBuffer* mesh, std::string path);
 
+scene::IAnimatedMeshSceneNode* readstl(scene::ISceneManager* smgr,char* name);
+
 core::vector3df getnormal(core::vector3df v1,core::vector3df v2,core::vector3df v3);
+
+
+
 
 #endif

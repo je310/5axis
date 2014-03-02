@@ -10,9 +10,10 @@ core::vector3df getnormal(core::vector3df v1,core::vector3df v2,core::vector3df 
 
 void writestl(scene::IMeshBuffer* mesh, std::string path){ //this now outputs the stl as per the input,
 	char * memblock;
+	path.append(".stl");
 	std::vector<trianginfo> mytriangles;
 	std::ofstream myfile;
-	myfile.open ("output.stl");
+	myfile.open (path);
 	u32 indexcount = mesh->getIndexCount();
 	u16 *indices =  mesh->getIndices();
 	u32 vertexcount = mesh->getVertexCount();
@@ -74,4 +75,11 @@ void writestl(scene::IMeshBuffer* mesh, std::string path){ //this now outputs th
 
 	}
 	myfile.write(memblock,numberofchars);
+}
+
+scene::IAnimatedMeshSceneNode* readstl(scene::ISceneManager* smgr,char* name){
+	char path[30] = "stl/";
+	strcat(path,name);
+	strcat(path,".stl");
+	return smgr->addAnimatedMeshSceneNode(smgr->getMesh(path),0, 0);
 }
