@@ -76,3 +76,55 @@ std::vector<Tline> makegrid(){
 	}
 	return grid;
 }
+
+void doprint(scene::IAnimatedMeshSceneNode* head, std::vector<instruction> instructions,std::vector<Tline> &allLines, int &inscount, float CurrentA, float CurrentB){
+	int numberOfInstructions  = instructions.size(); 
+	//make sure the head position is updated
+	head->updateAbsolutePosition();
+
+	// update next move and prevmove
+	core::vector3df  nextmove=core::vector3df (instructions[inscount].X,instructions[inscount].Y,instructions[inscount].Z);
+	core::vector3df  prevmove;
+	if(inscount>0){
+		prevmove=core::vector3df (instructions[inscount-1].X,instructions[inscount-1].Y,instructions[inscount-1].Z);
+	}
+	else{
+		prevmove=core::vector3df (0,0,0);
+	}
+
+	Tline myLine;
+	if(1){
+		if(inscount < numberOfInstructions - 1){
+
+			if(instructions.at(inscount).A != CurrentA){
+				revolveNodeInWorldSpace(head,instructions.at(inscount).A-CurrentA,core::vector3df(1,0,0),core::vector3df(BuildSize/2,BuildSize/2,40));
+				CurrentA = instructions.at(inscount).A;
+				//camera->setUpVector(core::vector3df(sin(core::DEGTORAD*CurrentA),0,cos(core::DEGTORAD*CurrentA)));
+			}
+			if(instructions.at(inscount).B != CurrentB){
+				revolveNodeInWorldSpace(head,instructions.at(inscount).B-CurrentB,core::vector3df(0,1,0),core::vector3df(BuildSize/2,BuildSize/2,40));
+				CurrentA = instructions.at(inscount).B;
+			}
+			//inscount++;
+			if(instructions.at(inscount).G ==1  && inscount < numberOfInstructions - 2){
+				head->setPosition(Headoffset(nextmove,head));
+				head->updateAbsolutePosition();
+				//core::vector3df  nextnextmove;
+				//nextnextmove = core::vector3df (instructions.at(inscount).X,instructions.at(inscount).Y,instructions.at(inscount).Z);
+				if(inscount ==0 ){
+					myLine.end= nextmove  ;
+					myLine.start = prevmove;
+					allLines.push_back(myLine);
+				}
+				else if((instructions.at(inscount).E - instructions.at(inscount-1).E) >0){
+					myLine.end= nextmove;
+					myLine.start = prevmove;
+					allLines.push_back(myLine);
+				}
+			}
+			inscount++;
+		}
+
+
+	}
+}

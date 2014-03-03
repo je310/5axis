@@ -21,9 +21,9 @@ void writestl(scene::IMeshBuffer* mesh, std::string path){ //this now outputs th
 	trianginfo currenttriang;
 	for(int i = 0 ; i <indexcount; i=i+3){
 		currenttriang.normal = getnormal(vertices[indices[i]].Pos,vertices[indices[i+1]].Pos,vertices[indices[i+2]].Pos);
-		currenttriang.v3 = vertices[indices[i]].Pos;
+		currenttriang.v1 = vertices[indices[i]].Pos;
 		currenttriang.v2 = vertices[indices[i+1]].Pos;
-		currenttriang.v1 = vertices[indices[i+2]].Pos;
+		currenttriang.v3 = vertices[indices[i+2]].Pos;
 		mytriangles.push_back(currenttriang);
 	}
 	int numberofchars = 80 + 4 + mytriangles.size()*((4*3*4)+2);

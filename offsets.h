@@ -2,6 +2,7 @@
 #define __OFF_INCLUDED__   //   #define this so the compiler knows it has been included
 #include <irrlicht.h>
 #include <vector>
+#include "triangle.h"
 using namespace irr;
 
 
@@ -12,5 +13,7 @@ core::vector3df findworldcoord(core::vector3df in, float Adeg, float Bdeg, float
 core::vector3df findmodeloffset(scene::IAnimatedMeshSceneNode* model, float Adeg, float Bdeg, float smallz);
 
 float findlowestvert (scene::IAnimatedMeshSceneNode* thing);
+
+void addoffset(Triangle &triangle, float smallz);
 
 #endif

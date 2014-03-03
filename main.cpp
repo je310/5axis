@@ -21,6 +21,12 @@
 
 //#define MULTI
 using namespace irr;
+//using namespace core;
+using namespace scene;
+using namespace video;
+using namespace io;
+using namespace gui;
+
 
 #ifdef _MSC_VER
 #pragma comment(lib, "Irrlicht.lib")
@@ -61,218 +67,194 @@ list TriangArr[numbox][numbox][numbox];
 
 
 
-class Printnode : public scene::ISceneNode
+// Define some values that we'll use to identify individual GUI controls.
+enum
 {
-
-	/*
-	First, we declare some member variables:
-	The bounding box, 4 vertices, and the material of the tetraeder.
-	*/
-	core::aabbox3d<f32> Box;
-	video::S3DVertex Vertices[8];
-	video::SMaterial Material;
-
-	/*
-	The parameters of the constructor specify the parent of the scene node,
-	a pointer to the scene manager, and an id of the scene node.
-	In the constructor we call the parent class' constructor,
-	set some properties of the material, and
-	create the 4 vertices of the tetraeder we will draw later.
-	*/
-
-public:
-
-	Printnode(scene::ISceneNode* parent, scene::ISceneManager* mgr, s32 id,core::vector3df Start, core::vector3df End,core::vector3df Up,float Width, float Height)
-		: scene::ISceneNode(parent, mgr, id)
-	{
-
-
-		core::vector3df length = End - Start;
-		core::vector3df WidthVect = Up.crossProduct(length);
-		WidthVect = (WidthVect.normalize()*Width)/2;
-		std::vector<core::vector3df> mycubes;
-		Tline myline;
-		myline.end = End;
-		myline.start = Start;
-		mycubes = findCubesOfInterest(myline);
-		int numofcubes = mycubes.size();
-
-		core::vector3df PrintHeight = Up.normalize()*Height;
-
-		core::vector3df Corn0 = Start - WidthVect;
-		core::vector3df Corn1 = Start + WidthVect;
-		core::vector3df Corn2 = Start - WidthVect - PrintHeight;
-		core::vector3df Corn3 = Start + WidthVect - PrintHeight;
-		core::vector3df Corn4 = End - WidthVect;
-		core::vector3df Corn5 = End + WidthVect;
-		core::vector3df Corn6 = End - WidthVect - PrintHeight;
-		core::vector3df Corn7 = End + WidthVect - PrintHeight;
-		Triangle triangle[12];
-
-		triangle[0].V0 = Corn3;
-		triangle[0].V1 = Corn2;
-		triangle[0].V2 = Corn0;
-
-		triangle[1].V0 = Corn0;
-		triangle[1].V1 = Corn1;
-		triangle[1].V2 = Corn3;
-
-		triangle[2].V0 = Corn5;
-		triangle[2].V1 = Corn1;
-		triangle[2].V2 = Corn0;
-
-		triangle[3].V0 = Corn0;
-		triangle[3].V1 = Corn4;
-		triangle[3].V2 = Corn5;
-
-		triangle[4].V0 = Corn3;
-		triangle[4].V1 = Corn1;
-		triangle[4].V2 = Corn5;
-
-		triangle[5].V0 = Corn3;
-		triangle[5].V1 = Corn5;
-		triangle[5].V2 = Corn7;
-
-		triangle[6].V0 = Corn5;
-		triangle[6].V1 = Corn4;
-		triangle[6].V2 = Corn6;
-
-		triangle[7].V0 = Corn6;
-		triangle[7].V1 = Corn7;
-		triangle[7].V2 = Corn5;
-
-		triangle[8].V0 = Corn0;
-		triangle[8].V1 = Corn2;
-		triangle[8].V2 = Corn4;
-
-		triangle[9].V0 = Corn2;
-		triangle[9].V1 = Corn6;
-		triangle[9].V2 = Corn4;
-
-		triangle[10].V0 = Corn2;
-		triangle[10].V1 = Corn3;
-		triangle[10].V2 = Corn7;
-
-		triangle[0].V0 = Corn6;
-		triangle[0].V1 = Corn2;
-		triangle[0].V2 = Corn7;
-
-
-		for(int i = 0; i < numofcubes ; i++){
-			for(int j = 0; j < 12; j++){
-				TriangArr[int(mycubes.at(i).X)][int(mycubes.at(i).Y)][int(mycubes.at(i).Z)].addNode(TriangArr[int(mycubes.at(i).X)][int(mycubes.at(i).Y)][int(mycubes.at(i).Z)].initNode(triangle[j]));
-			}
-
-		}
-		//3,2,0, 0,1,3, 5,1,0, 0,4,5, 3,1,5, 3,5,7, 5,4,6, 6,7,5, 0,2,4, 2,6,4, 2,3,7, 6,2,7
-
-		Material.Wireframe = false;
-		Material.Lighting = false;
-		video::SColor colour(128,126,89,200);
-		float widthover2 = 0.25;
-		float height = 0.2;
-		Vertices[0] = video::S3DVertex(Corn0.X,Corn0.Y,Corn0.Z, 1,1,0,colour, 0, 1);
-		Vertices[1] = video::S3DVertex(Corn1.X,Corn1.Y,Corn1.Z, 1,0,0,colour, 1, 1);
-		Vertices[2] = video::S3DVertex(Corn2.X,Corn2.Y,Corn2.Z, 0,1,1,colour, 1, 0);
-		Vertices[3] = video::S3DVertex(Corn3.X,Corn3.Y,Corn3.Z, 0,0,1,colour, 0, 0);
-		Vertices[4] = video::S3DVertex(Corn4.X,Corn4.Y,Corn4.Z, 1,1,0,colour, 0, 1);
-		Vertices[5] = video::S3DVertex(Corn5.X,Corn5.Y,Corn5.Z, 1,0,0,colour, 1, 1);
-		Vertices[6] = video::S3DVertex(Corn6.X,Corn6.Y,Corn6.Z, 0,1,1,colour, 1, 0);
-		Vertices[7] = video::S3DVertex(Corn7.X,Corn7.Y,Corn7.Z, 0,0,1,colour, 0, 0);
-
-		/*
-		The Irrlicht Engine needs to know the bounding box of a scene node.
-		It will use it for automatic culling and other things. Hence, we
-		need to create a bounding box from the 4 vertices we use.
-		If you do not want the engine to use the box for automatic culling,
-		and/or don't want to create the box, you could also call
-		irr::scene::ISceneNode::setAutomaticCulling() with irr::scene::EAC_OFF.
-		*/
-		Box.reset(Vertices[0].Pos);
-		for (s32 i=1; i<8; ++i)
-			Box.addInternalPoint(Vertices[i].Pos);
-	}
-
-	/*
-	Before it is drawn, the irr::scene::ISceneNode::OnRegisterSceneNode()
-	method of every scene node in the scene is called by the scene manager.
-	If the scene node wishes to draw itself, it may register itself in the
-	scene manager to be drawn. This is necessary to tell the scene manager
-	when it should call irr::scene::ISceneNode::render(). For
-	example, normal scene nodes render their content one after another,
-	while stencil buffer shadows would like to be drawn after all other
-	scene nodes. And camera or light scene nodes need to be rendered before
-	all other scene nodes (if at all). So here we simply register the
-	scene node to render normally. If we would like to let it be rendered
-	like cameras or light, we would have to call
-	SceneManager->registerNodeForRendering(this, SNRT_LIGHT_AND_CAMERA);
-	After this, we call the actual
-	irr::scene::ISceneNode::OnRegisterSceneNode() method of the base class,
-	which simply lets also all the child scene nodes of this node register
-	themselves.
-	*/
-	virtual void OnRegisterSceneNode()
-	{
-		if (IsVisible)
-			SceneManager->registerNodeForRendering(this);
-
-		ISceneNode::OnRegisterSceneNode();
-	}
-
-	/*
-	In the render() method most of the interesting stuff happens: The
-	Scene node renders itself. We override this method and draw the
-	tetraeder.
-	*/
-	virtual void render()
-	{
-		u16 indices[] = {	3,2,0, 0,1,3, 5,1,0, 0,4,5, 3,1,5, 3,5,7, 5,4,6, 6,7,5, 0,2,4, 2,6,4, 2,3,7, 6,2,7	};
-		video::IVideoDriver* driver = SceneManager->getVideoDriver();
-
-		driver->setMaterial(Material);
-		driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
-		driver->drawVertexPrimitiveList(&Vertices[0], 8, &indices[0], 12, video::EVT_STANDARD, scene::EPT_TRIANGLES, video::EIT_16BIT);
-	}
-
-	/*
-	And finally we create three small additional methods.
-	irr::scene::ISceneNode::getBoundingBox() returns the bounding box of
-	this scene node, irr::scene::ISceneNode::getMaterialCount() returns the
-	amount of materials in this scene node (our tetraeder only has one
-	material), and irr::scene::ISceneNode::getMaterial() returns the
-	material at an index. Because we have only one material here, we can
-	return the only one material, assuming that no one ever calls
-	getMaterial() with an index greater than 0.
-	*/
-	virtual const core::aabbox3d<f32>& getBoundingBox() const
-	{
-		return Box;
-	}
-
-	virtual u32 getMaterialCount() const
-	{
-		return 1;
-	}
-
-	virtual video::SMaterial& getMaterial(u32 i)
-	{
-		return Material;
-	}	
+	GUI_ID_QUIT_BUTTON = 101,
+	GUI_ID_NEW_WINDOW_BUTTON,
+	GUI_ID_FILE_OPEN_BUTTON,
+	GUI_ID_TRANSPARENCY_SCROLL_BAR,
+	GUI_ID_SELECT_SECTION,
+	GUI_ID_MOVE
 };
 
+	struct SAppContext
+	{
+		IrrlichtDevice *device;
+		s32				counter;
+		IGUIListBox*	listbox;
+	}Context;
 
-
+bool selectmode = 0;
 class MyEventReceiver : public IEventReceiver
 {
 public:
+	
+
+	struct SMouseState
+	{
+		core::position2di Position;
+		core::position2di LeftDownPos;
+		core::position2di RightDownPos;
+		bool LeftButtonDown;
+		bool RightButtonDown;
+		SMouseState() : LeftButtonDown(false),RightButtonDown(false) { }
+	} MouseState;
+
+
+
 	// This is the one method that we have to implement
 	virtual bool OnEvent(const SEvent& event)
 	{
+
+		if (event.EventType == EET_GUI_EVENT)
+		{
+			s32 id = event.GUIEvent.Caller->getID();
+			IGUIEnvironment* env = Context.device->getGUIEnvironment();
+
+			switch(event.GUIEvent.EventType)
+			{
+
+				/*
+				If a scrollbar changed its scroll position, and it is
+				'our' scrollbar (the one with id GUI_ID_TRANSPARENCY_SCROLL_BAR), then we change
+				the transparency of all gui elements. This is a very
+				easy task: There is a skin object, in which all color
+				settings are stored. We simply go through all colors
+				stored in the skin and change their alpha value.
+				*/
+			case EGET_SCROLL_BAR_CHANGED:
+				if (id == GUI_ID_TRANSPARENCY_SCROLL_BAR)
+				{
+					s32 pos = ((IGUIScrollBar*)event.GUIEvent.Caller)->getPos();
+
+					for (u32 i=0; i<EGDC_COUNT ; ++i)
+					{
+						SColor col = env->getSkin()->getColor((EGUI_DEFAULT_COLOR)i);
+						col.setAlpha(pos);
+						env->getSkin()->setColor((EGUI_DEFAULT_COLOR)i, col);
+					}
+
+				}
+				break;
+
+				/*
+				If a button was clicked, it could be one of 'our'
+				three buttons. If it is the first, we shut down the engine.
+				If it is the second, we create a little window with some
+				text on it. We also add a string to the list box to log
+				what happened. And if it is the third button, we create
+				a file open dialog, and add also this as string to the list box.
+				That's all for the event receiver.
+				*/
+			case EGET_BUTTON_CLICKED:
+				switch(id)
+				{
+				case GUI_ID_QUIT_BUTTON:
+					Context.device->closeDevice();
+					return true;
+
+				case GUI_ID_SELECT_SECTION:
+					selectmode = 1;
+					return true;
+
+				case GUI_ID_MOVE:
+					selectmode = 0;
+					return true;
+
+				case GUI_ID_NEW_WINDOW_BUTTON:
+					{
+						Context.listbox->addItem(L"Window created");
+						Context.counter += 30;
+						if (Context.counter > 200)
+							Context.counter = 0;
+
+						IGUIWindow* window = env->addWindow(
+							core::rect<s32>(100 + Context.counter, 100 + Context.counter, 300 + Context.counter, 200 + Context.counter),
+							false, // modal?
+							L"Test window");
+
+						env->addStaticText(L"Please close me",
+							core::rect<s32>(35,35,140,50),
+							true, // border?
+							false, // wordwrap?
+							window);
+					}
+					return true;
+
+				case GUI_ID_FILE_OPEN_BUTTON:
+					Context.listbox->addItem(L"File open");
+					// There are some options for the file open dialog
+					// We set the title, make it a modal window, and make sure
+					// that the working directory is restored after the dialog
+					// is finished.
+					env->addFileOpenDialog(L"Please choose a file.", true, 0, -1, true);
+					return true;
+
+				default:
+					return false;
+				}
+				break;
+
+			case EGET_FILE_SELECTED:
+				{
+					// show the model filename, selected in the file dialog
+					IGUIFileOpenDialog* dialog =
+						(IGUIFileOpenDialog*)event.GUIEvent.Caller;
+					Context.listbox->addItem(dialog->getFileName());
+				}
+				break;
+
+			default:
+				break;
+			}
+		}
 		// Remember whether each key is down or up
 		if (event.EventType == irr::EET_KEY_INPUT_EVENT)
 			KeyIsDown[event.KeyInput.Key] = event.KeyInput.PressedDown;
 
+		// Remember the mouse state
+		if (event.EventType == irr::EET_MOUSE_INPUT_EVENT)
+		{
+			switch(event.MouseInput.Event)
+			{
+			case EMIE_LMOUSE_PRESSED_DOWN:
+				MouseState.LeftButtonDown = true;
+				MouseState.LeftDownPos.X =  event.MouseInput.X;
+				MouseState.LeftDownPos.Y =  event.MouseInput.Y;
+				break;
+
+			case EMIE_RMOUSE_PRESSED_DOWN:
+				MouseState.RightButtonDown = true;
+				MouseState.RightDownPos.X =  event.MouseInput.X;
+				MouseState.RightDownPos.Y =  event.MouseInput.Y;
+				break;
+
+			case EMIE_LMOUSE_LEFT_UP:
+				MouseState.LeftButtonDown = false;
+				break;
+
+			case EMIE_RMOUSE_LEFT_UP:
+				MouseState.RightButtonDown = false;
+				break;
+
+			case EMIE_MOUSE_MOVED:
+				MouseState.Position.X = event.MouseInput.X;
+				MouseState.Position.Y = event.MouseInput.Y;
+				break;
+
+			default:
+				// We won't use the wheel
+				break;
+			}
+		}
+
 		return false;
+	}
+
+	const SMouseState & GetMouseState(void) const
+	{
+		return MouseState;
 	}
 
 	// This is used to check whether a key is being held down
@@ -281,7 +263,7 @@ public:
 		return KeyIsDown[keyCode];
 	}
 
-	MyEventReceiver()
+	MyEventReceiver(SAppContext & context) : Context(context)
 	{
 		for (u32 i=0; i<KEY_KEY_CODES_COUNT; ++i)
 			KeyIsDown[i] = false;
@@ -290,6 +272,8 @@ public:
 private:
 	// We use this array to store the current state of each key
 	bool KeyIsDown[KEY_KEY_CODES_COUNT];
+	SAppContext & Context;
+
 };
 
 
@@ -301,11 +285,16 @@ private:
 
 std::vector<Tline> allLines;
 std::vector<instruction> ReadInGCode(instruction savedVals,char* argv);
-void faceTarget(Printnode& hero, scene::IAnimatedMeshSceneNode& target);
+//void faceTarget(Printnode& hero, scene::IAnimatedMeshSceneNode& target);
 void clear(char buffer[20]);
 bool notCollided = 1;
 
 int numberOfInstructions = 0;
+
+const int ResY = 1080;
+const int ResX = 1920;
+
+
 
 
 int main(int argc, char* argv[])
@@ -316,32 +305,70 @@ int main(int argc, char* argv[])
 	video::E_DRIVER_TYPE driverType=driverChoiceConsole();
 	if (driverType==video::EDT_COUNT)
 		return 1;
-	MyEventReceiver receiver;
-	IrrlichtDevice *device =
-		createDevice(driverType, core::dimension2d<u32>(1920, 1080), 16, false,false,false, &receiver);
+	IrrlichtDevice *device;
+
+
+
+	device =
+		createDevice(driverType, core::dimension2d<u32>(ResX, ResY), 16, false,false,false);
 	if (device == 0)
 		return 1; // could not create selected driver.
-	device->getCursorControl()->setVisible(false);
+	device->getCursorControl()->setVisible(true);
 	video::IVideoDriver* driver = device->getVideoDriver();
 	scene::ISceneManager* smgr = device->getSceneManager();
 	scene::ICameraSceneNode* camera =
-		smgr->addCameraSceneNodeFPS(0, 100.0f, .3f, ID_IsNotPickable, 0, 0, false, 3.f);
+		smgr->addCameraSceneNode(0, core::vector3df(50,0,0), core::vector3df(0,0,0));
 	camera->setPosition(core::vector3df(-75,75,40));
 	camera->setTarget(core::vector3df(75,75,40));
-	scene::ITriangleSelector* selector = 0;
+	camera->setUpVector(core::vector3df(0,0,1));
 	smgr->setAmbientLight(video::SColorf(0.3,0.3,0.3,1));
-	if (selector)
-	{
-		scene::ISceneNodeAnimator* anim = smgr->createCollisionResponseAnimator(
-			selector, camera, core::vector3df(30,50,30),
-			core::vector3df(0,-10,0), core::vector3df(0,30,0));
-		selector->drop(); // As soon as we're done with the selector, drop it.
-		camera->addAnimator(anim);
-		anim->drop();  // And likewise, drop the animator when we're done referring to it.
-	}
 	driver->setTransform(video::ETS_WORLD,  core::matrix4());
 	//add lighting to the environment
 	addlighting(smgr,80);
+
+	gui::IGUIEnvironment* env = device->getGUIEnvironment();
+	gui::IGUISkin* skin = env->getSkin();
+	gui::IGUIFont* font = env->getFont("../../media/fonthaettenschweiler.bmp");
+	if (font)
+		skin->setFont(font);
+
+	skin->setFont(env->getBuiltInFont(), gui::EGDF_TOOLTIP);
+		env->addButton(core::rect<s32>(10,240,ResX/4,240 + 64), 0, GUI_ID_QUIT_BUTTON,
+			L"Quit", L"Exits Program");
+	env->addButton(core::rect<s32>(10,320,ResX/4,320 + 64), 0, GUI_ID_NEW_WINDOW_BUTTON,
+			L"New Window", L"Launches a new Window");
+	env->addButton(core::rect<s32>(10,380,ResX/4,380 + 64), 0, GUI_ID_FILE_OPEN_BUTTON,
+			L"File Open", L"Opens a file");
+	env->addButton(core::rect<s32>(10,440,ResX/4,440 + 64), 0, GUI_ID_SELECT_SECTION,
+			L"Select Section", L"switches to a mode where you can select secrions of the model");
+	env->addButton(core::rect<s32>(10,500,ResX/4,500 + 64), 0, GUI_ID_MOVE,
+			L"Move", L"switches to a mode where you can move your view");
+
+		env->addStaticText(L"Transparent Control:", core::rect<s32>(150,20,350,40), true);
+	IGUIScrollBar* scrollbar = env->addScrollBar(true,
+			core::rect<s32>(150, 45, 350, 60), 0, GUI_ID_TRANSPARENCY_SCROLL_BAR);
+	scrollbar->setMax(255);
+
+	// set scrollbar position to alpha value of an arbitrary element
+	scrollbar->setPos(env->getSkin()->getColor(EGDC_WINDOW).getAlpha());
+
+	env->addStaticText(L"Logging ListBox:", core::rect<s32>(50,110,250,130), true);
+	IGUIListBox * listbox = env->addListBox(core::rect<s32>(50, 140, 250, 210));
+	env->addEditBox(L"Editable Text", core::rect<s32>(350, 80, 550, 100));
+
+	// Store the appropriate data in a context structure.
+
+
+	// Then create the event receiver, giving it that context structure.
+	SAppContext context;
+	context.device = device;
+	context.counter = 0;
+	context.listbox = listbox;
+
+	MyEventReceiver receiver(context);
+
+	// And tell the device to use our custom event receiver.
+	device->setEventReceiver(&receiver);
 
 
 
@@ -361,7 +388,7 @@ int main(int argc, char* argv[])
 	video::SMaterial material;
 
 	//slice the stl denoted by the comand line input (TEST ONLY)
-	slice(argv[1]);
+	//slice(argv[1]);
 
 	//read in the newly sliced gcode 
 	std::vector<instruction> instructions;
@@ -380,7 +407,7 @@ int main(int argc, char* argv[])
 	//section that loads the test model stls 
 	scene::IAnimatedMeshSceneNode* zcore = 0;
 	zcore = smgr->addAnimatedMeshSceneNode(smgr->getMesh("stl/(Z1)core.stl"),
-		0, ID_IsNotPickable);
+		0, IDFlag_IsPickable);
 	smgr->getMeshManipulator()->setVertexColors(zcore->getMesh(), video::SColor(255,145,0,123));
 
 	//load stl from input args, this is the translucent 'final model'
@@ -405,21 +432,24 @@ int main(int argc, char* argv[])
 	//load the models that are adjacent in the input stl model space
 	scene::IAnimatedMeshSceneNode* y1core = 0;
 	y1core = smgr->addAnimatedMeshSceneNode(smgr->getMesh("stl/(Y1)core.stl"),
-		0, ID_IsNotPickable);
-	smgr->getMeshManipulator()->setVertexColors(y1core->getMesh(), video::SColor(0,145,124,123));
+		0, IDFlag_IsPickable);
+	smgr->getMeshManipulator()->setVertexColors(y1core->getMesh(), video::SColor(255,145,0,123));
 	y1core->setPosition(y1core->getAbsolutePosition() - core::vector3df(0,0,smallz));
 
 	scene::IAnimatedMeshSceneNode* y2core = 0;
 	y2core = smgr->addAnimatedMeshSceneNode(smgr->getMesh("stl/(Y2)core.stl"),
-		0, ID_IsNotPickable);
-	smgr->getMeshManipulator()->setVertexColors(y2core->getMesh(), video::SColor(26,145,0,123));
+		0, IDFlag_IsPickable);
+	smgr->getMeshManipulator()->setVertexColors(y2core->getMesh(), video::SColor(255,145,0,123));
 	y2core->setPosition(y2core->getAbsolutePosition() - core::vector3df(0,0,smallz));
 
 	//test the rotation on both the side peices
-	rotateNodeInWorldSpace(y2core,90,core::vector3df(0,1,0), core::vector3df(0,0,50));
-	rotateNodeInWorldSpace(y1core,-90,core::vector3df(0,1,0), core::vector3df(0,0,50));
+	//rotateNodeInWorldSpace(y2core,90,core::vector3df(0,1,0), core::vector3df(0,0,50));
+	//rotateNodeInWorldSpace(y1core,-90,core::vector3df(0,1,0), core::vector3df(0,0,50));
 
-
+	std::vector<scene::IAnimatedMeshSceneNode*> allnodes;
+	allnodes.push_back(zcore);
+	allnodes.push_back(y1core);
+	allnodes.push_back(y2core);
 	int lastFPS = -1;
 	int inscount = 0;
 
@@ -440,6 +470,35 @@ int main(int argc, char* argv[])
 	std::vector<core::vector3df> mycubes;
 	int bigcount = 0;
 	bool forwards = 0;
+	core::vector3df intersection;
+	core::triangle3df hitTriangle;
+	Tline ray;
+	scene::IAnimatedMeshSceneNode* selectednode;
+
+	scene::IBillboardSceneNode * bill = smgr->addBillboardSceneNode();
+	bill->setMaterialType(video::EMT_TRANSPARENT_ADD_COLOR );
+	bill->setMaterialTexture(0, driver->getTexture("../../media/particle.bmp"));
+	bill->setMaterialFlag(video::EMF_LIGHTING, false);
+	bill->setMaterialFlag(video::EMF_ZBUFFER, false);
+	bill->setSize(core::dimension2d<f32>(20.0f, 20.0f));
+	bill->setID(ID_IsNotPickable); 
+	core::position2di newPosition;
+	core::position2di oldPosition =core::position2di(0,0);
+	float xmovemouse = 0;
+	float ymovemouse = 0;
+	core::position2di rnewPosition;
+	core::position2di roldPosition =core::position2di(0,0);
+	float rxmovemouse = 0;
+	float rymovemouse = 0;
+	static core::vector3df campos = core::vector3df(0,0,0);
+	static core::vector3df camoffset = core::vector3df(0,0,0);
+	float diam = 90;
+	float height = 0;
+	bool held = 0;
+	bool rheld = 0;
+	static core::vector3df nearleftup;
+	static core::vector3df nearleftdown;
+	static core::vector3df downvect ;
 #ifdef vis
 	while(device->run())
 		if (device->isWindowActive())
@@ -449,101 +508,122 @@ int main(int argc, char* argv[])
 		if (1)
 		{
 #endif
-
-			//make sure the head position is updated
-			head->updateAbsolutePosition();
-
-			core::vector3df intersection;
-			core::triangle3df hitTriangle;
-			core::line3d<f32> ray;
-
-			// update next move and prevmove
-			core::vector3df  nextmove=core::vector3df (instructions[inscount].X,instructions[inscount].Y,instructions[inscount].Z);
-			core::vector3df  prevmove;
-			if(inscount>0){
-				prevmove=core::vector3df (instructions[inscount-1].X,instructions[inscount-1].Y,instructions[inscount-1].Z);
-			}
-			else{
-				prevmove=core::vector3df (0,0,0);
-			}
-
-			Tline vertline;
-#ifdef coll
-#ifdef MULTI
-#pragma omp  for
-			//		{
-#endif
-			for(int i = 0; i <VertexCount; i++){
-				std::vector<core::vector3df> mycubes2;
-				Tline vertline2;
-				vertline2.start = vertices[i].Pos +prevmove;
-				vertline2.end = vertices[i].Pos + nextmove;
-				mycubes2 = findCubesOfInterest(vertline2);
-				vertline2 = validateLine(vertline2);
-				if(checkcollision(mycubes2,vertline2)){
-					//std::cout << "impact";
-				}
-
-			}
-#ifdef MULTI	
-			//	}
-
-#endif
-#endif
+			//virtualprint move
+			doprint(head,instructions,allLines, inscount, CurrentA,CurrentB);
 
 
-
-
-			Tline myLine;
-			if(!receiver.IsKeyDown(irr::KEY_KEY_E)){
-				if(inscount < numberOfInstructions - 1){
-
-					if(instructions.at(inscount).A != CurrentA){
-						revolveNodeInWorldSpace(head,instructions.at(inscount).A-CurrentA,core::vector3df(1,0,0),core::vector3df(BuildSize/2,BuildSize/2,40));
-						CurrentA = instructions.at(inscount).A;
-						//camera->setUpVector(core::vector3df(sin(core::DEGTORAD*CurrentA),0,cos(core::DEGTORAD*CurrentA)));
+			if(receiver.GetMouseState().LeftButtonDown && selectmode ==0){
+				if(held){
+					newPosition = receiver.MouseState.Position;
+					xmovemouse = xmovemouse - newPosition.X + oldPosition.X ;
+					ymovemouse = ymovemouse + newPosition.Y - oldPosition.Y ;
+					diam = 90 * cos(ymovemouse/100);
+					height = 90*sin(ymovemouse/100);
+					if(diam < 1) diam = 1;
+					if(ymovemouse/100 > 3.14/2){
+						height = 90;
+						ymovemouse = ymovemouse - newPosition.Y + oldPosition.Y ;
 					}
-					if(instructions.at(inscount).B != CurrentB){
-						revolveNodeInWorldSpace(head,instructions.at(inscount).B-CurrentB,core::vector3df(0,1,0),core::vector3df(BuildSize/2,BuildSize/2,40));
-						CurrentA = instructions.at(inscount).B;
+					if(ymovemouse/100 < -3.14/2){
+						height = -90;
+						ymovemouse = ymovemouse - newPosition.Y + oldPosition.Y ;
 					}
-					//inscount++;
-					if(instructions.at(inscount).G ==1  && inscount < numberOfInstructions - 2){
-						head->setPosition(Headoffset(nextmove,head));
-						head->updateAbsolutePosition();
-						//core::vector3df  nextnextmove;
-						//nextnextmove = core::vector3df (instructions.at(inscount).X,instructions.at(inscount).Y,instructions.at(inscount).Z);
-						if(inscount ==0 ){
-							myLine.end= nextmove  ;
-							myLine.start = prevmove;
-							allLines.push_back(myLine);
-							Printnode *print =new Printnode(Printed, smgr,IDFlag_IsPickable ,prevmove,nextmove,core::vector3df(0,0,1),0.5,0.2);
-						}
-						else if((instructions.at(inscount).E - instructions.at(inscount-1).E) >0){
-							myLine.end= nextmove;
-							myLine.start = prevmove;
-							allLines.push_back(myLine);
-							Printnode *print =new Printnode(Printed, smgr,IDFlag_IsPickable ,prevmove,nextmove,core::vector3df(0,0,1),0.5,0.2);
-
-							//if(instructions.at(inscount).Z>25 || instructions.at(inscount).Y>150 || instructions.at(inscount).Z<-1 ||instructions.at(inscount).Y<0||instructions.at(inscount).X>140){
-							//	inscount =inscount;
-							//}
-						}
-					}
-					inscount++;
+					campos = core::vector3df(diam*sin(xmovemouse/100),diam*cos(xmovemouse/100) ,height );
+					camera->setPosition(campos+camera->getTarget());
+					camera->setTarget(camoffset);
+					oldPosition = newPosition;
 				}
 				else{
-					//if(bigcount % drawat == 
-
-					//std::cout << "done";
+					oldPosition = receiver.MouseState.LeftDownPos;
+					held = 1;
 				}
-
-
 			}
+			else{
+				held = 0;
+			}
+			nearleftup  = camera->getViewFrustum()->getNearLeftUp();
+			nearleftdown = camera->getViewFrustum()->getNearLeftDown();
+			if(receiver.GetMouseState().RightButtonDown  && selectmode ==0){
+				if(rheld){
+					downvect = nearleftdown -nearleftup;
+					rnewPosition = receiver.MouseState.Position;
+					rxmovemouse = - rnewPosition.X + roldPosition.X ;
+					rymovemouse =  + rnewPosition.Y - roldPosition.Y ;
+					camoffset =rxmovemouse/10 * (camera->getPosition() - camera->getTarget()).crossProduct(camera->getUpVector()).normalize() - rymovemouse/10 * downvect.normalize();
+					camera->setPosition(camera->getAbsolutePosition() + camoffset);
+					camera->setTarget(camera->getTarget() + camoffset);
+					roldPosition = rnewPosition;
+				}
+				else{
+					roldPosition = receiver.MouseState.RightDownPos;
+					rheld = 1;
+				}
+			}
+			else{
+				rheld = 0;
+			}
+			//= camera->getViewFrustum()->getNearLeftUp();
+			static core::vector3df nearrightdown;// = camera->getViewFrustum()->getNearLeftDown();
+			//= camera->getViewFrustum()->getNearRightUp();
+			static core::vector3df nearrightup;//= camera->getViewFrustum()->getNearRightDown();
+			static core::position2di clickpos;
+			static core::vector3df topvect ;
+			
+
+			if(receiver.GetMouseState().LeftButtonDown && selectmode ==1){
+				ray.start = camera->getPosition();
+				clickpos  =receiver.MouseState.Position;
+				 nearleftup  = camera->getViewFrustum()->getNearLeftUp();
+				//camera->getAbsoluteTransformation().transformVect(nearleftup);
+
+				nearleftdown = camera->getViewFrustum()->getNearLeftDown();
+				//camera->getAbsoluteTransformation().transformVect(nearleftdown);
+
+				 nearrightup = camera->getViewFrustum()->getNearRightUp();
+				//camera->getAbsoluteTransformation().transformVect(nearrightup);
+
+				nearrightdown = camera->getViewFrustum()->getNearRightDown();
+				//camera->getAbsoluteTransformation().transformVect(nearrightdown);
+
+				topvect = nearrightup - nearleftup;
+				downvect = nearleftdown -nearleftup;
+				//camera->getAbsoluteTransformation().transformVect(topvect);
+				//camera->getAbsoluteTransformation().transformVect(downvect);
+				//float fov = camera->getFOV();
+				//core::position2di distfrommid = core::position2di(fov*(clickpos.X -ResX/2)/ResX, fov*(clickpos.Y -ResY/2)/ResY);
+				core::vector3df in = (nearleftup + ((float)clickpos.X/(float)ResX)*topvect + ((float)clickpos.Y/(float)ResY)*downvect);
+				//camera->getAbsoluteTransformation().transformVect(in);
+				core::vector3df  rot = camera->getRotation();
+		
+				ray.end = ray.start+ (in -ray.start).normalize()*100;
+				//ray.end = ray.start + (camera->getTarget() - ray.start).normalize() * 1000.0f;
+				selectednode = findselected(ray,allnodes,smallz);
+				bill->setPosition(ray.end);
+				if(selectednode != 0){
+					smgr->getMeshManipulator()->setVertexColors(selectednode->getMesh(), video::SColor(123,123,123,123));
+					//bill->setPosition(ray.end);
+				}
+			}
+			
 #ifdef vis		
 			bigcount++;
 			if(bigcount % drawat == 0){ //olny render infrequently
-				driver->beginScene(true, true, 0);
+				driver->setViewPort(core::rect<s32>(0,0,ResX,ResY));
+				driver->beginScene(true, true, SColor(0,200,200,200));
+				driver->setTransform(video::ETS_WORLD,  core::matrix4());
+				driver->draw3DLine(ray.start,ray.start+ (nearleftdown - ray.start ).normalize()*100,video::SColor(255,255,0,0));
+				driver->draw3DLine(ray.start,ray.start+ (nearrightup - ray.start ).normalize()*100,video::SColor(255,255,0,0));
+				driver->draw3DLine(ray.start,ray.start+ (nearleftup - ray.start ).normalize()*100,video::SColor(255,255,0,0));
+				driver->draw3DLine(ray.start,ray.start+ (nearrightdown - ray.start ).normalize()*100,video::SColor(255,255,0,0));
+				
+				driver->draw3DLine(nearleftup,nearleftup + ((float)clickpos.X/(float)ResX)*topvect,video::SColor(255,255,0,0));
+				driver->draw3DLine(nearleftup,nearleftup + ((float)clickpos.Y/(float)ResY)*downvect,video::SColor(255,255,0,0));
+				
+				driver->draw3DLine(ray.start,ray.end,video::SColor(255,255,255,0));
+				//driver->setViewPort(core::rect<s32>(0,0,ResX/4,ResY));
+				
+				//driver->setViewPort(core::rect<s32>(ResX/4,0,ResX,ResY));
+				//driver->draw3DLine(ray.start,ray.end,video::SColor(200,50,210,200));
 				if(receiver.IsKeyDown(irr::KEY_KEY_R) && nextpressR ==0){
 					nextpressR = 1;
 				}
@@ -573,13 +653,14 @@ int main(int argc, char* argv[])
 							driver->draw3DLine(allLines.at(i).start,allLines.at(i).end,video::SColor(200,50,210,200));
 						}
 					}
-					Printed->setVisible(true);
-					Printed->setVisible(false);
-					smgr->drawAll();
+					
 				}
 				else{
-					Printed->setVisible(false);
+					inscount = 0;
+					allLines.clear();
 				}
+				env->drawAll();
+				smgr->drawAll();
 				driver->endScene();
 
 				int fps = driver->getFPS()*drawat;

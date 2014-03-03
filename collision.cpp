@@ -196,3 +196,49 @@ bool checkcollision(std::vector<core::vector3df> mycubes, Tline myline){
 	return false;
 
 }
+
+float linemag(Tline ray){
+	float xdif = ray.end.X - ray.start.X;
+	float ydif = ray.end.Y - ray.start.Y;
+	float zdif = ray.end.Z - ray.start.Z;
+	float squsum = xdif*xdif + ydif*ydif + zdif*zdif;
+	return sqrt(squsum);
+}
+
+
+scene::IAnimatedMeshSceneNode* findselected(Tline &ray, std::vector<scene::IAnimatedMeshSceneNode*> allnodes,float smallz){
+
+	int numberOfNodes = allnodes.size();
+	scene::IAnimatedMeshSceneNode* selectednode;
+	scene::IMeshBuffer *mesh; 
+	Triangle currenttriang;
+	core::vector3df Intersection; 
+	int hasInt = 0;
+	float closest = 100000;
+
+	for(int i = 0; i < numberOfNodes; i++){
+		mesh = allnodes.at(i)->getMesh()->getMeshBuffer(0);
+		u32 indexcount = mesh->getIndexCount();
+		u16 *indices =  mesh->getIndices();
+		u32 vertexcount = mesh->getVertexCount();
+		video::S3DVertex *vertices = (video::S3DVertex *)mesh->getVertices();
+		for(int j = 0 ; j <indexcount; j=j+3){
+			currenttriang.V0 = vertices[indices[j]].Pos;
+			currenttriang.V1 = vertices[indices[j+1]].Pos;
+			currenttriang.V2 = vertices[indices[j+2]].Pos;
+			addoffset(currenttriang, smallz);
+			hasInt = intersect3D_RayTriangle(ray,currenttriang,& Intersection);
+			if (hasInt ==1){
+				ray.end = Intersection;
+				if(linemag(ray)<closest){
+					closest = linemag(ray);
+					selectednode = allnodes.at(i); 
+				}
+			}
+		}
+	}
+	if(closest < 100000){
+		return selectednode;
+	}
+	return 0;
+}

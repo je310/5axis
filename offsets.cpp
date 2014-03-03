@@ -72,3 +72,10 @@ float findlowestvert (scene::IAnimatedMeshSceneNode* thing){
 	}
 	return smallz;
 }
+
+void addoffset(Triangle &triangle, float smallz){
+	triangle.V0.Z -= smallz;
+	triangle.V1.Z -= smallz;
+	triangle.V2.Z -= smallz;
+	return;
+}
