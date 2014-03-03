@@ -20,3 +20,9 @@
 *.cd
 *.obj
 *.log
+*.sdf
+
+*.stl
+*.gcode
+
+stl/*
