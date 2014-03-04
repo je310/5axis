@@ -68,15 +68,17 @@ list TriangArr[numbox][numbox][numbox];
 
 
 // Define some values that we'll use to identify individual GUI controls.
-enum
-{
-	GUI_ID_QUIT_BUTTON = 101,
-	GUI_ID_NEW_WINDOW_BUTTON,
-	GUI_ID_FILE_OPEN_BUTTON,
-	GUI_ID_TRANSPARENCY_SCROLL_BAR,
-	GUI_ID_SELECT_SECTION,
-	GUI_ID_MOVE
-};
+
+int current = -1;
+
+float pinkalpha = 70;
+float yellowalpha = 70;
+float redalpha = 70;
+float bluealpha = 70;
+float greenalpha = 70;
+float blackalpha = 70;
+
+
 
 	struct SAppContext
 	{
@@ -158,13 +160,69 @@ public:
 					selectmode = 1;
 					return true;
 
+				case GUI_ID_YELLOW:
+					if (current == GUI_ID_YELLOW){
+						yellowalpha = 70;
+						current = -1;
+					}
+					else{
+						resetsols();
+						yellowalpha = 255;
+						current = GUI_ID_YELLOW;
+					}
+					return true;
+				case GUI_ID_PINK:
+					if (current == GUI_ID_PINK){
+						pinkalpha = 70;
+						current = -1;
+					}
+					else{
+						resetsols();
+						pinkalpha = 255;
+						current = GUI_ID_PINK;
+					}
+					return true;
+				case GUI_ID_RED:
+					if (current == GUI_ID_RED){
+						redalpha = 70;
+						current = -1;
+					}
+					else{
+						resetsols();
+						redalpha = 255;
+						current = GUI_ID_RED;
+					}
+					return true;
+				case GUI_ID_BLUE:
+					if (current == GUI_ID_BLUE){
+						bluealpha = 70;
+						current = -1;
+					}
+					else{
+						resetsols();
+						bluealpha = 255;
+						current = GUI_ID_BLUE;
+					}
+					return true;
+				case GUI_ID_GREEN:
+					if (current == GUI_ID_GREEN){
+						greenalpha = 70;
+						current = -1;
+					}
+					else{
+						resetsols();
+						greenalpha = 255;
+						current = GUI_ID_GREEN;
+					}
+					return true;
+
 				case GUI_ID_MOVE:
 					selectmode = 0;
 					return true;
 
 				case GUI_ID_NEW_WINDOW_BUTTON:
 					{
-						Context.listbox->addItem(L"Window created");
+						//Context.listbox->addItem(L"Window created");
 						Context.counter += 30;
 						if (Context.counter > 200)
 							Context.counter = 0;
@@ -183,12 +241,12 @@ public:
 					return true;
 
 				case GUI_ID_FILE_OPEN_BUTTON:
-					Context.listbox->addItem(L"File open");
+					//Context.listbox->addItem(L"File open");
 					// There are some options for the file open dialog
 					// We set the title, make it a modal window, and make sure
 					// that the working directory is restored after the dialog
 					// is finished.
-					env->addFileOpenDialog(L"Please choose a file.", true, 0, -1, true);
+					env->addFileOpenDialog(L"Please choose a file.", false, 0, -1, true);
 					return true;
 
 				default:
@@ -274,6 +332,14 @@ private:
 	bool KeyIsDown[KEY_KEY_CODES_COUNT];
 	SAppContext & Context;
 
+	void resetsols(){
+		yellowalpha = 70;
+		pinkalpha = 70;
+		redalpha = 70;
+		bluealpha = 70;
+		greenalpha = 70;
+	}
+
 };
 
 
@@ -291,8 +357,12 @@ bool notCollided = 1;
 
 int numberOfInstructions = 0;
 
-const int ResY = 1080;
-const int ResX = 1920;
+const int ResY = 768;
+const int ResX = 1360;
+
+int cubex = 1000;
+int cubey  =450;
+
 
 
 
@@ -327,34 +397,68 @@ int main(int argc, char* argv[])
 	addlighting(smgr,80);
 
 	gui::IGUIEnvironment* env = device->getGUIEnvironment();
+	gui::IGUIEnvironment* invis = device->getGUIEnvironment();
 	gui::IGUISkin* skin = env->getSkin();
 	gui::IGUIFont* font = env->getFont("../../media/fonthaettenschweiler.bmp");
 	if (font)
 		skin->setFont(font);
 
+
+
 	skin->setFont(env->getBuiltInFont(), gui::EGDF_TOOLTIP);
-		env->addButton(core::rect<s32>(10,240,ResX/4,240 + 64), 0, GUI_ID_QUIT_BUTTON,
+		env->addButton(core::rect<s32>(10,240,ResX/8,240 + 64), 0, GUI_ID_QUIT_BUTTON,
 			L"Quit", L"Exits Program");
-	env->addButton(core::rect<s32>(10,320,ResX/4,320 + 64), 0, GUI_ID_NEW_WINDOW_BUTTON,
+	env->addButton(core::rect<s32>(10,320,ResX/8,320 + 64), 0, GUI_ID_NEW_WINDOW_BUTTON,
 			L"New Window", L"Launches a new Window");
-	env->addButton(core::rect<s32>(10,380,ResX/4,380 + 64), 0, GUI_ID_FILE_OPEN_BUTTON,
+	env->addButton(core::rect<s32>(10,380,ResX/8,380 + 64), 0, GUI_ID_FILE_OPEN_BUTTON,
 			L"File Open", L"Opens a file");
-	env->addButton(core::rect<s32>(10,440,ResX/4,440 + 64), 0, GUI_ID_SELECT_SECTION,
-			L"Select Section", L"switches to a mode where you can select secrions of the model");
-	env->addButton(core::rect<s32>(10,500,ResX/4,500 + 64), 0, GUI_ID_MOVE,
-			L"Move", L"switches to a mode where you can move your view");
 
-		env->addStaticText(L"Transparent Control:", core::rect<s32>(150,20,350,40), true);
-	IGUIScrollBar* scrollbar = env->addScrollBar(true,
-			core::rect<s32>(150, 45, 350, 60), 0, GUI_ID_TRANSPARENCY_SCROLL_BAR);
-	scrollbar->setMax(255);
+	//gui::IGUIButton* yellow;
+	//yellow->setText("yellow");
+	//yellow->setUseAlphaChannel();
+	gui::IGUIButton* yellow = env->addButton(core::rect<s32>(cubex+17,cubey+168,cubex+17 +120,cubey+157 + 40), 0, GUI_ID_YELLOW,
+		L"", L"switches to a mode where you can move your view");
+	
+	yellow->setUseAlphaChannel();
+	yellow->setImage(driver->getTexture("cube/blank.png"));
+	yellow->setDrawBorder(0);
+	
+	gui::IGUIButton* green = env->addButton(core::rect<s32>(cubex+167,cubey+146,cubex+167 +110,cubey+146 + 110), 0, GUI_ID_GREEN,
+			L"", L"switches to a mode where you can move your view");
+	green->setUseAlphaChannel();
+	green->setImage(driver->getTexture("cube/blank.png"));
+	green->setDrawBorder(0);
 
-	// set scrollbar position to alpha value of an arbitrary element
-	scrollbar->setPos(env->getSkin()->getColor(EGDC_WINDOW).getAlpha());
+	gui::IGUIButton* red = env->addButton(core::rect<s32>(cubex+182,cubey+110,cubex+182 +100,cubey+110 + 40), 0, GUI_ID_RED,
+			L"", L"switches to a mode where you can move your view");
+	red->setUseAlphaChannel();
+	red->setImage(driver->getTexture("cube/blank.png"));
+	red->setDrawBorder(0);
 
-	env->addStaticText(L"Logging ListBox:", core::rect<s32>(50,110,250,130), true);
-	IGUIListBox * listbox = env->addListBox(core::rect<s32>(50, 140, 250, 210));
-	env->addEditBox(L"Editable Text", core::rect<s32>(350, 80, 550, 100));
+	gui::IGUIButton* blue = env->addButton(core::rect<s32>(cubex+272,cubey+122,cubex+272 +30,cubey+122 + 90), 0, GUI_ID_BLUE,
+			L"", L"switches to a mode where you can move your view");
+	blue->setUseAlphaChannel();
+	blue->setImage(driver->getTexture("cube/blank.png"));
+	blue->setDrawBorder(0);
+
+	gui::IGUIButton* pink = env->addButton(core::rect<s32>(cubex+252,cubey+15,cubex+252 +45,cubey+15 + 75), 0, GUI_ID_PINK,
+			L"", L"switches to a mode where you can move your view");
+	pink->setUseAlphaChannel();
+	pink->setImage(driver->getTexture("cube/blank.png"));
+	pink->setDrawBorder(0);
+
+
+	//	env->addStaticText(L"Transparent Control:", core::rect<s32>(150,20,350,40), true);
+	//IGUIScrollBar* scrollbar = env->addScrollBar(true,
+	//		core::rect<s32>(150, 45, 350, 60), 0, GUI_ID_TRANSPARENCY_SCROLL_BAR);
+	//scrollbar->setMax(255);
+
+	////// set scrollbar position to alpha value of an arbitrary element			
+	//scrollbar->setPos(invis->getSkin()->getColor(EGDC_WINDOW).getAlpha());
+
+	//env->addStaticText(L"Logging ListBox:", core::rect<s32>(50,110,250,130), true);->setUseAlphaChannel()->setImage(driver->getTexture("cube/blank.png")->,core::rect<s32>(0,0,300,256)
+	//IGUIListBox * listbox = env->addListBox(core::rect<s32>(50, 140, 250, 210));
+	//env->addEditBox(L"Editable Text", core::rect<s32>(350, 80, 550, 100));
 
 	// Store the appropriate data in a context structure.
 
@@ -363,7 +467,7 @@ int main(int argc, char* argv[])
 	SAppContext context;
 	context.device = device;
 	context.counter = 0;
-	context.listbox = listbox;
+	context.listbox = 0;
 
 	MyEventReceiver receiver(context);
 
@@ -475,13 +579,13 @@ int main(int argc, char* argv[])
 	Tline ray;
 	scene::IAnimatedMeshSceneNode* selectednode;
 
-	scene::IBillboardSceneNode * bill = smgr->addBillboardSceneNode();
-	bill->setMaterialType(video::EMT_TRANSPARENT_ADD_COLOR );
-	bill->setMaterialTexture(0, driver->getTexture("../../media/particle.bmp"));
-	bill->setMaterialFlag(video::EMF_LIGHTING, false);
-	bill->setMaterialFlag(video::EMF_ZBUFFER, false);
-	bill->setSize(core::dimension2d<f32>(20.0f, 20.0f));
-	bill->setID(ID_IsNotPickable); 
+	//scene::IBillboardSceneNode * bill = smgr->addBillboardSceneNode();
+	//bill->setMaterialType(video::EMT_TRANSPARENT_ADD_COLOR );
+	//bill->setMaterialTexture(0, driver->getTexture("../../media/particle.bmp"));
+	//bill->setMaterialFlag(video::EMF_LIGHTING, false);
+	//bill->setMaterialFlag(video::EMF_ZBUFFER, false);
+	//bill->setSize(core::dimension2d<f32>(20.0f, 20.0f));
+	//bill->setID(ID_IsNotPickable); 
 	core::position2di newPosition;
 	core::position2di oldPosition =core::position2di(0,0);
 	float xmovemouse = 0;
@@ -499,6 +603,8 @@ int main(int argc, char* argv[])
 	static core::vector3df nearleftup;
 	static core::vector3df nearleftdown;
 	static core::vector3df downvect ;
+	static float lookside = 0;
+	static float lookup = 0;
 #ifdef vis
 	while(device->run())
 		if (device->isWindowActive())
@@ -512,8 +618,9 @@ int main(int argc, char* argv[])
 			doprint(head,instructions,allLines, inscount, CurrentA,CurrentB);
 
 
-			if(receiver.GetMouseState().LeftButtonDown && selectmode ==0){
+			if(receiver.GetMouseState().LeftButtonDown && current ==-1){
 				if(held){
+					
 					newPosition = receiver.MouseState.Position;
 					xmovemouse = xmovemouse - newPosition.X + oldPosition.X ;
 					ymovemouse = ymovemouse + newPosition.Y - oldPosition.Y ;
@@ -529,7 +636,10 @@ int main(int argc, char* argv[])
 						ymovemouse = ymovemouse - newPosition.Y + oldPosition.Y ;
 					}
 					campos = core::vector3df(diam*sin(xmovemouse/100),diam*cos(xmovemouse/100) ,height );
-					camera->setPosition(campos+camera->getTarget());
+					camera->setPosition(campos);//+camera->getTarget());
+					//camoffset = core::vector3df(camera->getTarget().X*sin(xmovemouse/100), camera->getTarget().Y*diam*cos(xmovemouse/100), height);
+					core::vector3df camoffset2 = camoffset;
+					camoffset2.rotateXZBy(180*lookside/3.14,campos);
 					camera->setTarget(camoffset);
 					oldPosition = newPosition;
 				}
@@ -543,7 +653,7 @@ int main(int argc, char* argv[])
 			}
 			nearleftup  = camera->getViewFrustum()->getNearLeftUp();
 			nearleftdown = camera->getViewFrustum()->getNearLeftDown();
-			if(receiver.GetMouseState().RightButtonDown  && selectmode ==0){
+			if(receiver.GetMouseState().RightButtonDown  && current ==-1){
 				if(rheld){
 					downvect = nearleftdown -nearleftup;
 					rnewPosition = receiver.MouseState.Position;
@@ -553,6 +663,11 @@ int main(int argc, char* argv[])
 					camera->setPosition(camera->getAbsolutePosition() + camoffset);
 					camera->setTarget(camera->getTarget() + camoffset);
 					roldPosition = rnewPosition;
+					
+
+					core::vector3df tomid = - camera->getAbsolutePosition().normalize();
+					core::vector3df tolook  = (camera->getTarget() - camera->getAbsolutePosition()).normalize();
+					lookside = acos(core::vector2df(tomid.X,tomid.Y	).normalize().dotProduct(core::vector2df(tolook.X,tolook.Y).normalize()));
 				}
 				else{
 					roldPosition = receiver.MouseState.RightDownPos;
@@ -570,7 +685,7 @@ int main(int argc, char* argv[])
 			static core::vector3df topvect ;
 			
 
-			if(receiver.GetMouseState().LeftButtonDown && selectmode ==1){
+			if(receiver.GetMouseState().LeftButtonDown && current !=-1){
 				ray.start = camera->getPosition();
 				clickpos  =receiver.MouseState.Position;
 				 nearleftup  = camera->getViewFrustum()->getNearLeftUp();
@@ -598,9 +713,10 @@ int main(int argc, char* argv[])
 				ray.end = ray.start+ (in -ray.start).normalize()*100;
 				//ray.end = ray.start + (camera->getTarget() - ray.start).normalize() * 1000.0f;
 				selectednode = findselected(ray,allnodes,smallz);
-				bill->setPosition(ray.end);
+				//bill->setPosition(ray.end);
 				if(selectednode != 0){
-					smgr->getMeshManipulator()->setVertexColors(selectednode->getMesh(), video::SColor(123,123,123,123));
+					setdir(smgr,selectednode, current);
+					//smgr->getMeshManipulator()->setVertexColors(selectednode->getMesh(), video::SColor(123,123,123,123));
 					//bill->setPosition(ray.end);
 				}
 			}
@@ -608,59 +724,83 @@ int main(int argc, char* argv[])
 #ifdef vis		
 			bigcount++;
 			if(bigcount % drawat == 0){ //olny render infrequently
-				driver->setViewPort(core::rect<s32>(0,0,ResX,ResY));
-				driver->beginScene(true, true, SColor(0,200,200,200));
+				//driver->setViewPort(core::rect<s32>(0,0,ResX,ResY));
+				driver->beginScene(true, true, SColor(0,0,0,0));
 				driver->setTransform(video::ETS_WORLD,  core::matrix4());
-				driver->draw3DLine(ray.start,ray.start+ (nearleftdown - ray.start ).normalize()*100,video::SColor(255,255,0,0));
-				driver->draw3DLine(ray.start,ray.start+ (nearrightup - ray.start ).normalize()*100,video::SColor(255,255,0,0));
-				driver->draw3DLine(ray.start,ray.start+ (nearleftup - ray.start ).normalize()*100,video::SColor(255,255,0,0));
-				driver->draw3DLine(ray.start,ray.start+ (nearrightdown - ray.start ).normalize()*100,video::SColor(255,255,0,0));
-				
-				driver->draw3DLine(nearleftup,nearleftup + ((float)clickpos.X/(float)ResX)*topvect,video::SColor(255,255,0,0));
-				driver->draw3DLine(nearleftup,nearleftup + ((float)clickpos.Y/(float)ResY)*downvect,video::SColor(255,255,0,0));
-				
-				driver->draw3DLine(ray.start,ray.end,video::SColor(255,255,255,0));
 				//driver->setViewPort(core::rect<s32>(0,0,ResX/4,ResY));
-				
+
 				//driver->setViewPort(core::rect<s32>(ResX/4,0,ResX,ResY));
 				//driver->draw3DLine(ray.start,ray.end,video::SColor(200,50,210,200));
-				if(receiver.IsKeyDown(irr::KEY_KEY_R) && nextpressR ==0){
-					nextpressR = 1;
-				}
-				if(!receiver.IsKeyDown(irr::KEY_KEY_R) && nextpressR ==1){
-					nextpressR2 = !nextpressR2;
-					nextpressR =0;
-				}
-
-				if(!receiver.IsKeyDown(irr::KEY_KEY_Q)){
-					if(nextpressR2){
-#ifdef GRID
-						for(int i = 0; i<grid.size();i++){
-							driver->setTransform(video::ETS_WORLD,  core::matrix4());
-
-							driver->draw3DLine(grid.at(i).start,grid.at(i).end,video::SColor(20,50,210,100));
-
+//				if(receiver.IsKeyDown(irr::KEY_KEY_R) && nextpressR ==0){
+//					nextpressR = 1;
+//				}
+//				if(!receiver.IsKeyDown(irr::KEY_KEY_R) && nextpressR ==1){
+//					nextpressR2 = !nextpressR2;
+//					nextpressR =0;
+//				}
+//
+//				if(!receiver.IsKeyDown(irr::KEY_KEY_Q)){
+//					if(nextpressR2){
+//#ifdef GRID
+//						for(int i = 0; i<grid.size();i++){
+//							driver->setTransform(video::ETS_WORLD,  core::matrix4());
+//
+//							driver->draw3DLine(grid.at(i).start,grid.at(i).end,video::SColor(20,50,210,100));
+//
+//						}
+//#endif
+//						for(int i = allLines.size()-1000; i<allLines.size();i++){
+//							driver->setTransform(video::ETS_WORLD,  core::matrix4());
+//							driver->draw3DLine(allLines.at(i).start,allLines.at(i).end,video::SColor(255,50,210,200));
+//						}
+//					}
+//					else{
+//						for(int i = 0; i<allLines.size();i++){
+//							driver->setTransform(video::ETS_WORLD,  core::matrix4());
+//							driver->draw3DLine(allLines.at(i).start,allLines.at(i).end,video::SColor(255,50,210,200));
+//						}
+//					}
+//											
+//					
+//				}
+//				else{
+//					inscount = 0;
+//					allLines.clear();
+//				}
+				for(int i = 0; i<allLines.size();i++){
+							SMaterial m; 
+							m.Lighting=false;
+							driver->setMaterial(m);
+							driver->setTransform(video::ETS_WORLD, core::matrix4());
+							driver->draw3DLine(allLines.at(i).start,allLines.at(i).end,video::SColor(255,50,210,200));
 						}
-#endif
-						for(int i = allLines.size()-1000; i<allLines.size();i++){
-							driver->setTransform(video::ETS_WORLD,  core::matrix4());
-							driver->draw3DLine(allLines.at(i).start,allLines.at(i).end,video::SColor(200,50,210,200));
-						}
-					}
-					else{
-						for(int i = 0; i<allLines.size();i++){
-							driver->setTransform(video::ETS_WORLD,  core::matrix4());
-							driver->draw3DLine(allLines.at(i).start,allLines.at(i).end,video::SColor(200,50,210,200));
-						}
-					}
-					
-				}
-				else{
-					inscount = 0;
-					allLines.clear();
-				}
-				env->drawAll();
+
+								driver->draw2DImage(driver->getTexture("cube/cubeguidepink.png"), core::position2d<s32>(cubex,cubey),
+					core::rect<s32>(0,0,312,256), 0,
+					video::SColor(pinkalpha,255,255,255), true);
+
+				driver->draw2DImage(driver->getTexture("cube/cubeguideyellow.png"), core::position2d<s32>(cubex,cubey),
+					core::rect<s32>(0,0,312,256), 0,
+					video::SColor(yellowalpha,255,255,255), true);
+
+				driver->draw2DImage(driver->getTexture("cube/cubeguidered.png"), core::position2d<s32>(cubex,cubey),
+					core::rect<s32>(0,0,312,256), 0,
+					video::SColor(redalpha,255,255,0), true);
+
+				driver->draw2DImage(driver->getTexture("cube/cubeguideblue.png"), core::position2d<s32>(cubex,cubey),
+					core::rect<s32>(0,0,312,256), 0,
+					video::SColor(bluealpha,255,255,255), true);
+
+				driver->draw2DImage(driver->getTexture("cube/cubeguidegreen.png"), core::position2d<s32>(cubex,cubey),
+					core::rect<s32>(0,0,312,256), 0,
+					video::SColor(greenalpha,255,255,255), true);
+
+				driver->draw2DImage(driver->getTexture("cube/cubeguide.png"), core::position2d<s32>(cubex,cubey),
+					core::rect<s32>(0,0,312,256), 0,
+					video::SColor(blackalpha,255,255,255), true);
 				smgr->drawAll();
+				env->drawAll();
+				
 				driver->endScene();
 
 				int fps = driver->getFPS()*drawat;

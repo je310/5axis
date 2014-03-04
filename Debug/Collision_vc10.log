@@ -1,4 +1,4 @@
-﻿Build started 03/03/2014 05:26:06.
+﻿Build started 04/03/2014 04:23:15.
      1>Project "C:\Users\Josh\Dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.Collision\Collision_vc10.vcxproj" on node 2 (build target(s)).
      1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\Microsoft.CppBuild.targets(299,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
      1>InitializeBuildStatus:
@@ -6,13 +6,18 @@
        ClCompile:
          c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I..\..\include /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _VC80_UPGRADE=0x0710 /D _MBCS /Gm- /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /openmp /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
          main.cpp
-     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(324): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
-     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(324): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
-     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(324): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
-     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(550): warning C4244: '=' : conversion from 'irr::s32' to 'float', possible loss of data
-     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(551): warning C4244: '=' : conversion from 'irr::s32' to 'float', possible loss of data
-     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(645): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(651): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(394): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(394): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(394): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(660): warning C4244: '=' : conversion from 'irr::s32' to 'float', possible loss of data
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(661): warning C4244: '=' : conversion from 'irr::s32' to 'float', possible loss of data
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(770): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(780): warning C4244: 'argument' : conversion from 'float' to 'irr::u32', possible loss of data
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(784): warning C4244: 'argument' : conversion from 'float' to 'irr::u32', possible loss of data
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(788): warning C4244: 'argument' : conversion from 'float' to 'irr::u32', possible loss of data
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(792): warning C4244: 'argument' : conversion from 'float' to 'irr::u32', possible loss of data
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(796): warning C4244: 'argument' : conversion from 'float' to 'irr::u32', possible loss of data
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\main.cpp(800): warning C4244: 'argument' : conversion from 'float' to 'irr::u32', possible loss of data
        Link:
          c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"..\..\bin\Win32-VisualStudio\07.Collision.exe" /NOLOGO /LIBPATH:"..\..\lib\Win32-visualstudio" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\07.Collision.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Josh\Dropbox\4th year project\iirlichkt\irrlicht-1.8\bin\Win32-VisualStudio\07.Collision.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /IMPLIB:"..\..\bin\Win32-VisualStudio\07.Collision.lib" /MACHINE:X86 Debug\collision.obj
          Debug\gcode.obj
@@ -33,4 +38,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:07.99
+Time Elapsed 00:00:07.01

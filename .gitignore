@@ -21,7 +21,7 @@
 *.obj
 *.log
 *.sdf
-
+*.ipch
 *.stl
 *.gcode
 

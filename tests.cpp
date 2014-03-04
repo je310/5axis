@@ -33,7 +33,7 @@ bool testTriangleCol(){
 
 void addlighting(scene::ISceneManager* smgr,float lightstr){
 
-	scene::ILightSceneNode * light = smgr->addLightSceneNode(0, core::vector3df(0,0,0),
+	scene::ILightSceneNode * light = smgr->addLightSceneNode(0, core::vector3df(-150,-150,150),
 		video::SColorf(1.0f,1.0f,1.0f,1.0f), lightstr);
 
 
@@ -127,4 +127,36 @@ void doprint(scene::IAnimatedMeshSceneNode* head, std::vector<instruction> instr
 
 
 	}
+}
+video::SColor greencol  =	video::SColor(255,34,177,76);
+video::SColor pinkcol  =	video::SColor(255,255,174,201);
+video::SColor bluecol  =	video::SColor(255,63,72,204);
+video::SColor redcol  =		video::SColor(255,237,28,36);
+video::SColor yellowcol  =  video::SColor(255,255,201,14);
+
+
+
+void setdir(scene::ISceneManager* smgr, scene::IAnimatedMeshSceneNode* selectednode,int current){
+	switch (current){
+	case GUI_ID_YELLOW:
+		smgr->getMeshManipulator()->setVertexColors(selectednode->getMesh(), yellowcol);
+		break;
+
+	case GUI_ID_PINK:
+		smgr->getMeshManipulator()->setVertexColors(selectednode->getMesh(), pinkcol);
+		break;
+
+	case GUI_ID_RED:
+		smgr->getMeshManipulator()->setVertexColors(selectednode->getMesh(), redcol);
+		break;
+
+	case GUI_ID_BLUE:
+		smgr->getMeshManipulator()->setVertexColors(selectednode->getMesh(), bluecol);
+		break;
+
+	case GUI_ID_GREEN:
+		smgr->getMeshManipulator()->setVertexColors(selectednode->getMesh(), greencol);
+		break;
+
+	};
 }
