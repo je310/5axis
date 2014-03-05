@@ -1,12 +1,33 @@
-﻿Build started 05/03/2014 19:52:21.
+﻿Build started 05/03/2014 20:00:02.
      1>Project "C:\Users\Josh\Dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.Collision\Collision_vc10.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
-         Touching "Release\07.Collision.unsuccessfulbuild".
+         Creating "Release\07.Collision.unsuccessfulbuild" because "AlwaysCreate" was specified.
        ClCompile:
-         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I"C:\Users\Josh\Dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.Collision" /I..\..\include /Zi /nologo /W3 /WX- /O2 /Ob1 /Oy- /D WIN32 /D NDEBUG /D _CONSOLE /D _VC80_UPGRADE=0x0710 /D _MBCS /GF /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /openmp /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt rotation.cpp
-         rotation.cpp
-     1>rotation.cpp(99): warning C4018: '<' : signed/unsigned mismatch
-     1>rotation.cpp(104): warning C4018: '<' : signed/unsigned mismatch
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I"C:\Users\Josh\Dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.Collision" /I..\..\include /Zi /nologo /W3 /WX- /O2 /Ob1 /Oy- /D WIN32 /D NDEBUG /D _CONSOLE /D _VC80_UPGRADE=0x0710 /D _MBCS /GF /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /openmp /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
+         main.cpp
+     1>main.cpp(312): warning C4018: '<' : signed/unsigned mismatch
+     1>main.cpp(315): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _itoa. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdlib.h(867) : see declaration of 'itoa'
+     1>main.cpp(322): warning C4018: '<' : signed/unsigned mismatch
+     1>main.cpp(326): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
+     1>main.cpp(326): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
+     1>main.cpp(326): warning C4244: 'argument' : conversion from 'double' to 'irr::f32', possible loss of data
+     1>main.cpp(479): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
+     1>main.cpp(479): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
+     1>main.cpp(479): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
+     1>main.cpp(537): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
+     1>main.cpp(537): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
+     1>main.cpp(747): warning C4244: '=' : conversion from 'irr::s32' to 'float', possible loss of data
+     1>main.cpp(748): warning C4244: '=' : conversion from 'irr::s32' to 'float', possible loss of data
+     1>main.cpp(839): warning C4018: '<' : signed/unsigned mismatch
+     1>main.cpp(845): warning C4018: '<' : signed/unsigned mismatch
+     1>main.cpp(861): warning C4244: 'argument' : conversion from 'float' to 'irr::u32', possible loss of data
+     1>main.cpp(865): warning C4244: 'argument' : conversion from 'float' to 'irr::u32', possible loss of data
+     1>main.cpp(869): warning C4244: 'argument' : conversion from 'float' to 'irr::u32', possible loss of data
+     1>main.cpp(873): warning C4244: 'argument' : conversion from 'float' to 'irr::u32', possible loss of data
+     1>main.cpp(877): warning C4244: 'argument' : conversion from 'float' to 'irr::u32', possible loss of data
+     1>main.cpp(881): warning C4244: 'argument' : conversion from 'float' to 'irr::u32', possible loss of data
+     1>main.cpp(573): warning C4101: 'pBuffer' : unreferenced local variable
        Link:
          c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"..\..\bin\Win32-VisualStudio\07.Collision.exe" /NOLOGO /LIBPATH:"..\..\lib\Win32-visualstudio" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Release\07.Collision.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /PDB:"C:\Users\Josh\Dropbox\4th year project\iirlichkt\irrlicht-1.8\bin\Win32-VisualStudio\07.Collision.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /IMPLIB:"..\..\bin\Win32-VisualStudio\07.Collision.lib" /MACHINE:X86 Release\collision.obj
          Release\gcode.obj
@@ -26,4 +47,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.33
+Time Elapsed 00:00:01.99

@@ -136,7 +136,7 @@ video::SColor yellowcol  =  video::SColor(255,255,201,14);
 
 
 
-void setdir(scene::ISceneManager* smgr, dirnode selectednode,int current){
+void setdir(scene::ISceneManager* smgr, dirnode &selectednode,int current){
 	switch (current){
 	case GUI_ID_YELLOW:
 		smgr->getMeshManipulator()->setVertexColors(selectednode.node->getMesh(), yellowcol);

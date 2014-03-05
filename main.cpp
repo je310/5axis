@@ -435,7 +435,7 @@ private:
 
 
 std::vector<Tline> allLines;
-std::vector<instruction> ReadInGCode(instruction savedVals,char* argv);
+
 //void faceTarget(Printnode& hero, scene::IAnimatedMeshSceneNode& target);
 void clear(char buffer[20]);
 bool notCollided = 1;
@@ -581,16 +581,12 @@ int main(int argc, char* argv[])
 	savedVals.Z = 0;
 	savedVals.G = 0;
 	savedVals.E = 0;
-	float smallz = 1000;
 	video::SMaterial material;
 
 	//slice the stl denoted by the comand line input (TEST ONLY)
 	//slice(argv[1]);
 
 	//read in the newly sliced gcode 
-	std::vector<instruction> instructions;
-	instructions = ReadInGCode(savedVals, argv[1]);
-	numberOfInstructions = instructions.size();
 
 	//load the head model
 	scene::IAnimatedMeshSceneNode* head = 0;
@@ -608,19 +604,14 @@ int main(int argc, char* argv[])
 	smgr->getMeshManipulator()->setVertexColors(zcore->getMesh(), video::SColor(255,145,0,123));
 
 	//load stl from input args, this is the translucent 'final model'
-	scene::IAnimatedMeshSceneNode* thing = readstl(smgr,argv[1]);
-	mirrorx(thing);
-	thing->setMaterialType(video::EMT_TRANSPARENT_ALPHA_CHANNEL);
-	smgr->getMeshManipulator()->setVertexColors(thing->getMesh(), video::SColor(99,145,0,123));
+	
 
 	// write back the model to stl as a test
-	pBuffer = thing->getMesh()->getMeshBuffer(0);
-	writestl(pBuffer, "stloutputtest");
+
 
 
 	//find the middle of the object in the same manner that slic3r does and reposition accordingly
-	core::vector3df midpointtest = findmodeloffset(thing, 0,0, 0);
-	thing->setPosition(thing->getAbsolutePosition()-midpointtest);
+
 
 	//find the distance to bed of a print object, set the model to the bed
 	smallz = findlowestvert(zcore);
@@ -862,13 +853,7 @@ int main(int argc, char* argv[])
 					inscount = 0;
 					allLines.clear();
 				}
-				for(int i = 0; i<allLines.size();i++){
-							SMaterial m; 
-							m.Lighting=false;
-							driver->setMaterial(m);
-							driver->setTransform(video::ETS_WORLD, core::matrix4());
-							driver->draw3DLine(allLines.at(i).start,allLines.at(i).end,video::SColor(255,50,210,200));
-						}
+
 
 								driver->draw2DImage(driver->getTexture("cube/cubeguidepink.png"), core::position2d<s32>(cubex,cubey),
 					core::rect<s32>(0,0,312,256), 0,

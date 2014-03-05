@@ -2,7 +2,7 @@
 
 std::vector<instruction> ReadInGCode(instruction savedVals, char* argv){
 	using namespace std;
-	char gcode[40] ="stl/";
+	char gcode[40] ="";
 	strcat(gcode,argv);
 	strcat(gcode,".gcode");
 	ifstream infile(gcode);
