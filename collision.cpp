@@ -206,10 +206,10 @@ float linemag(Tline ray){
 }
 
 
-dirnode findselected(Tline &ray, std::vector<dirnode> allnodes,float smallz){
+int findselected(Tline &ray, std::vector<dirnode> allnodes,float smallz){
 
 	int numberOfNodes = allnodes.size();
-	dirnode selectednode;
+	int selectednode;
 	scene::IMeshBuffer *mesh; 
 	Triangle currenttriang;
 	core::vector3df Intersection; 
@@ -232,7 +232,7 @@ dirnode findselected(Tline &ray, std::vector<dirnode> allnodes,float smallz){
 				ray.end = Intersection;
 				if(linemag(ray)<closest){
 					closest = linemag(ray);
-					selectednode = allnodes.at(i); 
+					selectednode = i; 
 				}
 			}
 		}
@@ -240,6 +240,6 @@ dirnode findselected(Tline &ray, std::vector<dirnode> allnodes,float smallz){
 	if(closest < 100000){
 		return selectednode;
 	}
-	selectednode.direction = 0;
+	selectednode= -1;
 	return selectednode;
 }

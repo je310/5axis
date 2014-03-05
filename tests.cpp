@@ -77,7 +77,7 @@ std::vector<Tline> makegrid(){
 	return grid;
 }
 
-void doprint(scene::IAnimatedMeshSceneNode* head, std::vector<instruction> instructions,std::vector<Tline> &allLines, int &inscount, float CurrentA, float CurrentB){
+void doprint(scene::IAnimatedMeshSceneNode* head, std::vector<instruction> instructions,std::vector<Tline> &allLines,scene::ISceneNode* Printed, int &inscount, float CurrentA, float CurrentB){
 	int numberOfInstructions  = instructions.size(); 
 	//make sure the head position is updated
 	head->updateAbsolutePosition();
@@ -120,6 +120,7 @@ void doprint(scene::IAnimatedMeshSceneNode* head, std::vector<instruction> instr
 					myLine.end= nextmove;
 					myLine.start = prevmove;
 					allLines.push_back(myLine);
+					
 				}
 			}
 			inscount++;
@@ -128,15 +129,15 @@ void doprint(scene::IAnimatedMeshSceneNode* head, std::vector<instruction> instr
 
 	}
 }
-video::SColor greencol  =	video::SColor(255,34,177,76);
-video::SColor pinkcol  =	video::SColor(255,255,174,201);
-video::SColor bluecol  =	video::SColor(255,63,72,204);
-video::SColor redcol  =		video::SColor(255,237,28,36);
-video::SColor yellowcol  =  video::SColor(255,255,201,14);
+video::SColor greencol  =	video::SColor(120,34,177,76);
+video::SColor pinkcol  =	video::SColor(120,255,174,201);
+video::SColor bluecol  =	video::SColor(120,63,72,204);
+video::SColor redcol  =		video::SColor(120,237,28,36);
+video::SColor yellowcol  =  video::SColor(120,255,201,14);
 
 
 
-void setdir(scene::ISceneManager* smgr, dirnode selectednode,int current){
+void setdir(scene::ISceneManager* smgr, dirnode &selectednode,int current){
 	switch (current){
 	case GUI_ID_YELLOW:
 		smgr->getMeshManipulator()->setVertexColors(selectednode.node->getMesh(), yellowcol);

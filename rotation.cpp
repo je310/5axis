@@ -110,3 +110,26 @@ void mirrorx(scene::IAnimatedMeshSceneNode* obj){ // this is neccessary due to f
 	}
 	return;
 }
+
+
+void rotateline(core::vector3df &myline, int direction){
+	core::vector3df Aaxis = core::vector3df(0,0,40);
+	core::vector3df toBaxis;
+	switch(direction){
+	case GUI_ID_YELLOW:
+		myline.rotateXZBy(-90,Aaxis);
+		break;
+	case GUI_ID_PINK:
+		myline.rotateYZBy(90,Aaxis);
+		break;
+	case GUI_ID_RED:
+			return;
+		break;
+	case GUI_ID_BLUE:
+		myline.rotateXZBy(90,Aaxis);
+		break;
+	case GUI_ID_GREEN:
+		myline.rotateYZBy(-90,Aaxis);
+		break;
+	}
+}

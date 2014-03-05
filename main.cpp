@@ -46,55 +46,7 @@ using namespace gui;
 //#include "printnode.h"
 
 
-class flatnode : public scene::ISceneNode
-{
 
-	core::aabbox3d<f32> Box;
-	video::S3DVertex Vertices[4];
-	video::SMaterial Material;
-
-public:
-
-	flatnode(scene::ISceneNode* parent, scene::ISceneManager* mgr, s32 id)
-		: scene::ISceneNode(parent, mgr, id)
-	{
-		Material.Wireframe = false;
-		Material.Lighting = false;
-
-	Vertices[0] = video::S3DVertex(-35,-35,0, 0,0,1,
-			video::SColor(255,0,255,255), 0, 1);
-	Vertices[0] = video::S3DVertex(-35,35,0, 0,0,1,
-			video::SColor(255,0,255,255), 0, 1);
-	Vertices[0] = video::S3DVertex(35,-35,0, 0,0,1,
-			video::SColor(255,0,255,255), 0, 1);
-	Vertices[0] = video::S3DVertex(35,35,0, 0,0,1,
-			video::SColor(255,0,255,255), 0, 1);
-	u16 indices[] ={0,1,2,3};
-
-		Box.reset(Vertices[0].Pos);
-		for (s32 i=1; i<8; ++i)
-			Box.addInternalPoint(Vertices[i].Pos);
-	}
-
-	virtual void OnRegisterSceneNode()
-	{
-		if (IsVisible)
-			SceneManager->registerNodeForRendering(this);
-
-		ISceneNode::OnRegisterSceneNode();
-	}
-
-	virtual void render()
-	{
-		u16 indices[] ={0,1,2,3};
-		video::IVideoDriver* driver = SceneManager->getVideoDriver();
-
-		driver->setMaterial(Material);
-		driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
-		driver->drawVertexPrimitiveList(&Vertices[0], 4, &indices[0], 1, video::EVT_STANDARD, scene::EPT_QUADS, video::EIT_16BIT);
-	}
-
-};
 
 enum
 {
@@ -127,6 +79,13 @@ float redalpha = 70;
 float bluealpha = 70;
 float greenalpha = 70;
 float blackalpha = 70;
+
+bool sliced  = 0;
+std::vector<instruction> instructions;
+
+instruction savedVals;
+float smallz = 1000;
+
 
 
 
@@ -309,9 +268,25 @@ public:
 						mesh = allnodes.at(i).node->getMesh()->getMeshBuffer(0);
 						char path[10] = "";
 						itoa(i,path,10);
+						rotatemesh(mesh,allnodes.at(i).direction);
 						writestl(mesh,path);
 						slice(path);
+						core::vector3df midpointtest = findmodeloffset(allnodes.at(i).node, 0,0, 0);
+						std::vector<instruction> curr;
+						curr = ReadInGCode(savedVals,path);
+						for(int j =0; j< curr.size(); j++){
+							curr.at(j).X += midpointtest.X;
+							curr.at(j).Y += midpointtest.Y; 
+							curr.at(j).Z += midpointtest.Z  -smallz; 
+							core::vector3df point = core::vector3df(curr.at(j).X,curr.at(j).Y,curr.at(j).Z);
+							//rotateline(point,allnodes.at(i).direction);
+							//curr.at(j).X = point.X;
+							//curr.at(j).Y = point.Y; 
+							//curr.at(j).Z = point.Z; 
+						}
+						instructions.insert(instructions.end(), curr.begin(), curr.end());
 					}
+					sliced = 1;
 					
 					return true;
 
@@ -554,7 +529,15 @@ int main(int argc, char* argv[])
 	scene::IMeshBuffer *pBuffer; // used to store mesh data
 	float CurrentA = 0; 
 	float CurrentB = 0 ; 
-	instruction savedVals;
+
+	
+	video::SMaterial material;
+
+	//slice the stl denoted by the comand line input (TEST ONLY)
+	//slice(argv[1]);
+
+	//read in the newly sliced gcode 
+
 	savedVals.A = 0;
 	savedVals.B = 0;
 	savedVals.X = 0;
@@ -562,16 +545,6 @@ int main(int argc, char* argv[])
 	savedVals.Z = 0;
 	savedVals.G = 0;
 	savedVals.E = 0;
-	float smallz = 1000;
-	video::SMaterial material;
-
-	//slice the stl denoted by the comand line input (TEST ONLY)
-	//slice(argv[1]);
-
-	//read in the newly sliced gcode 
-	std::vector<instruction> instructions;
-	instructions = ReadInGCode(savedVals, argv[1]);
-	numberOfInstructions = instructions.size();
 
 	//load the head model
 	scene::IAnimatedMeshSceneNode* head = 0;
@@ -580,28 +553,30 @@ int main(int argc, char* argv[])
 	smgr->getMeshManipulator()->setVertexColors(head->getMesh(), video::SColor(255,0,0,255));
 	head->setPosition(core::vector3df(5,5,1));
 	head->updateAbsolutePosition();
+	head->setVisible(false);
 
 
 	//section that loads the test model stls 
 	scene::IAnimatedMeshSceneNode* zcore = 0;
 	zcore = smgr->addAnimatedMeshSceneNode(smgr->getMesh("stl/(Z1)core.stl"),
 		0, IDFlag_IsPickable);
-	smgr->getMeshManipulator()->setVertexColors(zcore->getMesh(), video::SColor(255,145,0,123));
+	smgr->getMeshManipulator()->setVertexColors(zcore->getMesh(), video::SColor(120,145,0,123));
+	zcore->setMaterialType(video::EMT_TRANSPARENT_ALPHA_CHANNEL);
 
 	//load stl from input args, this is the translucent 'final model'
-	scene::IAnimatedMeshSceneNode* thing = readstl(smgr,argv[1]);
-	mirrorx(thing);
-	thing->setMaterialType(video::EMT_TRANSPARENT_ALPHA_CHANNEL);
-	smgr->getMeshManipulator()->setVertexColors(thing->getMesh(), video::SColor(99,145,0,123));
+	//scene::IAnimatedMeshSceneNode* thing = readstl(smgr,argv[1]);
+	//mirrorx(thing);
+	//thing->setMaterialType(video::EMT_TRANSPARENT_ALPHA_CHANNEL);
+	//smgr->getMeshManipulator()->setVertexColors(thing->getMesh(), video::SColor(99,145,0,123));
 
 	// write back the model to stl as a test
-	pBuffer = thing->getMesh()->getMeshBuffer(0);
-	writestl(pBuffer, "stloutputtest");
+	//pBuffer = thing->getMesh()->getMeshBuffer(0);
+	//writestl(pBuffer, "stloutputtest");
 
 
 	//find the middle of the object in the same manner that slic3r does and reposition accordingly
-	core::vector3df midpointtest = findmodeloffset(thing, 0,0, 0);
-	thing->setPosition(thing->getAbsolutePosition()-midpointtest);
+	//core::vector3df midpointtest = findmodeloffset(thing, 0,0, 0);
+	//thing->setPosition(thing->getAbsolutePosition()-midpointtest);
 
 	//find the distance to bed of a print object, set the model to the bed
 	smallz = findlowestvert(zcore);
@@ -611,14 +586,16 @@ int main(int argc, char* argv[])
 	scene::IAnimatedMeshSceneNode* y1core = 0;
 	y1core = smgr->addAnimatedMeshSceneNode(smgr->getMesh("stl/(Y1)core.stl"),
 		0, IDFlag_IsPickable);
-	smgr->getMeshManipulator()->setVertexColors(y1core->getMesh(), video::SColor(255,145,0,123));
+	smgr->getMeshManipulator()->setVertexColors(y1core->getMesh(), video::SColor(120,145,0,123));
 	y1core->setPosition(y1core->getAbsolutePosition() - core::vector3df(0,0,smallz));
+	y1core->setMaterialType(video::EMT_TRANSPARENT_ALPHA_CHANNEL);
 
 	scene::IAnimatedMeshSceneNode* y2core = 0;
 	y2core = smgr->addAnimatedMeshSceneNode(smgr->getMesh("stl/(Y2)core.stl"),
 		0, IDFlag_IsPickable);
-	smgr->getMeshManipulator()->setVertexColors(y2core->getMesh(), video::SColor(255,145,0,123));
+	smgr->getMeshManipulator()->setVertexColors(y2core->getMesh(), video::SColor(120,145,0,123));
 	y2core->setPosition(y2core->getAbsolutePosition() - core::vector3df(0,0,smallz));
+	y2core->setMaterialType(video::EMT_TRANSPARENT_ALPHA_CHANNEL);
 
 	//test the rotation on both the side peices
 	//rotateNodeInWorldSpace(y2core,90,core::vector3df(0,1,0), core::vector3df(0,0,50));
@@ -637,9 +614,7 @@ int main(int argc, char* argv[])
 #endif
 
 	//represents the printed material
-	scene::ISceneNode * Printed  = smgr->addAnimatedMeshSceneNode(smgr->getMesh("../../media/cube.stl"),0, IDFlag_IsPickable | IDFlag_IsHighlightable);
-	Printed->setVisible(false);
-	Printed->setMaterialTexture(0,driver->getTexture("../../media/rockwall.jpg"));
+	scene::ISceneNode * Printed;
 	//latch variables for choosing the amount of lines to show. 
 	int nextpressR = 0;
 	bool nextpressR2 = true;
@@ -650,7 +625,7 @@ int main(int argc, char* argv[])
 	core::vector3df intersection;
 	core::triangle3df hitTriangle;
 	Tline ray;
-	dirnode selectednode;
+	int selectednode;
 
 	//scene::IBillboardSceneNode * bill = smgr->addBillboardSceneNode();
 	//bill->setMaterialType(video::EMT_TRANSPARENT_ADD_COLOR );
@@ -688,7 +663,10 @@ int main(int argc, char* argv[])
 		{
 #endif
 			//virtualprint move
-			doprint(head,instructions,allLines, inscount, CurrentA,CurrentB);
+			if(sliced){
+				doprint(head,instructions,allLines,Printed, inscount, CurrentA,CurrentB);
+				head->setVisible(true);
+			}
 
 
 			if(receiver.GetMouseState().LeftButtonDown && current ==-1){
@@ -787,8 +765,8 @@ int main(int argc, char* argv[])
 				//ray.end = ray.start + (camera->getTarget() - ray.start).normalize() * 1000.0f;
 				selectednode = findselected(ray,allnodes,smallz);
 				//bill->setPosition(ray.end);
-				if(selectednode.direction != 0){
-					setdir(smgr,selectednode, current);
+				if(selectednode != -1){
+					setdir(smgr,allnodes.at(selectednode), current);
 					//smgr->getMeshManipulator()->setVertexColors(selectednode->getMesh(), video::SColor(123,123,123,123));
 					//bill->setPosition(ray.end);
 				}
@@ -804,49 +782,49 @@ int main(int argc, char* argv[])
 
 				//driver->setViewPort(core::rect<s32>(ResX/4,0,ResX,ResY));
 				//driver->draw3DLine(ray.start,ray.end,video::SColor(200,50,210,200));
-//				if(receiver.IsKeyDown(irr::KEY_KEY_R) && nextpressR ==0){
-//					nextpressR = 1;
-//				}
-//				if(!receiver.IsKeyDown(irr::KEY_KEY_R) && nextpressR ==1){
-//					nextpressR2 = !nextpressR2;
-//					nextpressR =0;
-//				}
-//
-//				if(!receiver.IsKeyDown(irr::KEY_KEY_Q)){
-//					if(nextpressR2){
-//#ifdef GRID
-//						for(int i = 0; i<grid.size();i++){
-//							driver->setTransform(video::ETS_WORLD,  core::matrix4());
-//
-//							driver->draw3DLine(grid.at(i).start,grid.at(i).end,video::SColor(20,50,210,100));
-//
-//						}
-//#endif
-//						for(int i = allLines.size()-1000; i<allLines.size();i++){
-//							driver->setTransform(video::ETS_WORLD,  core::matrix4());
-//							driver->draw3DLine(allLines.at(i).start,allLines.at(i).end,video::SColor(255,50,210,200));
-//						}
-//					}
-//					else{
-//						for(int i = 0; i<allLines.size();i++){
-//							driver->setTransform(video::ETS_WORLD,  core::matrix4());
-//							driver->draw3DLine(allLines.at(i).start,allLines.at(i).end,video::SColor(255,50,210,200));
-//						}
-//					}
-//											
-//					
-//				}
-//				else{
-//					inscount = 0;
-//					allLines.clear();
-//				}
-				for(int i = 0; i<allLines.size();i++){
+				if(receiver.IsKeyDown(irr::KEY_KEY_R) && nextpressR ==0){
+					nextpressR = 1;
+				}
+				if(!receiver.IsKeyDown(irr::KEY_KEY_R) && nextpressR ==1){
+					nextpressR2 = !nextpressR2;
+					nextpressR =0;
+				}
+
+				if(!receiver.IsKeyDown(irr::KEY_KEY_Q)){
+					if(nextpressR2){
+#ifdef GRID
+						for(int i = 0; i<grid.size();i++){
+							driver->setTransform(video::ETS_WORLD,  core::matrix4());
+
+							driver->draw3DLine(grid.at(i).start,grid.at(i).end,video::SColor(20,50,210,100));
+
+						}
+#endif
+						for(int i = allLines.size()-1000; i<allLines.size();i++){
 							SMaterial m; 
 							m.Lighting=false;
 							driver->setMaterial(m);
-							driver->setTransform(video::ETS_WORLD, core::matrix4());
+							driver->setTransform(video::ETS_WORLD,  core::matrix4());
 							driver->draw3DLine(allLines.at(i).start,allLines.at(i).end,video::SColor(255,50,210,200));
 						}
+					}
+					else{
+						for(int i = 0; i<allLines.size();i++){
+							SMaterial m; 
+							m.Lighting=false;
+							driver->setMaterial(m);
+							driver->setTransform(video::ETS_WORLD,  core::matrix4());
+							driver->draw3DLine(allLines.at(i).start,allLines.at(i).end,video::SColor(255,50,210,200));
+						}
+					}
+											
+					
+				}
+				else{
+					inscount = 0;
+					allLines.clear();
+				}
+
 
 								driver->draw2DImage(driver->getTexture("cube/cubeguidepink.png"), core::position2d<s32>(cubex,cubey),
 					core::rect<s32>(0,0,312,256), 0,
