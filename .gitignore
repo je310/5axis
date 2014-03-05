@@ -24,5 +24,8 @@
 *.ipch
 *.stl
 *.gcode
+*.log
 
 stl/*
+Release/*
+Debug/*
