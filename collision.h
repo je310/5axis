@@ -1,14 +1,14 @@
 #ifndef __COL_INCLUDED__   // if x.h hasn't been included yet...
 #define __COL_INCLUDED__   //   #define this so the compiler knows it has been included
-using namespace irr;
+
 #include <vector>
 #include <irrlicht.h>
 #include "list.h"
 #include "triangle.h"
 #include "stl.h"
 #include "offsets.h"
-#include "tests.h"
-
+//#include "tests.h"
+using namespace irr;
 
 #define BuildSize 150
 #define Boxsize		1

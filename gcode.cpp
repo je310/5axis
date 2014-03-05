@@ -181,7 +181,7 @@ void clear(char buffer[20]){
 
 
 void slice(char* stl){
-	char callslicer[50]  = "slic3r --load stl/config.ini stl/";
+	char callslicer[50]  = "slic3r --load stl/config.ini ";
 	strcat(callslicer,stl);
 	strcat(callslicer,".stl");
 	system (callslicer);

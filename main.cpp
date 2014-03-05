@@ -307,7 +307,8 @@ public:
 					scene::IMeshBuffer *mesh;
 					for(int i = 0; i< allnodes.size(); i++){
 						mesh = allnodes.at(i).node->getMesh()->getMeshBuffer(0);
-						char *path = itoa(i,path,0);
+						char path[10] = "";
+						itoa(i,path,10);
 						writestl(mesh,path);
 						slice(path);
 					}
