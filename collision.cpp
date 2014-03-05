@@ -207,7 +207,6 @@ float linemag(Tline ray){
 
 
 int findselected(Tline &ray, std::vector<dirnode> allnodes,float smallz){
-
 	int numberOfNodes = allnodes.size();
 	int selectednode;
 	scene::IMeshBuffer *mesh; 
@@ -232,7 +231,7 @@ int findselected(Tline &ray, std::vector<dirnode> allnodes,float smallz){
 				ray.end = Intersection;
 				if(linemag(ray)<closest){
 					closest = linemag(ray);
-					selectednode = i; 
+					selectednode = i;  
 				}
 			}
 		}

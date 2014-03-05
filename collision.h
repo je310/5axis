@@ -12,7 +12,7 @@ using namespace irr;
 
 #define BuildSize 150
 #define Boxsize		1
-#define drawat		500
+#define drawat		1
 #define numbox  BuildSize/Boxsize
 
  extern list TriangArr[numbox][numbox][numbox];

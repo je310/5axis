@@ -1,8 +1,8 @@
 #ifndef __ROT_H_INCLUDED__   // if x.h hasn't been included yet...
 #define __ROT_H_INCLUDED__   //   #define this so the compiler knows it has been included
+#include "colours.h"
 #include <irrlicht.h>
-#include "collision.h"
-#include "tests.h"
+
 using namespace irr;
 
 core::vector3df getClosestPointOnLine( const core::vector3df& axis,const core::vector3df& pivot,const core::vector3df& point);

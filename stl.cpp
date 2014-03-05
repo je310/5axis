@@ -91,5 +91,5 @@ void rotatemesh(scene::IMeshBuffer* mesh, int direction){
 	video::S3DVertex *vertices = (video::S3DVertex *)mesh->getVertices();
 	for(int i = 0; i < vertexcount; i++){
 		rotateline(vertices[0].Pos,direction);
-	}
+}
 }

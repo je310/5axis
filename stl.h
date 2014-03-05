@@ -24,6 +24,4 @@ core::vector3df getnormal(core::vector3df v1,core::vector3df v2,core::vector3df 
 void rotatemesh(scene::IMeshBuffer* mesh, int direction);
 
 
-
-
 #endif
