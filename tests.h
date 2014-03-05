@@ -25,9 +25,15 @@ enum
 	GUI_ID_PINK,
 	GUI_ID_RED,
 	GUI_ID_BLUE,
-	GUI_ID_GREEN
+	GUI_ID_GREEN,
+	GUI_ID_SLICE
 
 };
+
+
+
+
+
 
 
 bool testTriangleCol();
@@ -38,5 +44,8 @@ std::vector<Tline> makegrid();
 
 void doprint(scene::IAnimatedMeshSceneNode* head, std::vector<instruction> instructions,std::vector<Tline> &allLines, int &inscount, float CurrentA, float CurrentB);
 
-void setdir(scene::ISceneManager* smgr, scene::IAnimatedMeshSceneNode* selectednode,int current);
+void setdir(scene::ISceneManager* smgr, dirnode selectednode,int current);
+
+dirnode makedirnode(scene::IAnimatedMeshSceneNode* node);
+
 #endif

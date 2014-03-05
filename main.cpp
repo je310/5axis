@@ -46,6 +46,56 @@ using namespace gui;
 //#include "printnode.h"
 
 
+class flatnode : public scene::ISceneNode
+{
+
+	core::aabbox3d<f32> Box;
+	video::S3DVertex Vertices[4];
+	video::SMaterial Material;
+
+public:
+
+	flatnode(scene::ISceneNode* parent, scene::ISceneManager* mgr, s32 id)
+		: scene::ISceneNode(parent, mgr, id)
+	{
+		Material.Wireframe = false;
+		Material.Lighting = false;
+
+	Vertices[0] = video::S3DVertex(-35,-35,0, 0,0,1,
+			video::SColor(255,0,255,255), 0, 1);
+	Vertices[0] = video::S3DVertex(-35,35,0, 0,0,1,
+			video::SColor(255,0,255,255), 0, 1);
+	Vertices[0] = video::S3DVertex(35,-35,0, 0,0,1,
+			video::SColor(255,0,255,255), 0, 1);
+	Vertices[0] = video::S3DVertex(35,35,0, 0,0,1,
+			video::SColor(255,0,255,255), 0, 1);
+	u16 indices[] ={0,1,2,3};
+
+		Box.reset(Vertices[0].Pos);
+		for (s32 i=1; i<8; ++i)
+			Box.addInternalPoint(Vertices[i].Pos);
+	}
+
+	virtual void OnRegisterSceneNode()
+	{
+		if (IsVisible)
+			SceneManager->registerNodeForRendering(this);
+
+		ISceneNode::OnRegisterSceneNode();
+	}
+
+	virtual void render()
+	{
+		u16 indices[] ={0,1,2,3};
+		video::IVideoDriver* driver = SceneManager->getVideoDriver();
+
+		driver->setMaterial(Material);
+		driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
+		driver->drawVertexPrimitiveList(&Vertices[0], 4, &indices[0], 1, video::EVT_STANDARD, scene::EPT_QUADS, video::EIT_16BIT);
+	}
+
+};
+
 enum
 {
 	// I use this ISceneNode ID to indicate a scene node that is
@@ -80,12 +130,16 @@ float blackalpha = 70;
 
 
 
+std::vector<dirnode> allnodes;
+
 	struct SAppContext
 	{
 		IrrlichtDevice *device;
 		s32				counter;
 		IGUIListBox*	listbox;
 	}Context;
+
+
 
 bool selectmode = 0;
 class MyEventReceiver : public IEventReceiver
@@ -247,6 +301,17 @@ public:
 					// that the working directory is restored after the dialog
 					// is finished.
 					env->addFileOpenDialog(L"Please choose a file.", false, 0, -1, true);
+					return true;
+
+				case GUI_ID_SLICE:
+					scene::IMeshBuffer *mesh;
+					for(int i = 0; i< allnodes.size(); i++){
+						mesh = allnodes.at(i).node->getMesh()->getMeshBuffer(0);
+						char *path = itoa(i,path,0);
+						writestl(mesh,path);
+						slice(path);
+					}
+					
 					return true;
 
 				default:
@@ -412,6 +477,8 @@ int main(int argc, char* argv[])
 			L"New Window", L"Launches a new Window");
 	env->addButton(core::rect<s32>(10,380,ResX/8,380 + 64), 0, GUI_ID_FILE_OPEN_BUTTON,
 			L"File Open", L"Opens a file");
+	env->addButton(core::rect<s32>(10,440,ResX/8,440 + 64), 0, GUI_ID_SLICE,
+			L"5lice", L"slices the file");
 
 	//gui::IGUIButton* yellow;
 	//yellow->setText("yellow");
@@ -447,6 +514,12 @@ int main(int argc, char* argv[])
 	pink->setImage(driver->getTexture("cube/blank.png"));
 	pink->setDrawBorder(0);
 
+	scene::ISceneNode* n = smgr->addCubeSceneNode(100,0,-1,core::vector3df(0,0,-0.01),core::vector3df(0,0,180),core::vector3df(1,1,0.000001));
+	n->setMaterialTexture(0, driver->getTexture("cube/bed.png"));
+	n->setMaterialFlag(video::EMF_LIGHTING, false);
+	n->setMaterialType(video::EMT_TRANSPARENT_ALPHA_CHANNEL);
+
+	
 
 	//	env->addStaticText(L"Transparent Control:", core::rect<s32>(150,20,350,40), true);
 	//IGUIScrollBar* scrollbar = env->addScrollBar(true,
@@ -550,10 +623,10 @@ int main(int argc, char* argv[])
 	//rotateNodeInWorldSpace(y2core,90,core::vector3df(0,1,0), core::vector3df(0,0,50));
 	//rotateNodeInWorldSpace(y1core,-90,core::vector3df(0,1,0), core::vector3df(0,0,50));
 
-	std::vector<scene::IAnimatedMeshSceneNode*> allnodes;
-	allnodes.push_back(zcore);
-	allnodes.push_back(y1core);
-	allnodes.push_back(y2core);
+	
+	allnodes.push_back(makedirnode(zcore));
+	allnodes.push_back(makedirnode(y1core));
+	allnodes.push_back(makedirnode(y2core));
 	int lastFPS = -1;
 	int inscount = 0;
 
@@ -565,11 +638,10 @@ int main(int argc, char* argv[])
 	//represents the printed material
 	scene::ISceneNode * Printed  = smgr->addAnimatedMeshSceneNode(smgr->getMesh("../../media/cube.stl"),0, IDFlag_IsPickable | IDFlag_IsHighlightable);
 	Printed->setVisible(false);
-
+	Printed->setMaterialTexture(0,driver->getTexture("../../media/rockwall.jpg"));
 	//latch variables for choosing the amount of lines to show. 
 	int nextpressR = 0;
 	bool nextpressR2 = true;
-
 	//the cubes to be inspected
 	std::vector<core::vector3df> mycubes;
 	int bigcount = 0;
@@ -577,7 +649,7 @@ int main(int argc, char* argv[])
 	core::vector3df intersection;
 	core::triangle3df hitTriangle;
 	Tline ray;
-	scene::IAnimatedMeshSceneNode* selectednode;
+	dirnode selectednode;
 
 	//scene::IBillboardSceneNode * bill = smgr->addBillboardSceneNode();
 	//bill->setMaterialType(video::EMT_TRANSPARENT_ADD_COLOR );
@@ -631,8 +703,8 @@ int main(int argc, char* argv[])
 						height = 90;
 						ymovemouse = ymovemouse - newPosition.Y + oldPosition.Y ;
 					}
-					if(ymovemouse/100 < -3.14/2){
-						height = -90;
+					if(ymovemouse/100 < 0){
+						height = 0;
 						ymovemouse = ymovemouse - newPosition.Y + oldPosition.Y ;
 					}
 					campos = core::vector3df(diam*sin(xmovemouse/100),diam*cos(xmovemouse/100) ,height );
@@ -714,7 +786,7 @@ int main(int argc, char* argv[])
 				//ray.end = ray.start + (camera->getTarget() - ray.start).normalize() * 1000.0f;
 				selectednode = findselected(ray,allnodes,smallz);
 				//bill->setPosition(ray.end);
-				if(selectednode != 0){
+				if(selectednode.direction != 0){
 					setdir(smgr,selectednode, current);
 					//smgr->getMeshManipulator()->setVertexColors(selectednode->getMesh(), video::SColor(123,123,123,123));
 					//bill->setPosition(ray.end);
@@ -798,7 +870,11 @@ int main(int argc, char* argv[])
 				driver->draw2DImage(driver->getTexture("cube/cubeguide.png"), core::position2d<s32>(cubex,cubey),
 					core::rect<s32>(0,0,312,256), 0,
 					video::SColor(blackalpha,255,255,255), true);
+
+				
+
 				smgr->drawAll();
+
 				env->drawAll();
 				
 				driver->endScene();

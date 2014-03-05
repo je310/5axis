@@ -1,39 +1,96 @@
-﻿Build started 04/03/2014 04:28:54.
+﻿Build started 05/03/2014 02:04:36.
      1>Project "C:\Users\Josh\Dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.Collision\Collision_vc10.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
-         Creating "Release\07.Collision.unsuccessfulbuild" because "AlwaysCreate" was specified.
+         Touching "Release\07.Collision.unsuccessfulbuild".
        ClCompile:
-         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I"C:\Users\Josh\Dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.Collision" /I..\..\include /Zi /nologo /W3 /WX- /O2 /Ob1 /Oy- /D WIN32 /D NDEBUG /D _CONSOLE /D _VC80_UPGRADE=0x0710 /D _MBCS /GF /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /openmp /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I"C:\Users\Josh\Dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.Collision" /I..\..\include /Zi /nologo /W3 /WX- /O2 /Ob1 /Oy- /D WIN32 /D NDEBUG /D _CONSOLE /D _VC80_UPGRADE=0x0710 /D _MBCS /GF /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /openmp /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt collision.cpp main.cpp
+         collision.cpp
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\collision.h(3): error C2871: 'irr' : a namespace with this name does not exist
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\tests.h(43): error C2065: 'Tline' : undeclared identifier
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\tests.h(45): error C2065: 'Tline' : undeclared identifier
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\tests.h(47): error C2061: syntax error : identifier 'dirnode'
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\tests.h(49): error C2146: syntax error : missing ';' before identifier 'makedirnode'
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\tests.h(49): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\tests.h(49): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\collision.h(44): error C2146: syntax error : missing ';' before identifier 'findselected'
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\collision.h(44): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\collision.h(44): error C2086: 'int dirnode' : redefinition
+                 c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\tests.h(49) : see declaration of 'dirnode'
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\collision.h(44): error C2923: 'std::vector' : 'dirnode' is not a valid template type argument for parameter '_Ty'
+                 c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\tests.h(49) : see declaration of 'dirnode'
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\collision.h(44): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>collision.cpp(187): warning C4305: 'argument' : truncation from 'double' to 'const irr::f32'
+     1>collision.cpp(188): warning C4305: 'argument' : truncation from 'double' to 'const irr::f32'
+     1>collision.cpp(209): error C2146: syntax error : missing ';' before identifier 'findselected'
+     1>collision.cpp(209): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>collision.cpp(209): error C2086: 'int dirnode' : redefinition
+                 c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\tests.h(49) : see declaration of 'dirnode'
+     1>collision.cpp(209): error C2923: 'std::vector' : 'dirnode' is not a valid template type argument for parameter '_Ty'
+                 c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\tests.h(49) : see declaration of 'dirnode'
+     1>collision.cpp(209): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>collision.cpp(212): error C2146: syntax error : missing ';' before identifier 'selectednode'
+     1>collision.cpp(212): error C2065: 'selectednode' : undeclared identifier
+     1>collision.cpp(220): error C2228: left of '.node' must have class/struct/union
+                 type is 'int'
+     1>collision.cpp(220): error C2227: left of '->getMesh' must point to class/struct/union/generic type
+     1>collision.cpp(220): error C2227: left of '->getMeshBuffer' must point to class/struct/union/generic type
+     1>collision.cpp(225): warning C4018: '<' : signed/unsigned mismatch
+     1>collision.cpp(235): error C2065: 'selectednode' : undeclared identifier
+     1>collision.cpp(241): error C2065: 'selectednode' : undeclared identifier
+     1>collision.cpp(243): error C2065: 'selectednode' : undeclared identifier
+     1>collision.cpp(243): error C2228: left of '.direction' must have class/struct/union
+                 type is ''unknown-type''
+     1>collision.cpp(244): error C2065: 'selectednode' : undeclared identifier
          main.cpp
-     1>main.cpp(394): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
-     1>main.cpp(394): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
-     1>main.cpp(394): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
-     1>main.cpp(660): warning C4244: '=' : conversion from 'irr::s32' to 'float', possible loss of data
-     1>main.cpp(661): warning C4244: '=' : conversion from 'irr::s32' to 'float', possible loss of data
-     1>main.cpp(770): warning C4018: '<' : signed/unsigned mismatch
-     1>main.cpp(780): warning C4244: 'argument' : conversion from 'float' to 'irr::u32', possible loss of data
-     1>main.cpp(784): warning C4244: 'argument' : conversion from 'float' to 'irr::u32', possible loss of data
-     1>main.cpp(788): warning C4244: 'argument' : conversion from 'float' to 'irr::u32', possible loss of data
-     1>main.cpp(792): warning C4244: 'argument' : conversion from 'float' to 'irr::u32', possible loss of data
-     1>main.cpp(796): warning C4244: 'argument' : conversion from 'float' to 'irr::u32', possible loss of data
-     1>main.cpp(800): warning C4244: 'argument' : conversion from 'float' to 'irr::u32', possible loss of data
-       Link:
-         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"..\..\bin\Win32-VisualStudio\07.Collision.exe" /NOLOGO /LIBPATH:"..\..\lib\Win32-visualstudio" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Release\07.Collision.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /PDB:"C:\Users\Josh\Dropbox\4th year project\iirlichkt\irrlicht-1.8\bin\Win32-VisualStudio\07.Collision.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /IMPLIB:"..\..\bin\Win32-VisualStudio\07.Collision.lib" /MACHINE:X86 Release\collision.obj
-         Release\gcode.obj
-         Release\list.obj
-         Release\main.obj
-         Release\offsets.obj
-         Release\rotation.obj
-         Release\stl.obj
-         Release\tests.obj
-         Collision_vc10.vcxproj -> C:\Users\Josh\Dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.Collision\..\..\bin\Win32-VisualStudio\07.Collision.exe
-       Manifest:
-         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"..\..\bin\Win32-VisualStudio\07.Collision.exe;#1" /manifest Release\07.Collision.exe.intermediate.manifest
-       FinalizeBuildStatus:
-         Deleting file "Release\07.Collision.unsuccessfulbuild".
-         Touching "Release\07.Collision.lastbuildstate".
-     1>Done Building Project "C:\Users\Josh\Dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.Collision\Collision_vc10.vcxproj" (build target(s)).
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\tests.h(43): error C2065: 'Tline' : undeclared identifier
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\tests.h(45): error C2065: 'Tline' : undeclared identifier
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\tests.h(47): error C2061: syntax error : identifier 'dirnode'
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\tests.h(49): error C2146: syntax error : missing ';' before identifier 'makedirnode'
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\tests.h(49): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\tests.h(49): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\collision.h(44): error C2146: syntax error : missing ';' before identifier 'findselected'
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\collision.h(44): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\collision.h(44): error C2086: 'int dirnode' : redefinition
+                 c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\tests.h(49) : see declaration of 'dirnode'
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\collision.h(44): error C2923: 'std::vector' : 'dirnode' is not a valid template type argument for parameter '_Ty'
+                 c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\tests.h(49) : see declaration of 'dirnode'
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\collision.h(44): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>main.cpp(133): error C2923: 'std::vector' : 'dirnode' is not a valid template type argument for parameter '_Ty'
+                 c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\tests.h(49) : see declaration of 'dirnode'
+     1>main.cpp(308): warning C4018: '<' : signed/unsigned mismatch
+     1>main.cpp(309): error C2228: left of '.node' must have class/struct/union
+                 type is 'int'
+     1>main.cpp(309): error C2227: left of '->getMesh' must point to class/struct/union/generic type
+     1>main.cpp(309): error C2227: left of '->getMeshBuffer' must point to class/struct/union/generic type
+     1>main.cpp(459): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
+     1>main.cpp(459): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
+     1>main.cpp(459): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
+     1>main.cpp(517): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
+     1>main.cpp(517): warning C4305: 'argument' : truncation from 'double' to 'irr::f32'
+     1>main.cpp(652): error C2146: syntax error : missing ';' before identifier 'selectednode'
+     1>main.cpp(652): error C2065: 'selectednode' : undeclared identifier
+     1>main.cpp(690): error C2664: 'doprint' : cannot convert parameter 3 from 'std::vector<_Ty>' to 'std::vector &'
+                 with
+                 [
+                     _Ty=Tline
+                 ]
+     1>main.cpp(732): warning C4244: '=' : conversion from 'irr::s32' to 'float', possible loss of data
+     1>main.cpp(733): warning C4244: '=' : conversion from 'irr::s32' to 'float', possible loss of data
+     1>main.cpp(787): error C2065: 'selectednode' : undeclared identifier
+     1>main.cpp(789): error C2065: 'selectednode' : undeclared identifier
+     1>main.cpp(789): error C2228: left of '.direction' must have class/struct/union
+                 type is ''unknown-type''
+     1>main.cpp(790): error C2065: 'selectednode' : undeclared identifier
+     1>main.cpp(842): warning C4018: '<' : signed/unsigned mismatch
+     1>main.cpp(852): warning C4244: 'argument' : conversion from 'float' to 'irr::u32', possible loss of data
+     1>main.cpp(856): warning C4244: 'argument' : conversion from 'float' to 'irr::u32', possible loss of data
+     1>main.cpp(860): warning C4244: 'argument' : conversion from 'float' to 'irr::u32', possible loss of data
+     1>main.cpp(864): warning C4244: 'argument' : conversion from 'float' to 'irr::u32', possible loss of data
+     1>main.cpp(868): warning C4244: 'argument' : conversion from 'float' to 'irr::u32', possible loss of data
+     1>main.cpp(872): warning C4244: 'argument' : conversion from 'float' to 'irr::u32', possible loss of data
+         Generating Code...
+     1>Done Building Project "C:\Users\Josh\Dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.Collision\Collision_vc10.vcxproj" (build target(s)) -- FAILED.
 
-Build succeeded.
+Build FAILED.
 
-Time Elapsed 00:00:02.33
+Time Elapsed 00:00:01.52

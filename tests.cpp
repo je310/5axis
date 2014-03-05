@@ -136,27 +136,38 @@ video::SColor yellowcol  =  video::SColor(255,255,201,14);
 
 
 
-void setdir(scene::ISceneManager* smgr, scene::IAnimatedMeshSceneNode* selectednode,int current){
+void setdir(scene::ISceneManager* smgr, dirnode selectednode,int current){
 	switch (current){
 	case GUI_ID_YELLOW:
-		smgr->getMeshManipulator()->setVertexColors(selectednode->getMesh(), yellowcol);
+		smgr->getMeshManipulator()->setVertexColors(selectednode.node->getMesh(), yellowcol);
+		selectednode.direction = GUI_ID_YELLOW;
 		break;
 
 	case GUI_ID_PINK:
-		smgr->getMeshManipulator()->setVertexColors(selectednode->getMesh(), pinkcol);
+		smgr->getMeshManipulator()->setVertexColors(selectednode.node->getMesh(), pinkcol);
+		selectednode.direction = GUI_ID_PINK;
 		break;
 
 	case GUI_ID_RED:
-		smgr->getMeshManipulator()->setVertexColors(selectednode->getMesh(), redcol);
+		smgr->getMeshManipulator()->setVertexColors(selectednode.node->getMesh(), redcol);
+		selectednode.direction = GUI_ID_RED;
 		break;
 
 	case GUI_ID_BLUE:
-		smgr->getMeshManipulator()->setVertexColors(selectednode->getMesh(), bluecol);
+		smgr->getMeshManipulator()->setVertexColors(selectednode.node->getMesh(), bluecol);
+		selectednode.direction = GUI_ID_BLUE;
 		break;
 
 	case GUI_ID_GREEN:
-		smgr->getMeshManipulator()->setVertexColors(selectednode->getMesh(), greencol);
+		smgr->getMeshManipulator()->setVertexColors(selectednode.node->getMesh(), greencol);
+		selectednode.direction = GUI_ID_GREEN;
 		break;
 
 	};
+}
+
+dirnode makedirnode(scene::IAnimatedMeshSceneNode* node){
+	dirnode mynode;
+	mynode.node = node;
+	return mynode;
 }

@@ -206,10 +206,10 @@ float linemag(Tline ray){
 }
 
 
-scene::IAnimatedMeshSceneNode* findselected(Tline &ray, std::vector<scene::IAnimatedMeshSceneNode*> allnodes,float smallz){
+dirnode findselected(Tline &ray, std::vector<dirnode> allnodes,float smallz){
 
 	int numberOfNodes = allnodes.size();
-	scene::IAnimatedMeshSceneNode* selectednode;
+	dirnode selectednode;
 	scene::IMeshBuffer *mesh; 
 	Triangle currenttriang;
 	core::vector3df Intersection; 
@@ -217,7 +217,7 @@ scene::IAnimatedMeshSceneNode* findselected(Tline &ray, std::vector<scene::IAnim
 	float closest = 100000;
 
 	for(int i = 0; i < numberOfNodes; i++){
-		mesh = allnodes.at(i)->getMesh()->getMeshBuffer(0);
+		mesh = allnodes.at(i).node->getMesh()->getMeshBuffer(0);
 		u32 indexcount = mesh->getIndexCount();
 		u16 *indices =  mesh->getIndices();
 		u32 vertexcount = mesh->getVertexCount();
@@ -240,5 +240,6 @@ scene::IAnimatedMeshSceneNode* findselected(Tline &ray, std::vector<scene::IAnim
 	if(closest < 100000){
 		return selectednode;
 	}
-	return 0;
+	selectednode.direction = 0;
+	return selectednode;
 }
