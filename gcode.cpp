@@ -28,7 +28,7 @@ std::vector<instruction> ReadInGCode(instruction savedVals, char* argv){
 	while(getline(infile, line)){
 		istringstream record(line);
 		char iscom = record.peek();
-		if(iscom != ';' && iscom!= ' '){
+		if(iscom != ';' && iscom!= -1){
 			while (record >> unit) {
 				clear(buffer);
 				//cout << "* " <<unit << endl;
@@ -40,7 +40,28 @@ std::vector<instruction> ReadInGCode(instruction savedVals, char* argv){
 					unit.copy(buffer,2,1);
 					currentins.G = atoi(buffer);
 					savedVals.G = currentins.G;
+					currentins.M = -10000;
 					Gused = 1;
+					break;
+				case 'M':
+					//cout << "g command"<<endl;
+					
+					unit.copy(buffer,3,1);
+					currentins.M = atoi(buffer);
+					currentins.G = -10000;
+
+					break;
+				case 'S':
+					//cout << "g command"<<endl;
+					
+					unit.copy(buffer,3,1);
+					currentins.S = atoi(buffer);
+					break;
+				case 'F':
+					//cout << "g command"<<endl;
+					
+					unit.copy(buffer,15,1);
+					currentins.F = atoi(buffer);
 					break;
 				case 'E':
 					//cout << "e command"<<endl;
@@ -53,6 +74,7 @@ std::vector<instruction> ReadInGCode(instruction savedVals, char* argv){
 						unit.copy(buffer,15,1);
 						currentins.E = atof(buffer);
 					}
+					savedVals.E = currentins.E;
 					Eused = 1;
 					break;
 				case 'X':
@@ -69,6 +91,7 @@ std::vector<instruction> ReadInGCode(instruction savedVals, char* argv){
 							Xused = 1;
 						}
 					}
+					savedVals.X = currentins.X;
 					Xused = 1;
 					break;
 
@@ -102,6 +125,7 @@ std::vector<instruction> ReadInGCode(instruction savedVals, char* argv){
 						unit.copy(buffer,15,1);
 						currentins.Z = atof(buffer);
 					}
+					savedVals.Z = currentins.Z;
 					Zused = 1;
 					break;
 
@@ -139,13 +163,13 @@ std::vector<instruction> ReadInGCode(instruction savedVals, char* argv){
 					currentins.G = 0;
 				}
 				if(Xused ==0){
-					currentins.X = returnins.back().X;
+					currentins.X = savedVals.X;
 				}
 				if(Yused ==0){
-					currentins.Y = returnins.back().Y;
+					currentins.Y = savedVals.Y;
 				}
 				if(Zused ==0){
-					currentins.Z = returnins.back().Z;
+					currentins.Z = savedVals.Z;
 				}
 				if(Aused ==0){
 					currentins.A = returnins.back().A;
@@ -154,7 +178,7 @@ std::vector<instruction> ReadInGCode(instruction savedVals, char* argv){
 					currentins.B = returnins.back().B;
 				}
 				if(Eused ==0){
-					currentins.E = returnins.back().E;
+					currentins.E = savedVals.E;
 				}
 			}
 			Gused= 0;
@@ -164,9 +188,9 @@ std::vector<instruction> ReadInGCode(instruction savedVals, char* argv){
 			Aused= 0;
 			Bused = 0;
 			Eused= 0;
-			if(currentins.G == 1){
-				returnins.push_back(currentins);
-			}
+			currentins.T = -10000;
+			returnins.push_back(currentins);
+			
 		}
 	}
 	return returnins;
@@ -185,4 +209,153 @@ void slice(char* stl){
 	strcat(callslicer,stl);
 	strcat(callslicer,".stl");
 	system (callslicer);
+}
+
+void clearins (instruction &thisins){
+	thisins.A = -10000;		//-10000 is an indication that the feild is not used. 
+	thisins.B = -10000;
+	thisins.E = -10000;
+	thisins.G = -10000;
+	thisins.T = -10000;
+	thisins.X = -10000;
+	thisins.Y = -10000;
+	thisins.Z = -10000;
+}
+
+// t2 is A axis, rotate yellow to blue. t1 is the rotation about red
+void addRotGcode(std::vector<instruction> &instructions,  int direction){
+	float t2div  = 1/0.044223327;
+	float t1div = 1/0.013266;
+	instruction thisins;
+	clearins(thisins);
+	switch(direction){
+	case GUI_ID_YELLOW:
+		thisins.T =2;
+		instructions.push_back(thisins);
+		clearins(thisins);
+		thisins.G = 1;
+		thisins.E = -90/t2div;
+		instructions.push_back(thisins);
+		clearins(thisins);
+		thisins.T = 1;
+		instructions.push_back(thisins);
+		clearins(thisins);
+		thisins.G = 1;
+		thisins.E = 0;
+		instructions.push_back(thisins);
+		clearins(thisins);
+		thisins.T = 0;
+		instructions.push_back(thisins);			
+		break;
+	case GUI_ID_PINK:
+		thisins.T = 2;
+		instructions.push_back(thisins);
+		clearins(thisins);
+		thisins.G = 1;
+		thisins.E = 90/t2div;
+		instructions.push_back(thisins);
+		clearins(thisins);
+		thisins.T = 1;
+		instructions.push_back(thisins);
+		clearins(thisins);
+		thisins.G = 1;
+		thisins.E = -90/t1div;
+		instructions.push_back(thisins);
+		clearins(thisins);
+		thisins.T = 0;
+		instructions.push_back(thisins);	
+		break;
+	case GUI_ID_RED:
+		thisins.T = 2;
+		instructions.push_back(thisins);
+		clearins(thisins);
+		thisins.G = 1;
+		thisins.E = 0;
+		instructions.push_back(thisins);
+		clearins(thisins);
+		thisins.T = 1;
+		instructions.push_back(thisins);
+		clearins(thisins);
+		thisins.G = 1;
+		thisins.E = 0;
+		instructions.push_back(thisins);
+		clearins(thisins);
+		thisins.T = 0;
+		instructions.push_back(thisins);
+		break;
+	case GUI_ID_BLUE:
+		thisins.T = 2;
+		instructions.push_back(thisins);
+		clearins(thisins);
+		thisins.G = 1;
+		thisins.E = 90/t2div;
+		instructions.push_back(thisins);
+		clearins(thisins);
+		thisins.T = 1;
+		instructions.push_back(thisins);
+		clearins(thisins);
+		thisins.G = 1;
+		thisins.E = 0;
+		instructions.push_back(thisins);
+		clearins(thisins);
+		thisins.T = 0;
+		instructions.push_back(thisins);		
+		break;
+	case GUI_ID_GREEN:
+		thisins.T = 2;
+		instructions.push_back(thisins);
+		clearins(thisins);
+		thisins.G = 1;
+		thisins.E = -90/t2div;
+		instructions.push_back(thisins);
+		clearins(thisins);
+		thisins.T = 1;
+		instructions.push_back(thisins);
+		clearins(thisins);
+		thisins.G = 1;
+		thisins.E = -90/t1div;
+		instructions.push_back(thisins);
+		clearins(thisins);
+		thisins.T = 0;
+		instructions.push_back(thisins);		
+		break;
+	}
+}
+
+void OutputGcode(std::vector<instruction> instructions){
+	std::ofstream myfile;
+	myfile.open ("5axisGcode.gcode");
+	myfile<<"T1 \n G92 E0 \n T2 \n G92 E0 \n T0\n";
+	for(int i = 0; i< instructions.size(); i++){
+		if(instructions.at(i).G != -10000){
+			if(instructions.at(i).G == 28 || instructions.at(i).G == 90 || instructions.at(i).G == 21){
+				myfile <<'G'<<instructions.at(i).G<<std::endl;
+			}
+			if(instructions.at(i).G == 1){
+				if(instructions.at(i).X != -10000){
+					myfile <<'G'<<instructions.at(i).G<<' '<<'X'<<instructions.at(i).X<<' '<<'Y'<<instructions.at(i).Y<<' '<<'Z'<<instructions.at(i).Z<<' '<<'F'<<instructions.at(i).F<<' '<<'E'<<instructions.at(i).E<<std::endl;
+				}
+				else{
+					myfile <<'G'<<instructions.at(i).G<<' '<<'F'<<"100"<<' '<<'E'<<instructions.at(i).E<<std::endl;
+				}
+			}
+			if(instructions.at(i).G == 92){
+				myfile <<'G'<<instructions.at(i).G<<' '<<"E0"<<std::endl;
+			}
+		}
+		if(instructions.at(i).M != -10000){
+			if(instructions.at(i).M == 82 ||instructions.at(i).M == 84){
+				myfile <<'M'<<instructions.at(i).M<<std::endl;
+			}
+			if(instructions.at(i).M == 104 || instructions.at(i).M == 109){
+				myfile <<'M'<<instructions.at(i).M<<' '<<"S"<<instructions.at(i).S<<std::endl;
+			}
+		}
+		if(instructions.at(i).T != -10000){
+			myfile <<'T'<<instructions.at(i).T<<std::endl;
+		}
+
+
+	}
+	myfile.close();
 }

@@ -84,12 +84,17 @@ scene::IAnimatedMeshSceneNode* readstl(scene::ISceneManager* smgr,char* name){
 	return smgr->addAnimatedMeshSceneNode(smgr->getMesh(path),0, 0);
 }
 
-void rotatemesh(scene::IMeshBuffer* mesh, int direction){
+void rotatemesh(scene::IMeshBuffer* mesh, int direction, float smallz){
 	u32 indexcount = mesh->getIndexCount();
 	u16 *indices =  mesh->getIndices();
 	u32 vertexcount = mesh->getVertexCount();
 	video::S3DVertex *vertices = (video::S3DVertex *)mesh->getVertices();
 	for(int i = 0; i < vertexcount; i++){
-		rotateline(vertices[0].Pos,direction);
+		vertices[i].Pos = vertices[i].Pos - core::vector3df(0,0,smallz);
+		rotateline(vertices[i].Pos,direction);
+		vertices[i].Pos = vertices[i].Pos + core::vector3df(0,0,smallz);
+	}
 }
-}
+
+
+// - core::vector3df(0,0,smallz)

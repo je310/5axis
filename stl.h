@@ -21,7 +21,7 @@ scene::IAnimatedMeshSceneNode* readstl(scene::ISceneManager* smgr,char* name);
 
 core::vector3df getnormal(core::vector3df v1,core::vector3df v2,core::vector3df v3);
 
-void rotatemesh(scene::IMeshBuffer* mesh, int direction);
+void rotatemesh(scene::IMeshBuffer* mesh, int direction, float smallz);
 
 
 #endif

@@ -130,7 +130,7 @@ float blackalpha = 70;
 
 bool sliced  = 0;
 std::vector<instruction> instructions;
-
+IrrlichtDevice *device;
 instruction savedVals;
 float smallz = 1000;
 
@@ -149,7 +149,7 @@ bool selectmode = 0;
 class MyEventReceiver : public IEventReceiver
 {
 public:
-	
+	IGUIWindow* window;
 
 	struct SMouseState
 	{
@@ -285,7 +285,7 @@ public:
 						if (Context.counter > 200)
 							Context.counter = 0;
 
-						IGUIWindow* window = env->addWindow(
+						window = env->addWindow(
 							core::rect<s32>(100 + Context.counter, 100 + Context.counter, 300 + Context.counter, 200 + Context.counter),
 							false, // modal?
 							L"Test window");
@@ -309,19 +309,20 @@ public:
 
 				case GUI_ID_SLICE:
 					scene::IMeshBuffer *mesh;
+
 					for(int i = 0; i< allnodes.size(); i++){
 						mesh = allnodes.at(i).node->getMesh()->getMeshBuffer(0);
 						char path[10] = "";
 						itoa(i,path,10);
-						rotatemesh(mesh,allnodes.at(i).direction);
+						rotatemesh(mesh,allnodes.at(i).direction,smallz);
 						writestl(mesh,path);
 						slice(path);
 						core::vector3df midpointtest = findmodeloffset(allnodes.at(i).node, 0,0, 0);
 						std::vector<instruction> curr;
 						curr = ReadInGCode(savedVals,path);
 						for(int j =0; j< curr.size(); j++){
-							curr.at(j).X += midpointtest.X;
-							curr.at(j).Y += midpointtest.Y; 
+							curr.at(j).X += midpointtest.X + 2.3;
+							curr.at(j).Y += midpointtest.Y  + 2.3; 
 							curr.at(j).Z += midpointtest.Z  -smallz; 
 							core::vector3df point = core::vector3df(curr.at(j).X,curr.at(j).Y,curr.at(j).Z);
 							//rotateline(point,allnodes.at(i).direction);
@@ -329,9 +330,11 @@ public:
 							//curr.at(j).Y = point.Y; 
 							//curr.at(j).Z = point.Z; 
 						}
+						addRotGcode(instructions,allnodes.at(i).direction);
 						instructions.insert(instructions.end(), curr.begin(), curr.end());
 					}
 					sliced = 1;
+					OutputGcode(instructions);
 					return true;
 
 				default:
@@ -460,7 +463,7 @@ int main(int argc, char* argv[])
 	video::E_DRIVER_TYPE driverType=driverChoiceConsole();
 	if (driverType==video::EDT_COUNT)
 		return 1;
-	IrrlichtDevice *device;
+	
 
 
 
@@ -601,6 +604,7 @@ int main(int argc, char* argv[])
 	scene::IAnimatedMeshSceneNode* zcore = 0;
 	zcore = smgr->addAnimatedMeshSceneNode(smgr->getMesh("stl/(Z1)core.stl"),
 		0, IDFlag_IsPickable);
+	zcore->setMaterialType(video::EMT_TRANSPARENT_ALPHA_CHANNEL);
 	smgr->getMeshManipulator()->setVertexColors(zcore->getMesh(), video::SColor(255,145,0,123));
 
 	//load stl from input args, this is the translucent 'final model'
@@ -621,12 +625,14 @@ int main(int argc, char* argv[])
 	scene::IAnimatedMeshSceneNode* y1core = 0;
 	y1core = smgr->addAnimatedMeshSceneNode(smgr->getMesh("stl/(Y1)core.stl"),
 		0, IDFlag_IsPickable);
+	y1core->setMaterialType(video::EMT_TRANSPARENT_ALPHA_CHANNEL);
 	smgr->getMeshManipulator()->setVertexColors(y1core->getMesh(), video::SColor(255,145,0,123));
 	y1core->setPosition(y1core->getAbsolutePosition() - core::vector3df(0,0,smallz));
 
 	scene::IAnimatedMeshSceneNode* y2core = 0;
 	y2core = smgr->addAnimatedMeshSceneNode(smgr->getMesh("stl/(Y2)core.stl"),
 		0, IDFlag_IsPickable);
+	y2core->setMaterialType(video::EMT_TRANSPARENT_ALPHA_CHANNEL);
 	smgr->getMeshManipulator()->setVertexColors(y2core->getMesh(), video::SColor(255,145,0,123));
 	y2core->setPosition(y2core->getAbsolutePosition() - core::vector3df(0,0,smallz));
 
@@ -688,6 +694,8 @@ int main(int argc, char* argv[])
 	static core::vector3df downvect ;
 	static float lookside = 0;
 	static float lookup = 0;
+
+
 #ifdef vis
 	while(device->run())
 		if (device->isWindowActive())
@@ -835,15 +843,23 @@ int main(int argc, char* argv[])
 
 						}
 #endif
-						for(int i = allLines.size()-1000; i<allLines.size();i++){
+						for(int i = allLines.size()-20; i<allLines.size();i++){
+							material.Lighting=false;
+							material.Thickness = 1.0f;
+							driver->setMaterial(material);
 							driver->setTransform(video::ETS_WORLD,  core::matrix4());
 							driver->draw3DLine(allLines.at(i).start,allLines.at(i).end,video::SColor(255,50,210,200));
 						}
 					}
 					else{
 						for(int i = 0; i<allLines.size();i++){
-							driver->setTransform(video::ETS_WORLD,  core::matrix4());
-							driver->draw3DLine(allLines.at(i).start,allLines.at(i).end,video::SColor(255,50,210,200));
+							if(i%1 == 0){
+								material.Lighting=false;
+								material.Thickness = 1.0f;
+								driver->setMaterial(material);
+								driver->setTransform(video::ETS_WORLD,  core::matrix4());
+								driver->draw3DLine(allLines.at(i).start,allLines.at(i).end,video::SColor(255,50,210,200));
+							}
 						}
 					}
 											

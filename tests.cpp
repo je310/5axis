@@ -128,11 +128,11 @@ void doprint(scene::IAnimatedMeshSceneNode* head, std::vector<instruction> instr
 
 	}
 }
-video::SColor greencol  =	video::SColor(255,34,177,76);
-video::SColor pinkcol  =	video::SColor(255,255,174,201);
-video::SColor bluecol  =	video::SColor(255,63,72,204);
-video::SColor redcol  =		video::SColor(255,237,28,36);
-video::SColor yellowcol  =  video::SColor(255,255,201,14);
+video::SColor greencol  =	video::SColor(100,34,177,76);
+video::SColor pinkcol  =	video::SColor(100,255,174,201);
+video::SColor bluecol  =	video::SColor(100,63,72,204);
+video::SColor redcol  =		video::SColor(100,237,28,36);
+video::SColor yellowcol  =  video::SColor(100,255,201,14);
 
 
 
