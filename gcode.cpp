@@ -223,25 +223,49 @@ void clearins (instruction &thisins){
 }
 
 // t2 is A axis, rotate yellow to blue. t1 is the rotation about red
-void addRotGcode(std::vector<instruction> &instructions,  int direction){
+void addRotGcode(std::vector<instruction> &instructions,  int direction, int currentdirection){
 	float t2div  = 1/0.044223327;
 	float t1div = 1/0.013266;
+	float t1direction;
+	float t2direction;
 	instruction thisins;
 	clearins(thisins);
+	switch(currentdirection){
+	case GUI_ID_YELLOW:
+		t1direction = 0;
+		t2direction = -90;
+		break;
+	case GUI_ID_PINK:
+		t1direction = -90;
+		t2direction = 90;	
+		break;
+	case GUI_ID_RED:
+		t1direction = 0;
+		t2direction = 0;
+		break;
+	case GUI_ID_BLUE:
+		t1direction = 0;
+		t2direction = 90;	
+		break;
+	case GUI_ID_GREEN:
+		t1direction = -90;
+		t2direction = -90;	
+		break;
+	}
 	switch(direction){
 	case GUI_ID_YELLOW:
 		thisins.T =2;
 		instructions.push_back(thisins);
 		clearins(thisins);
 		thisins.G = 1;
-		thisins.E = -90/t2div;
+		thisins.E = (-90-t2direction)/t2div;
 		instructions.push_back(thisins);
 		clearins(thisins);
 		thisins.T = 1;
 		instructions.push_back(thisins);
 		clearins(thisins);
 		thisins.G = 1;
-		thisins.E = 0;
+		thisins.E = (0-t1direction)/t1div;
 		instructions.push_back(thisins);
 		clearins(thisins);
 		thisins.T = 0;
@@ -252,14 +276,14 @@ void addRotGcode(std::vector<instruction> &instructions,  int direction){
 		instructions.push_back(thisins);
 		clearins(thisins);
 		thisins.G = 1;
-		thisins.E = 90/t2div;
+		thisins.E = (90-t2direction)/t2div;
 		instructions.push_back(thisins);
 		clearins(thisins);
 		thisins.T = 1;
 		instructions.push_back(thisins);
 		clearins(thisins);
 		thisins.G = 1;
-		thisins.E = -90/t1div;
+		thisins.E = (-90-t1direction)/t1div;
 		instructions.push_back(thisins);
 		clearins(thisins);
 		thisins.T = 0;
@@ -270,14 +294,14 @@ void addRotGcode(std::vector<instruction> &instructions,  int direction){
 		instructions.push_back(thisins);
 		clearins(thisins);
 		thisins.G = 1;
-		thisins.E = 0;
+		thisins.E = (0-t2direction)/t2div;
 		instructions.push_back(thisins);
 		clearins(thisins);
 		thisins.T = 1;
 		instructions.push_back(thisins);
 		clearins(thisins);
 		thisins.G = 1;
-		thisins.E = 0;
+		thisins.E = (0-t1direction)/t1div;
 		instructions.push_back(thisins);
 		clearins(thisins);
 		thisins.T = 0;
@@ -288,14 +312,14 @@ void addRotGcode(std::vector<instruction> &instructions,  int direction){
 		instructions.push_back(thisins);
 		clearins(thisins);
 		thisins.G = 1;
-		thisins.E = 90/t2div;
+		thisins.E = (90-t2direction)/t2div;
 		instructions.push_back(thisins);
 		clearins(thisins);
 		thisins.T = 1;
 		instructions.push_back(thisins);
 		clearins(thisins);
 		thisins.G = 1;
-		thisins.E = 0;
+		thisins.E =(0-t1direction)/t1div;
 		instructions.push_back(thisins);
 		clearins(thisins);
 		thisins.T = 0;
@@ -306,14 +330,14 @@ void addRotGcode(std::vector<instruction> &instructions,  int direction){
 		instructions.push_back(thisins);
 		clearins(thisins);
 		thisins.G = 1;
-		thisins.E = -90/t2div;
+		thisins.E = (-90-t2direction)/t2div;
 		instructions.push_back(thisins);
 		clearins(thisins);
 		thisins.T = 1;
 		instructions.push_back(thisins);
 		clearins(thisins);
 		thisins.G = 1;
-		thisins.E = -90/t1div;
+		thisins.E = (-90-t1direction)/t1div;
 		instructions.push_back(thisins);
 		clearins(thisins);
 		thisins.T = 0;

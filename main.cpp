@@ -313,6 +313,7 @@ public:
 					for(int i = 0; i< allnodes.size(); i++){
 						mesh = allnodes.at(i).node->getMesh()->getMeshBuffer(0);
 						char path[10] = "";
+						int currentdirection = GUI_ID_RED;
 						itoa(i,path,10);
 						rotatemesh(mesh,allnodes.at(i).direction,smallz);
 						writestl(mesh,path);
@@ -330,7 +331,8 @@ public:
 							//curr.at(j).Y = point.Y; 
 							//curr.at(j).Z = point.Z; 
 						}
-						addRotGcode(instructions,allnodes.at(i).direction);
+						addRotGcode(instructions,allnodes.at(i).direction,currentdirection);
+						currentdirection = allnodes.at(i).direction;
 						instructions.insert(instructions.end(), curr.begin(), curr.end());
 					}
 					sliced = 1;

@@ -24,7 +24,7 @@ void clear(char buffer[20]);
 
 void slice(char* stl);
 
-void addRotGcode(std::vector<instruction> &instructions,  int direction);
+void addRotGcode(std::vector<instruction> &instructions,  int direction, int currentdirection);
 
 void OutputGcode(std::vector<instruction> instructions);
 
