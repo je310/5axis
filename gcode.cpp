@@ -224,7 +224,7 @@ void clearins (instruction &thisins){
 
 // t2 is A axis, rotate yellow to blue. t1 is the rotation about red
 void addRotGcode(std::vector<instruction> &instructions,  int direction, int currentdirection){
-	float t2div  = 1/0.044223327;
+	float t2div  = 1/0.045823327;// 1/0.044223327;
 	float t1div = 1/0.013266;
 	float t1direction;
 	float t2direction;
@@ -261,6 +261,9 @@ void addRotGcode(std::vector<instruction> &instructions,  int direction, int cur
 		thisins.E = (-90-t2direction)/t2div;
 		instructions.push_back(thisins);
 		clearins(thisins);
+		thisins.G = 92;
+		instructions.push_back(thisins);
+		clearins(thisins);
 		thisins.T = 1;
 		instructions.push_back(thisins);
 		clearins(thisins);
@@ -277,6 +280,9 @@ void addRotGcode(std::vector<instruction> &instructions,  int direction, int cur
 		clearins(thisins);
 		thisins.G = 1;
 		thisins.E = (90-t2direction)/t2div;
+		instructions.push_back(thisins);
+		clearins(thisins);
+		thisins.G = 92;
 		instructions.push_back(thisins);
 		clearins(thisins);
 		thisins.T = 1;
@@ -297,6 +303,9 @@ void addRotGcode(std::vector<instruction> &instructions,  int direction, int cur
 		thisins.E = (0-t2direction)/t2div;
 		instructions.push_back(thisins);
 		clearins(thisins);
+		thisins.G = 92;
+		instructions.push_back(thisins);
+		clearins(thisins);
 		thisins.T = 1;
 		instructions.push_back(thisins);
 		clearins(thisins);
@@ -315,6 +324,9 @@ void addRotGcode(std::vector<instruction> &instructions,  int direction, int cur
 		thisins.E = (90-t2direction)/t2div;
 		instructions.push_back(thisins);
 		clearins(thisins);
+		thisins.G = 92;
+		instructions.push_back(thisins);
+		clearins(thisins);
 		thisins.T = 1;
 		instructions.push_back(thisins);
 		clearins(thisins);
@@ -331,6 +343,9 @@ void addRotGcode(std::vector<instruction> &instructions,  int direction, int cur
 		clearins(thisins);
 		thisins.G = 1;
 		thisins.E = (-90-t2direction)/t2div;
+		instructions.push_back(thisins);
+		clearins(thisins);
+		thisins.G = 92;
 		instructions.push_back(thisins);
 		clearins(thisins);
 		thisins.T = 1;
@@ -360,7 +375,7 @@ void OutputGcode(std::vector<instruction> instructions){
 					myfile <<'G'<<instructions.at(i).G<<' '<<'X'<<instructions.at(i).X<<' '<<'Y'<<instructions.at(i).Y<<' '<<'Z'<<instructions.at(i).Z<<' '<<'F'<<instructions.at(i).F<<' '<<'E'<<instructions.at(i).E<<std::endl;
 				}
 				else{
-					myfile <<'G'<<instructions.at(i).G<<' '<<'F'<<"100"<<' '<<'E'<<instructions.at(i).E<<std::endl;
+					myfile <<'G'<<instructions.at(i).G<<' '<<'F'<<"350"<<' '<<'E'<<instructions.at(i).E<<std::endl;
 				}
 			}
 			if(instructions.at(i).G == 92){
@@ -371,7 +386,7 @@ void OutputGcode(std::vector<instruction> instructions){
 			if(instructions.at(i).M == 82 ||instructions.at(i).M == 84){
 				myfile <<'M'<<instructions.at(i).M<<std::endl;
 			}
-			if(instructions.at(i).M == 104 || instructions.at(i).M == 109){
+			if(instructions.at(i).M == 104 || instructions.at(i).M == 119){ //109 to have blocking tempcalls 
 				myfile <<'M'<<instructions.at(i).M<<' '<<"S"<<instructions.at(i).S<<std::endl;
 			}
 		}

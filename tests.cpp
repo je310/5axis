@@ -171,3 +171,145 @@ dirnode makedirnode(scene::IAnimatedMeshSceneNode* node){
 	mynode.node = node;
 	return mynode;
 }
+
+int testTriangleIntersection(){
+	core::vector3df* I = new core::vector3df;
+	using namespace std;
+	char filename[40] ="triangtestdata.dat";
+	ifstream infile(filename);
+	string line;
+	string unit;
+	char buffer[20];
+	int numberOtriangles = 0;
+	int numberOint = 0;
+	int errors = 0;
+	Triangle currentTriangle;
+	Tline currentLine;
+
+	if(!infile.is_open()){
+		cout<<"oh no, the file cannot open"<< endl;
+	}
+	
+	getline(infile, line);
+	istringstream record(line);
+	record >> unit;
+	char first  = unit.front();
+	if (first == 'T'){
+		unit.copy(buffer,4,1);
+		numberOtriangles = atoi(buffer);
+	}
+	else{
+		return 2;
+	}
+	record >> unit;
+	first  = unit.front();
+	if (first == 'I'){
+		unit.copy(buffer,4,1);
+		numberOint = atoi(buffer);
+	}
+	else{
+		return 2;
+	}
+	for(int i=0; i<numberOtriangles; i++){
+		for(int j=0; j<1 ; j++){
+			getline(infile, line);//skip the triangle marker
+			getline(infile, line);
+			istringstream record(line);
+			record >> unit;
+			unit.copy(buffer,15,0);
+			currentTriangle.V0.X = atof(buffer);
+			record >> unit;
+			unit.copy(buffer,15,0);
+			currentTriangle.V0.Y = atof(buffer);
+			record >> unit;
+			unit.copy(buffer,15,0);
+			currentTriangle.V0.Z = atof(buffer);
+			getline(infile, line);
+			record.str(line);
+			record.clear();
+			record >> unit;
+			unit.copy(buffer,15,0);
+			currentTriangle.V1.X = atof(buffer);
+			record >> unit;
+			unit.copy(buffer,15,0);
+			currentTriangle.V1.Y = atof(buffer);
+			record >> unit;
+			unit.copy(buffer,15,0);
+			currentTriangle.V1.Z = atof(buffer);
+			getline(infile, line);
+			record.str(line);
+			record.clear();
+			record >> unit;
+			unit.copy(buffer,15,0);
+			currentTriangle.V2.X = atof(buffer);
+			record >> unit;
+			unit.copy(buffer,15,0);
+			currentTriangle.V2.Y = atof(buffer);
+			record >> unit;
+			unit.copy(buffer,15,0);
+			currentTriangle.V2.Z = atof(buffer);
+
+		}
+		getline(infile, line); // skip the hit marker
+		for(int j=0; j<numberOint;j++){
+			getline(infile, line);
+			istringstream record(line);
+			record >> unit;
+			unit.copy(buffer,15,0);
+			currentLine.start.X = atof(buffer);
+			record >> unit;
+			unit.copy(buffer,15,0);
+			currentLine.start.Y = atof(buffer);
+			record >> unit;
+			unit.copy(buffer,15,0);
+			currentLine.start.Z = atof(buffer);
+			record >> unit;
+			unit.copy(buffer,15,0);
+			currentLine.end.X = atof(buffer);
+			record >> unit;
+			unit.copy(buffer,15,0);
+			currentLine.end.Y = atof(buffer);
+			record >> unit;
+			unit.copy(buffer,15,0);
+			currentLine.end.Z = atof(buffer);
+			core::vector3df* I = new core::vector3df;
+			int colres = intersect3D_RayTriangle(currentLine,currentTriangle,I);
+			if(!colres){
+				errors++;
+			}
+			delete I;
+		}
+		
+		getline(infile, line); // skip the nothit marker
+		for(int j=0; j<numberOint;j++){
+			getline(infile, line);
+			istringstream record(line);
+			record >> unit;
+			unit.copy(buffer,15,0);
+			currentLine.start.X = atof(buffer);
+			record >> unit;
+			unit.copy(buffer,15,0);
+			currentLine.start.Y = atof(buffer);
+			record >> unit;
+			unit.copy(buffer,15,0);
+			currentLine.start.Z = atof(buffer);
+			record >> unit;
+			unit.copy(buffer,15,0);
+			currentLine.end.X = atof(buffer);
+			record >> unit;
+			unit.copy(buffer,15,0);
+			currentLine.end.Y = atof(buffer);
+			record >> unit;
+			unit.copy(buffer,15,0);
+			currentLine.end.Z = atof(buffer);
+			int colres = intersect3D_RayTriangle(currentLine,currentTriangle,I);
+			if(colres){
+				errors++;
+			}
+			
+		}
+
+	}
+	delete I;
+	return errors;
+}

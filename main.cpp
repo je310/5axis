@@ -16,6 +16,7 @@
 //#define USESILLYCHECK
 #define vis
 //#define coll
+#define test
 
 
 
@@ -144,7 +145,7 @@ std::vector<dirnode> allnodes;
 	}Context;
 
 
-
+int currentdirection = GUI_ID_RED;
 bool selectmode = 0;
 class MyEventReceiver : public IEventReceiver
 {
@@ -309,11 +310,11 @@ public:
 
 				case GUI_ID_SLICE:
 					scene::IMeshBuffer *mesh;
-
+					
 					for(int i = 0; i< allnodes.size(); i++){
 						mesh = allnodes.at(i).node->getMesh()->getMeshBuffer(0);
 						char path[10] = "";
-						int currentdirection = GUI_ID_RED;
+						
 						itoa(i,path,10);
 						rotatemesh(mesh,allnodes.at(i).direction,smallz);
 						writestl(mesh,path);
@@ -322,8 +323,8 @@ public:
 						std::vector<instruction> curr;
 						curr = ReadInGCode(savedVals,path);
 						for(int j =0; j< curr.size(); j++){
-							curr.at(j).X += midpointtest.X + 2.3;
-							curr.at(j).Y += midpointtest.Y  + 2.3; 
+							curr.at(j).X += midpointtest.X + 1.85;
+							curr.at(j).Y += midpointtest.Y  + 2.8; 
 							curr.at(j).Z += midpointtest.Z  -smallz; 
 							core::vector3df point = core::vector3df(curr.at(j).X,curr.at(j).Y,curr.at(j).Z);
 							//rotateline(point,allnodes.at(i).direction);
@@ -462,6 +463,9 @@ int main(int argc, char* argv[])
 	//
 	//	Setup irlicht in a sensible way
 	//
+#ifdef test
+	int errors =testTriangleIntersection();
+#endif
 	video::E_DRIVER_TYPE driverType=driverChoiceConsole();
 	if (driverType==video::EDT_COUNT)
 		return 1;
@@ -604,7 +608,7 @@ int main(int argc, char* argv[])
 
 	//section that loads the test model stls 
 	scene::IAnimatedMeshSceneNode* zcore = 0;
-	zcore = smgr->addAnimatedMeshSceneNode(smgr->getMesh("stl/(Z1)core.stl"),
+	zcore = smgr->addAnimatedMeshSceneNode(smgr->getMesh("stl2/(Z1)core.stl"),
 		0, IDFlag_IsPickable);
 	zcore->setMaterialType(video::EMT_TRANSPARENT_ALPHA_CHANNEL);
 	smgr->getMeshManipulator()->setVertexColors(zcore->getMesh(), video::SColor(255,145,0,123));
@@ -625,14 +629,14 @@ int main(int argc, char* argv[])
 
 	//load the models that are adjacent in the input stl model space
 	scene::IAnimatedMeshSceneNode* y1core = 0;
-	y1core = smgr->addAnimatedMeshSceneNode(smgr->getMesh("stl/(Y1)core.stl"),
+	y1core = smgr->addAnimatedMeshSceneNode(smgr->getMesh("stl2/(Y1)core.stl"),
 		0, IDFlag_IsPickable);
 	y1core->setMaterialType(video::EMT_TRANSPARENT_ALPHA_CHANNEL);
 	smgr->getMeshManipulator()->setVertexColors(y1core->getMesh(), video::SColor(255,145,0,123));
 	y1core->setPosition(y1core->getAbsolutePosition() - core::vector3df(0,0,smallz));
 
 	scene::IAnimatedMeshSceneNode* y2core = 0;
-	y2core = smgr->addAnimatedMeshSceneNode(smgr->getMesh("stl/(Y2)core.stl"),
+	y2core = smgr->addAnimatedMeshSceneNode(smgr->getMesh("stl2/(Y2)core.stl"),
 		0, IDFlag_IsPickable);
 	y2core->setMaterialType(video::EMT_TRANSPARENT_ALPHA_CHANNEL);
 	smgr->getMeshManipulator()->setVertexColors(y2core->getMesh(), video::SColor(255,145,0,123));
@@ -641,9 +645,15 @@ int main(int argc, char* argv[])
 	//test the rotation on both the side peices
 	//rotateNodeInWorldSpace(y2core,90,core::vector3df(0,1,0), core::vector3df(0,0,50));
 	//rotateNodeInWorldSpace(y1core,-90,core::vector3df(0,1,0), core::vector3df(0,0,50));
-
+		scene::IAnimatedMeshSceneNode* x1core = 0;
+	x1core = smgr->addAnimatedMeshSceneNode(smgr->getMesh("stl2/(X1)core.stl"),
+		0, IDFlag_IsPickable);
+	x1core->setMaterialType(video::EMT_TRANSPARENT_ALPHA_CHANNEL);
+	smgr->getMeshManipulator()->setVertexColors(x1core->getMesh(), video::SColor(255,145,0,123));
+	x1core->setPosition(x1core->getAbsolutePosition() - core::vector3df(0,0,smallz));
 	
 	allnodes.push_back(makedirnode(zcore));
+	allnodes.push_back(makedirnode(x1core));
 	allnodes.push_back(makedirnode(y1core));
 	allnodes.push_back(makedirnode(y2core));
 	int lastFPS = -1;

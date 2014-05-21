@@ -11,6 +11,7 @@
 #include "gcode.h"
 #include "colours.h"
 
+
 using namespace irr;
 
 
@@ -32,5 +33,7 @@ void doprint(scene::IAnimatedMeshSceneNode* head, std::vector<instruction> instr
 void setdir(scene::ISceneManager* smgr, dirnode &selectednode,int current);
 
 dirnode makedirnode(scene::IAnimatedMeshSceneNode* node);
+
+int testTriangleIntersection();
 
 #endif
