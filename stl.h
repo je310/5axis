@@ -23,5 +23,9 @@ core::vector3df getnormal(core::vector3df v1,core::vector3df v2,core::vector3df 
 
 void rotatemesh(scene::IMeshBuffer* mesh, int direction, float smallz);
 
+void makePlatform(scene::IMeshBuffer* mesh, scene::IMeshBuffer* nub);
+
+//dirnode sliceObj(std::vector<dirnode> allnodes, int selectednode, Triangle plane);
+
 
 #endif

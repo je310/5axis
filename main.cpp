@@ -147,6 +147,7 @@ std::vector<dirnode> allnodes;
 
 int currentdirection = GUI_ID_RED;
 bool selectmode = 0;
+bool cutFace = 0;
 class MyEventReceiver : public IEventReceiver
 {
 public:
@@ -323,9 +324,18 @@ public:
 						std::vector<instruction> curr;
 						curr = ReadInGCode(savedVals,path);
 						for(int j =0; j< curr.size(); j++){
-							curr.at(j).X += midpointtest.X + 1.85;
-							curr.at(j).Y += midpointtest.Y  + 2.8; 
-							curr.at(j).Z += midpointtest.Z  -smallz; 
+							if(allnodes.at(i).direction == GUI_ID_BLUE){
+								curr.at(j).X += midpointtest.X + 4.4;
+								curr.at(j).Y += midpointtest.Y  + 3.2; 
+								curr.at(j).Z += midpointtest.Z  -smallz -1.15; 
+
+							}
+							else{
+								curr.at(j).X += midpointtest.X + 3;
+								curr.at(j).Y += midpointtest.Y  + 4; 
+								curr.at(j).Z += midpointtest.Z  -smallz; 
+							}
+							
 							core::vector3df point = core::vector3df(curr.at(j).X,curr.at(j).Y,curr.at(j).Z);
 							//rotateline(point,allnodes.at(i).direction);
 							//curr.at(j).X = point.X;
@@ -338,6 +348,12 @@ public:
 					}
 					sliced = 1;
 					OutputGcode(instructions);
+					return true;
+
+
+				case GUI_ID_FACE:
+					cutFace = !cutFace;
+
 					return true;
 
 				default:
@@ -508,6 +524,8 @@ int main(int argc, char* argv[])
 			L"File Open", L"Opens a file");
 	env->addButton(core::rect<s32>(10,440,ResX/8,440 + 64), 0, GUI_ID_SLICE,
 			L"5lice", L"slices the file");
+	env->addButton(core::rect<s32>(10,500,ResX/8,500 + 64), 0, GUI_ID_FACE,
+			L"Cut, Face Offset", L"Divides the object allong a plane ofset from the selected face.");
 
 	//gui::IGUIButton* yellow;
 	//yellow->setText("yellow");
@@ -604,15 +622,26 @@ int main(int argc, char* argv[])
 	smgr->getMeshManipulator()->setVertexColors(head->getMesh(), video::SColor(255,0,0,255));
 	head->setPosition(core::vector3df(5,5,1));
 	head->updateAbsolutePosition();
+	head->setVisible(false);
 
 
 	//section that loads the test model stls 
 	scene::IAnimatedMeshSceneNode* zcore = 0;
-	zcore = smgr->addAnimatedMeshSceneNode(smgr->getMesh("stl2/(Z1)core.stl"),
+	zcore = smgr->addAnimatedMeshSceneNode(smgr->getMesh("stl5/middle.stl"),
 		0, IDFlag_IsPickable);
 	zcore->setMaterialType(video::EMT_TRANSPARENT_ALPHA_CHANNEL);
 	smgr->getMeshManipulator()->setVertexColors(zcore->getMesh(), video::SColor(255,145,0,123));
+	scene::IMeshBuffer* meshTest = zcore->getMesh()->getMeshBuffer(0);
 
+
+	scene::IAnimatedMeshSceneNode* nubnode = 0;
+	nubnode = smgr->addAnimatedMeshSceneNode(smgr->getMesh("stl/nub.stl"),
+		0, IDFlag_IsPickable);
+	scene::IMeshBuffer* nub = nubnode->getMesh()->getMeshBuffer(0);
+	nubnode->setVisible(false);
+	char path[21] = "testingtheoutput.stl";
+	writestl(nub,path);
+	makePlatform(meshTest, nub);
 	//load stl from input args, this is the translucent 'final model'
 	
 
@@ -629,14 +658,14 @@ int main(int argc, char* argv[])
 
 	//load the models that are adjacent in the input stl model space
 	scene::IAnimatedMeshSceneNode* y1core = 0;
-	y1core = smgr->addAnimatedMeshSceneNode(smgr->getMesh("stl2/(Y1)core.stl"),
+	y1core = smgr->addAnimatedMeshSceneNode(smgr->getMesh("stl4/side1.stl"),
 		0, IDFlag_IsPickable);
 	y1core->setMaterialType(video::EMT_TRANSPARENT_ALPHA_CHANNEL);
 	smgr->getMeshManipulator()->setVertexColors(y1core->getMesh(), video::SColor(255,145,0,123));
 	y1core->setPosition(y1core->getAbsolutePosition() - core::vector3df(0,0,smallz));
 
 	scene::IAnimatedMeshSceneNode* y2core = 0;
-	y2core = smgr->addAnimatedMeshSceneNode(smgr->getMesh("stl2/(Y2)core.stl"),
+	y2core = smgr->addAnimatedMeshSceneNode(smgr->getMesh("stl4/side2.stl"),
 		0, IDFlag_IsPickable);
 	y2core->setMaterialType(video::EMT_TRANSPARENT_ALPHA_CHANNEL);
 	smgr->getMeshManipulator()->setVertexColors(y2core->getMesh(), video::SColor(255,145,0,123));
@@ -651,11 +680,12 @@ int main(int argc, char* argv[])
 	x1core->setMaterialType(video::EMT_TRANSPARENT_ALPHA_CHANNEL);
 	smgr->getMeshManipulator()->setVertexColors(x1core->getMesh(), video::SColor(255,145,0,123));
 	x1core->setPosition(x1core->getAbsolutePosition() - core::vector3df(0,0,smallz));
+	x1core->setVisible(false);
 	
 	allnodes.push_back(makedirnode(zcore));
-	allnodes.push_back(makedirnode(x1core));
-	allnodes.push_back(makedirnode(y1core));
-	allnodes.push_back(makedirnode(y2core));
+	//allnodes.push_back(makedirnode(x1core));
+	//allnodes.push_back(makedirnode(y1core));
+	//allnodes.push_back(makedirnode(y2core));
 	int lastFPS = -1;
 	int inscount = 0;
 
@@ -820,11 +850,30 @@ int main(int argc, char* argv[])
 				//ray.end = ray.start + (camera->getTarget() - ray.start).normalize() * 1000.0f;
 				selectednode = findselected(ray,allnodes,smallz);
 				//bill->setPosition(ray.end);
-				if(selectednode != -1){
+				if(selectednode != -1 && !cutFace){
 					setdir(smgr,allnodes.at(selectednode), current);
 					//smgr->getMeshManipulator()->setVertexColors(selectednode->getMesh(), video::SColor(123,123,123,123));
 					//bill->setPosition(ray.end);
 				}
+
+			}
+			if(receiver.GetMouseState().LeftButtonDown &&cutFace){
+				ray.start = camera->getPosition();
+				clickpos  =receiver.MouseState.Position;
+				 nearleftup  = camera->getViewFrustum()->getNearLeftUp();
+				nearleftdown = camera->getViewFrustum()->getNearLeftDown();
+				 nearrightup = camera->getViewFrustum()->getNearRightUp();
+				nearrightdown = camera->getViewFrustum()->getNearRightDown();
+				topvect = nearrightup - nearleftup;
+				downvect = nearleftdown -nearleftup;
+				core::vector3df in = (nearleftup + ((float)clickpos.X/(float)ResX)*topvect + ((float)clickpos.Y/(float)ResY)*downvect);
+				core::vector3df  rot = camera->getRotation();
+				ray.end = ray.start+ (in -ray.start).normalize()*100;
+				selectednode = findselected(ray,allnodes,smallz);
+				Triangle plane;
+				plane = findPlane(ray,allnodes,smallz);
+				//allnodes.push_back(sliceObj(allnodes,selectednode,plane));
+				cutFace = !cutFace;
 			}
 			
 #ifdef vis		

@@ -42,6 +42,7 @@ Tline validateLine(Tline myline);
 bool checkcollision(std::vector<core::vector3df> mycubes, Tline myline);
 
 int findselected(Tline &ray, std::vector<dirnode> allnodes,float smallz);
+Triangle findPlane(Tline &ray, std::vector<dirnode> allnodes,float smallz);
 
 
 #endif

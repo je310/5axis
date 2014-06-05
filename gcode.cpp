@@ -224,7 +224,7 @@ void clearins (instruction &thisins){
 
 // t2 is A axis, rotate yellow to blue. t1 is the rotation about red
 void addRotGcode(std::vector<instruction> &instructions,  int direction, int currentdirection){
-	float t2div  = 1/0.045823327;// 1/0.044223327;
+	float t2div  = 1/0.045023327;// 1/0.044223327;
 	float t1div = 1/0.013266;
 	float t1direction;
 	float t2direction;

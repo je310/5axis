@@ -205,6 +205,47 @@ float linemag(Tline ray){
 	return sqrt(squsum);
 }
 
+Triangle findPlane(Tline &ray, std::vector<dirnode> allnodes,float smallz){
+	int numberOfNodes = allnodes.size();
+	int selectednode;
+	scene::IMeshBuffer *mesh; 
+	Triangle currenttriang;
+	Triangle savedTriangle;
+	core::vector3df Intersection; 
+	int hasInt = 0;
+	float closest = 100000;
+
+	for(int i = 0; i < numberOfNodes; i++){
+		mesh = allnodes.at(i).node->getMesh()->getMeshBuffer(0);
+		u32 indexcount = mesh->getIndexCount();
+		u16 *indices =  mesh->getIndices();
+		u32 vertexcount = mesh->getVertexCount();
+		video::S3DVertex *vertices = (video::S3DVertex *)mesh->getVertices();
+		for(int j = 0 ; j <indexcount; j=j+3){
+			currenttriang.V0 = vertices[indices[j]].Pos;
+			currenttriang.V1 = vertices[indices[j+1]].Pos;
+			currenttriang.V2 = vertices[indices[j+2]].Pos;
+			addoffset(currenttriang, smallz);
+			hasInt = intersect3D_RayTriangle(ray,currenttriang,& Intersection);
+			if (hasInt ==1){
+				ray.end = Intersection;
+				if(linemag(ray)<closest){
+					savedTriangle = currenttriang;
+					closest = linemag(ray);
+					selectednode = i;  
+				}
+			}
+		}
+	}
+	if(closest < 100000){
+		return savedTriangle;
+	}
+	savedTriangle.V0 =  core::vector3df(0,0,0);
+	savedTriangle.V1 =  core::vector3df(0,0,0);
+	savedTriangle.V2 =  core::vector3df(0,0,0);
+	return savedTriangle;
+}
+
 
 int findselected(Tline &ray, std::vector<dirnode> allnodes,float smallz){
 	int numberOfNodes = allnodes.size();
@@ -242,3 +283,6 @@ int findselected(Tline &ray, std::vector<dirnode> allnodes,float smallz){
 	selectednode= -1;
 	return selectednode;
 }
+
+
+
