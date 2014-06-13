@@ -130,11 +130,14 @@ float greenalpha = 70;
 float blackalpha = 70;
 
 bool sliced  = 0;
+int measure = 4;
+int reorder = 1;
 std::vector<instruction> instructions;
 IrrlichtDevice *device;
 instruction savedVals;
 float smallz = 1000;
-
+std::vector<int> order;
+std::string report;
 std::vector<dirnode> allnodes;
 
 	struct SAppContext
@@ -311,16 +314,44 @@ public:
 
 				case GUI_ID_SLICE:
 					scene::IMeshBuffer *mesh;
-					
+
+					report.clear();
+					if(checkOrdering(allnodes,order,report)){
+						window = env->addWindow(
+							core::rect<s32>(200 + Context.counter, 200+ Context.counter, 600 + Context.counter, 300 + Context.counter),
+							false, // modal?
+							L"Error Report - Fail");
+						std::wstring widestr = std::wstring(report.begin(), report.end());
+
+						env->addStaticText( widestr.c_str(),
+							core::rect<s32>(35,35,400,80),
+							false, // border?
+							false, // wordwrap?
+							window);
+						return false;
+					}
+					else{
+						window = env->addWindow(
+							core::rect<s32>(200 + Context.counter, 200+ Context.counter, 600 + Context.counter, 300 + Context.counter),
+							false, // modal?
+							L"Error Report - Success");
+						std::wstring widestr = std::wstring(report.begin(), report.end());
+
+						env->addStaticText( widestr.c_str(),
+							core::rect<s32>(35,35,400,80),
+							false, // border?
+							false, // wordwrap?
+							window);
+					}
 					for(int i = 0; i< allnodes.size(); i++){
-						mesh = allnodes.at(i).node->getMesh()->getMeshBuffer(0);
+						mesh = allnodes.at(order.at(i)).node->getMesh()->getMeshBuffer(0);
 						char path[10] = "";
 						
 						itoa(i,path,10);
-						rotatemesh(mesh,allnodes.at(i).direction,smallz);
+						rotatemesh(mesh,allnodes.at(order.at(i)).direction,smallz);
 						writestl(mesh,path);
 						slice(path);
-						core::vector3df midpointtest = findmodeloffset(allnodes.at(i).node, 0,0, 0);
+						core::vector3df midpointtest = findmodeloffset(allnodes.at(order.at(i)).node, 0,0, 0);
 						std::vector<instruction> curr;
 						curr = ReadInGCode(savedVals,path);
 						for(int j =0; j< curr.size(); j++){
@@ -342,8 +373,8 @@ public:
 							//curr.at(j).Y = point.Y; 
 							//curr.at(j).Z = point.Z; 
 						}
-						addRotGcode(instructions,allnodes.at(i).direction,currentdirection);
-						currentdirection = allnodes.at(i).direction;
+						addRotGcode(instructions,allnodes.at(order.at(i)).direction,currentdirection);
+						currentdirection = allnodes.at(order.at(i)).direction;
 						instructions.insert(instructions.end(), curr.begin(), curr.end());
 					}
 					sliced = 1;
@@ -353,6 +384,16 @@ public:
 
 				case GUI_ID_FACE:
 					cutFace = !cutFace;
+
+					return true;
+
+				case GUI_ID_MEASURE:
+					measure = 0;
+
+					return true;
+				
+				case GUI_ID_REORDER:
+					reorder = 0;
 
 					return true;
 
@@ -526,6 +567,10 @@ int main(int argc, char* argv[])
 			L"5lice", L"slices the file");
 	env->addButton(core::rect<s32>(10,500,ResX/8,500 + 64), 0, GUI_ID_FACE,
 			L"Cut, Face Offset", L"Divides the object allong a plane ofset from the selected face.");
+	env->addButton(core::rect<s32>(10,560,ResX/8,560 + 64), 0, GUI_ID_MEASURE,
+			L"Measure", L"Click on 2 vertices and the offset distance will be updated to the distance between the points");
+	env->addButton(core::rect<s32>(10,620,ResX/8,620 + 64), 0, GUI_ID_REORDER,
+			L"Ordering", L"Select the order that you want the sections to be printed in");
 
 	//gui::IGUIButton* yellow;
 	//yellow->setText("yellow");
@@ -560,6 +605,11 @@ int main(int argc, char* argv[])
 	pink->setUseAlphaChannel();
 	pink->setImage(driver->getTexture("cube/blank.png"));
 	pink->setDrawBorder(0);
+
+
+	IGUIEditBox * editBox = env->addEditBox(L"Editable Text", irr::core::rect<s32>(350, 80, 550, 100),1,0,10);
+	IGUIElement* root = env->getRootGUIElement();
+
 
 	scene::ISceneNode* n = smgr->addCubeSceneNode(100,0,-1,core::vector3df(0,0,-0.01),core::vector3df(0,0,180),core::vector3df(1,1,0.000001));
 	n->setMaterialTexture(0, driver->getTexture("cube/bed.png"));
@@ -627,9 +677,9 @@ int main(int argc, char* argv[])
 
 	//section that loads the test model stls 
 	scene::IAnimatedMeshSceneNode* zcore = 0;
-	zcore = smgr->addAnimatedMeshSceneNode(smgr->getMesh("stl5/middle.stl"),
+	zcore = smgr->addAnimatedMeshSceneNode(smgr->getMesh("stl/Lshape.stl"),
 		0, IDFlag_IsPickable);
-	zcore->setMaterialType(video::EMT_TRANSPARENT_ALPHA_CHANNEL);
+	//zcore->setMaterialType(video::EMT_TRANSPARENT_ALPHA_CHANNEL);
 	smgr->getMeshManipulator()->setVertexColors(zcore->getMesh(), video::SColor(255,145,0,123));
 	scene::IMeshBuffer* meshTest = zcore->getMesh()->getMeshBuffer(0);
 
@@ -657,19 +707,19 @@ int main(int argc, char* argv[])
 	zcore->setPosition(zcore->getAbsolutePosition() - core::vector3df(0,0,smallz));
 
 	//load the models that are adjacent in the input stl model space
-	scene::IAnimatedMeshSceneNode* y1core = 0;
-	y1core = smgr->addAnimatedMeshSceneNode(smgr->getMesh("stl4/side1.stl"),
-		0, IDFlag_IsPickable);
-	y1core->setMaterialType(video::EMT_TRANSPARENT_ALPHA_CHANNEL);
-	smgr->getMeshManipulator()->setVertexColors(y1core->getMesh(), video::SColor(255,145,0,123));
-	y1core->setPosition(y1core->getAbsolutePosition() - core::vector3df(0,0,smallz));
+	//scene::IAnimatedMeshSceneNode* y1core = 0;
+	//y1core = smgr->addAnimatedMeshSceneNode(smgr->getMesh("stl4/side1.stl"),
+	//	0, IDFlag_IsPickable);
+	//y1core->setMaterialType(video::EMT_TRANSPARENT_ALPHA_CHANNEL);
+	//smgr->getMeshManipulator()->setVertexColors(y1core->getMesh(), video::SColor(255,145,0,123));
+	//y1core->setPosition(y1core->getAbsolutePosition() - core::vector3df(0,0,smallz));
 
-	scene::IAnimatedMeshSceneNode* y2core = 0;
-	y2core = smgr->addAnimatedMeshSceneNode(smgr->getMesh("stl4/side2.stl"),
-		0, IDFlag_IsPickable);
-	y2core->setMaterialType(video::EMT_TRANSPARENT_ALPHA_CHANNEL);
-	smgr->getMeshManipulator()->setVertexColors(y2core->getMesh(), video::SColor(255,145,0,123));
-	y2core->setPosition(y2core->getAbsolutePosition() - core::vector3df(0,0,smallz));
+	//scene::IAnimatedMeshSceneNode* y2core = 0;
+	//y2core = smgr->addAnimatedMeshSceneNode(smgr->getMesh("stl4/side2.stl"),
+	//	0, IDFlag_IsPickable);
+	//y2core->setMaterialType(video::EMT_TRANSPARENT_ALPHA_CHANNEL);
+	//smgr->getMeshManipulator()->setVertexColors(y2core->getMesh(), video::SColor(255,145,0,123));
+	//y2core->setPosition(y2core->getAbsolutePosition() - core::vector3df(0,0,smallz));
 
 	//test the rotation on both the side peices
 	//rotateNodeInWorldSpace(y2core,90,core::vector3df(0,1,0), core::vector3df(0,0,50));
@@ -710,13 +760,15 @@ int main(int argc, char* argv[])
 	Tline ray;
 	int selectednode;
 
-	//scene::IBillboardSceneNode * bill = smgr->addBillboardSceneNode();
-	//bill->setMaterialType(video::EMT_TRANSPARENT_ADD_COLOR );
-	//bill->setMaterialTexture(0, driver->getTexture("../../media/particle.bmp"));
-	//bill->setMaterialFlag(video::EMF_LIGHTING, false);
-	//bill->setMaterialFlag(video::EMF_ZBUFFER, false);
-	//bill->setSize(core::dimension2d<f32>(20.0f, 20.0f));
-	//bill->setID(ID_IsNotPickable); 
+	scene::IBillboardSceneNode * bill = smgr->addBillboardSceneNode();
+	bill->setMaterialType(video::EMT_TRANSPARENT_ADD_COLOR );
+	bill->setMaterialTexture(0, driver->getTexture("../../media/particle.bmp"));
+	bill->setMaterialFlag(video::EMF_LIGHTING, false);
+	bill->setMaterialFlag(video::EMF_ZBUFFER, false);
+	bill->setSize(core::dimension2d<f32>(20.0f, 20.0f));
+	bill->setID(ID_IsNotPickable); 
+	bill->setPosition(core::vector3df(20,20,0));
+	bill->setVisible(false);
 	core::position2di newPosition;
 	core::position2di oldPosition =core::position2di(0,0);
 	float xmovemouse = 0;
@@ -736,6 +788,13 @@ int main(int argc, char* argv[])
 	static core::vector3df downvect ;
 	static float lookside = 0;
 	static float lookup = 0;
+	irr::core::vector3df pointOne;
+	irr::core::vector3df pointTwo;
+	
+	int amountOrdered = 0;
+	std::vector<dirnode> allnodesCopy;
+	std::vector<int> nullList;
+	int lastclick = 0;
 
 
 #ifdef vis
@@ -821,7 +880,7 @@ int main(int argc, char* argv[])
 			static core::vector3df topvect ;
 			
 
-			if(receiver.GetMouseState().LeftButtonDown && current !=-1){
+			if(receiver.GetMouseState().LeftButtonDown && current !=-1 && amountOrdered ==0&& lastclick ==0 && reorder ==1){
 				ray.start = camera->getPosition();
 				clickpos  =receiver.MouseState.Position;
 				 nearleftup  = camera->getViewFrustum()->getNearLeftUp();
@@ -848,7 +907,7 @@ int main(int argc, char* argv[])
 		
 				ray.end = ray.start+ (in -ray.start).normalize()*100;
 				//ray.end = ray.start + (camera->getTarget() - ray.start).normalize() * 1000.0f;
-				selectednode = findselected(ray,allnodes,smallz);
+				selectednode = findselected(ray,allnodes,smallz,nullList);
 				//bill->setPosition(ray.end);
 				if(selectednode != -1 && !cutFace){
 					setdir(smgr,allnodes.at(selectednode), current);
@@ -869,11 +928,111 @@ int main(int argc, char* argv[])
 				core::vector3df in = (nearleftup + ((float)clickpos.X/(float)ResX)*topvect + ((float)clickpos.Y/(float)ResY)*downvect);
 				core::vector3df  rot = camera->getRotation();
 				ray.end = ray.start+ (in -ray.start).normalize()*100;
-				selectednode = findselected(ray,allnodes,smallz);
+				selectednode = findselected(ray,allnodes,smallz,nullList);
 				Triangle plane;
-				plane = findPlane(ray,allnodes,smallz);
-				//allnodes.push_back(sliceObj(allnodes,selectednode,plane));
-				cutFace = !cutFace;
+				irr::core::stringc Text;
+				Text = root->getElementFromId( 10, true )->getText();editBox->getText();
+				float offsetDist = atof(Text.c_str());
+				if(selectednode != -1 && current!=-1){
+					plane = findPlane(ray,allnodes,smallz);
+					if(plane.V0 != core::vector3df(0,0,0) || plane.V0 != core::vector3df(0,0,0) || plane.V0 != core::vector3df(0,0,0)){
+						offsetPlane(plane, current,offsetDist);
+						//bill->setPosition(ray.end);
+						sliceObj(allnodes,selectednode,plane,smgr,smallz, current);
+						cutFace = !cutFace;
+					}
+				}
+			}
+			if(measure ==0 && receiver.GetMouseState().LeftButtonDown){
+				ray.start = camera->getPosition();
+				clickpos  =receiver.MouseState.Position;
+				 nearleftup  = camera->getViewFrustum()->getNearLeftUp();
+				nearleftdown = camera->getViewFrustum()->getNearLeftDown();
+				 nearrightup = camera->getViewFrustum()->getNearRightUp();
+				nearrightdown = camera->getViewFrustum()->getNearRightDown();
+				topvect = nearrightup - nearleftup;
+				downvect = nearleftdown -nearleftup;
+				core::vector3df in = (nearleftup + ((float)clickpos.X/(float)ResX)*topvect + ((float)clickpos.Y/(float)ResY)*downvect);
+				core::vector3df  rot = camera->getRotation();
+				ray.end = ray.start+ (in -ray.start).normalize()*100;
+				selectednode = findselected(ray,allnodes,smallz,nullList);
+				if(selectednode!=-1){
+					pointOne = findClosestPoint(ray.end, allnodes, selectednode,smallz);
+					bill->setVisible(true);
+					bill->setPosition(pointOne);
+					measure++;
+				}
+			}
+			if(measure ==1 && !receiver.GetMouseState().LeftButtonDown){
+				measure++;
+			}
+			if(measure ==2 && receiver.GetMouseState().LeftButtonDown){
+				ray.start = camera->getPosition();
+				clickpos  =receiver.MouseState.Position;
+				 nearleftup  = camera->getViewFrustum()->getNearLeftUp();
+				nearleftdown = camera->getViewFrustum()->getNearLeftDown();
+				 nearrightup = camera->getViewFrustum()->getNearRightUp();
+				nearrightdown = camera->getViewFrustum()->getNearRightDown();
+				topvect = nearrightup - nearleftup;
+				downvect = nearleftdown -nearleftup;
+				core::vector3df in = (nearleftup + ((float)clickpos.X/(float)ResX)*topvect + ((float)clickpos.Y/(float)ResY)*downvect);
+				core::vector3df  rot = camera->getRotation();
+				ray.end = ray.start+ (in -ray.start).normalize()*100;
+				selectednode = findselected(ray,allnodes,smallz,nullList);
+				if(selectednode!=-1){
+					pointTwo = findClosestPoint(ray.end, allnodes, selectednode,smallz);
+					bill->setPosition(pointTwo);
+					float newOffset = (pointOne - pointTwo).getLength();
+					std::wostringstream woss;
+					woss << newOffset;       
+					std::wstring ws = woss.str();
+					const wchar_t* cwc = ws.c_str();
+					std::vector<wchar_t> buf( cwc , cwc + (ws.size() + 1) );
+					wchar_t* offsetChar = &buf[0];
+					root->getElementFromId( 10, true )->getText();editBox->setText(offsetChar);
+					measure++;
+				}
+			}
+			if(measure ==3 && !receiver.GetMouseState().LeftButtonDown){
+				measure++;
+				bill->setVisible(false);
+			}
+
+			if(reorder==0 && receiver.GetMouseState().LeftButtonDown && amountOrdered < allnodes.size()&& lastclick ==0){
+				lastclick = 1;
+				if(amountOrdered ==0){
+					allnodesCopy = allnodes;
+					order.clear();
+				}
+				ray.start = camera->getPosition();
+				clickpos  =receiver.MouseState.Position;
+				 nearleftup  = camera->getViewFrustum()->getNearLeftUp();
+				nearleftdown = camera->getViewFrustum()->getNearLeftDown();
+				 nearrightup = camera->getViewFrustum()->getNearRightUp();
+				nearrightdown = camera->getViewFrustum()->getNearRightDown();
+				topvect = nearrightup - nearleftup;
+				downvect = nearleftdown -nearleftup;
+				core::vector3df in = (nearleftup + ((float)clickpos.X/(float)ResX)*topvect + ((float)clickpos.Y/(float)ResY)*downvect);
+				core::vector3df  rot = camera->getRotation();
+				ray.end = ray.start+ (in -ray.start).normalize()*100;
+				selectednode = findselected(ray,allnodesCopy,smallz,order);
+				if(selectednode!=-1){
+					//allnodesCopy.
+					order.push_back(selectednode);
+					allnodes.at(selectednode).node->setVisible(false);
+					amountOrdered++;
+					if(amountOrdered == allnodes.size()){
+						reorder = 1;
+						amountOrdered = 0;
+						for(int i = 0; i< allnodes.size(); i++){
+							allnodes.at(i).node->setVisible(true);
+						}
+					}
+
+				}
+			}
+			if(!receiver.GetMouseState().LeftButtonDown){
+				lastclick = 0;
 			}
 			
 #ifdef vis		
@@ -968,7 +1127,7 @@ int main(int argc, char* argv[])
 
 				if (lastFPS != fps)
 				{
-					core::stringw str = L"Collision detection example - Irrlicht Engine [";
+					core::stringw str = L"5 Axis Slicer - '5licer' [";
 					str += driver->getName();
 					str += "] FPS:";
 					str += fps;

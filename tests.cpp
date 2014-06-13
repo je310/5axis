@@ -34,15 +34,15 @@ bool testTriangleCol(){
 void addlighting(scene::ISceneManager* smgr,float lightstr){
 
 	scene::ILightSceneNode * light = smgr->addLightSceneNode(0, core::vector3df(-150,-150,150),
-		video::SColorf(1.0f,1.0f,1.0f,1.0f), lightstr);
+		video::SColorf(1.0f,1.0f,1.0f,1.0f), 3*lightstr);
 
 
-	scene::ILightSceneNode * light2 = smgr->addLightSceneNode(0, core::vector3df(150,150,150),
-		video::SColorf(1.0f,1.0f,1.0f,1.0f), lightstr);
+	//scene::ILightSceneNode * light2 = smgr->addLightSceneNode(0, core::vector3df(150,150,150),
+	//	video::SColorf(1.0f,1.0f,1.0f,1.0f), lightstr);
 
 
-	scene::ILightSceneNode * light3 = smgr->addLightSceneNode(0, core::vector3df(0,150,150),
-		video::SColorf(1.0f,1.0f,1.0f,1.0f), lightstr);
+	//scene::ILightSceneNode * light3 = smgr->addLightSceneNode(0, core::vector3df(0,150,150),
+	//	video::SColorf(1.0f,1.0f,1.0f,1.0f), lightstr);
 
 
 	scene::ILightSceneNode * light4 = smgr->addLightSceneNode(0, core::vector3df(150,150,0),
@@ -128,11 +128,12 @@ void doprint(scene::IAnimatedMeshSceneNode* head, std::vector<instruction> instr
 
 	}
 }
-video::SColor greencol  =	video::SColor(100,34,177,76);
-video::SColor pinkcol  =	video::SColor(100,255,174,201);
-video::SColor bluecol  =	video::SColor(100,63,72,204);
-video::SColor redcol  =		video::SColor(100,237,28,36);
-video::SColor yellowcol  =  video::SColor(100,255,201,14);
+int alpha = 255;
+video::SColor greencol  =	video::SColor(alpha,34,177,76);
+video::SColor pinkcol  =	video::SColor(alpha,255,174,201);
+video::SColor bluecol  =	video::SColor(alpha,63,72,204);
+video::SColor redcol  =		video::SColor(alpha,237,28,36);
+video::SColor yellowcol  =  video::SColor(alpha,255,201,14);
 
 
 
@@ -312,4 +313,37 @@ int testTriangleIntersection(){
 	}
 	delete I;
 	return errors;
+}
+
+int checkOrdering(std::vector<dirnode> allnodes,std::vector<int> order, std::string &report){
+	std::string errorString;
+	int fail = 0;
+	std::string firstUp = "First is upright - good \n";
+	std::string firstUpnot = "First is not upright - fail \n";
+	std::string orderSet = "Order has been set - good\n";
+	std::string orderSetnot = "Order has not been set - fail\n";
+	if(order.size() >0){
+		if(allnodes.at(order.at(0)).direction == GUI_ID_RED){
+			errorString.append(firstUp);
+		}
+		else{
+			errorString.append(firstUpnot);
+			fail = 1;
+		}
+		int ordersize = order.size();
+		int nodeSize  = allnodes.size();
+		if(order.size() == allnodes.size()){
+			errorString.append(orderSet);
+		}
+		else{
+			errorString.append(orderSetnot);
+			fail = 1;
+		}
+	}
+	else{
+		errorString.append(orderSetnot);
+		fail = 1;
+	}
+	report = errorString;
+	return fail;
 }

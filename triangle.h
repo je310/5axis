@@ -10,5 +10,15 @@ struct Triangle{
 	core::vector3df V2;
 };
 
+struct dirnode{
+	scene::IAnimatedMeshSceneNode* node;
+	int direction;
+};
+
+struct Tline{
+	core::vector3df start;
+	core::vector3df end;
+};
+
 
 #endif

@@ -1,12 +1,86 @@
-﻿Build started 05/06/2014 16:42:17.
+﻿Build started 08/06/2014 00:47:28.
      1>Project "C:\Users\Josh\Dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.Collision\Collision_vc10.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
-         Touching "Release\07.Collision.unsuccessfulbuild".
+         Creating "Release\07.Collision.unsuccessfulbuild" because "AlwaysCreate" was specified.
        ClCompile:
-         All outputs are up-to-date.
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I"C:\Users\Josh\Dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.Collision" /I..\..\include /Zi /nologo /W3 /WX- /O2 /Ob1 /Oy- /D WIN32 /D NDEBUG /D _CONSOLE /D _VC80_UPGRADE=0x0710 /D _MBCS /GF /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /openmp /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt stl.cpp
+         stl.cpp
+     1>stl.cpp(29): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(48): warning C4305: '=' : truncation from 'unsigned int' to 'char'
+     1>stl.cpp(48): warning C4309: '=' : truncation of constant value
+     1>stl.cpp(53): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(89): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(110) : see declaration of 'strcat'
+     1>stl.cpp(90): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(110) : see declaration of 'strcat'
+     1>stl.cpp(99): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(107): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(116): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(125): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(137): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(188): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(212): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(220): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(231): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(243): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(246): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(274): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(337): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(341): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(354): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(373): warning C4305: '=' : truncation from 'unsigned int' to 'char'
+     1>stl.cpp(373): warning C4309: '=' : truncation of constant value
+     1>stl.cpp(378): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(431): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(105) : see declaration of 'strcpy'
+     1>stl.cpp(432): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(110) : see declaration of 'strcat'
+     1>stl.cpp(437): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(456): warning C4305: '=' : truncation from 'unsigned int' to 'char'
+     1>stl.cpp(456): warning C4309: '=' : truncation of constant value
+     1>stl.cpp(461): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(496): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(506): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(510): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(545): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(552): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(567): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(587): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(596): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(605): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(650): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(754): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(757): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(764): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(767): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(778): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(781): warning C4018: '<' : signed/unsigned mismatch
+     1>stl.cpp(813): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _itoa. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdlib.h(867) : see declaration of 'itoa'
+     1>stl.cpp(815): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(110) : see declaration of 'strcat'
+     1>stl.cpp(817): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(110) : see declaration of 'strcat'
+     1>stl.cpp(827): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(110) : see declaration of 'strcat'
+     1>stl.cpp(838): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(110) : see declaration of 'strcat'
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\stl.cpp(634): warning C4715: 'findCorrectDirection' : not all control paths return a value
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\stl.cpp(426): warning C4715: 'checkSide' : not all control paths return a value
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\stl.cpp(163): warning C4715: 'containedOnce' : not all control paths return a value
+     1>c:\users\josh\dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.collision\stl.cpp(501): warning C4715: 'findIndex' : not all control paths return a value
        Link:
-         All outputs are up-to-date.
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"..\..\bin\Win32-VisualStudio\07.Collision.exe" /NOLOGO /LIBPATH:"..\..\lib\Win32-visualstudio" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Release\07.Collision.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /PDB:"C:\Users\Josh\Dropbox\4th year project\iirlichkt\irrlicht-1.8\bin\Win32-VisualStudio\07.Collision.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /IMPLIB:"..\..\bin\Win32-VisualStudio\07.Collision.lib" /MACHINE:X86 Release\collision.obj
+         Release\gcode.obj
+         Release\list.obj
+         Release\main.obj
+         Release\offsets.obj
+         Release\rotation.obj
+         Release\stl.obj
+         Release\tests.obj
          Collision_vc10.vcxproj -> C:\Users\Josh\Dropbox\4th year project\iirlichkt\irrlicht-1.8\examples\07.Collision\..\..\bin\Win32-VisualStudio\07.Collision.exe
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"..\..\bin\Win32-VisualStudio\07.Collision.exe;#1" /manifest Release\07.Collision.exe.intermediate.manifest
        FinalizeBuildStatus:
          Deleting file "Release\07.Collision.unsuccessfulbuild".
          Touching "Release\07.Collision.lastbuildstate".
@@ -14,4 +88,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.10
+Time Elapsed 00:00:03.82

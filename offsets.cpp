@@ -79,3 +79,56 @@ void addoffset(Triangle &triangle, float smallz){
 	triangle.V2.Z -= smallz;
 	return;
 }
+
+void offsetPlane(Triangle &plane, int current, float offset){
+	switch(current){
+	case GUI_ID_YELLOW:
+		plane.V0.X += offset;
+		plane.V1.X += offset;
+		plane.V2.X += offset;
+		break;
+	case GUI_ID_GREEN:
+		plane.V0.Y -= offset;
+		plane.V1.Y -= offset;
+		plane.V2.Y -= offset;
+		break;
+	case GUI_ID_RED:
+		plane.V0.Z -= offset;
+		plane.V1.Z -= offset;
+		plane.V2.Z -= offset;
+		break;
+	case GUI_ID_BLUE:
+		plane.V0.X -= offset;
+		plane.V1.X -= offset;
+		plane.V2.X -= offset;
+		break;
+	case GUI_ID_PINK:
+		plane.V0.Y += offset;
+		plane.V1.Y += offset;
+		plane.V2.Y += offset;
+		break;
+	}
+
+}
+
+irr::core::vector3df findClosestPoint(irr::core::vector3df point,std::vector<dirnode> allnodes,int selectednode,float smallz){
+	point.Z += smallz;
+	scene::IMeshBuffer *mesh;
+	mesh = allnodes.at(selectednode).node->getMesh()->getMeshBuffer(0);
+	u32 indexcount = mesh->getIndexCount();
+	u16 *indices =  mesh->getIndices();
+	u32 vertexcount = mesh->getVertexCount();
+	video::S3DVertex *vertices = (video::S3DVertex *)mesh->getVertices();
+	float savedDistance = 1000000;
+	irr::core::vector3df savedPoint;
+	for(int i =0; i < vertexcount; i++){
+		float distance = (vertices[i].Pos - point).getLength();
+		if(distance < savedDistance){
+			savedDistance = distance;
+			savedPoint = vertices[i].Pos;
+		}
+
+	}
+	savedPoint.Z -= smallz;
+	return savedPoint;
+}

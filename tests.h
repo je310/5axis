@@ -10,6 +10,7 @@
 #include "offsets.h"
 #include "gcode.h"
 #include "colours.h"
+#include <string>
 
 
 using namespace irr;
@@ -35,5 +36,7 @@ void setdir(scene::ISceneManager* smgr, dirnode &selectednode,int current);
 dirnode makedirnode(scene::IAnimatedMeshSceneNode* node);
 
 int testTriangleIntersection();
+
+int checkOrdering(std::vector<dirnode> allnodes,std::vector<int> order, std::string &report);
 
 #endif

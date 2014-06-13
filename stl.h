@@ -1,10 +1,19 @@
 #ifndef __STL_INCLUDED__   // if x.h hasn't been included yet...
 #define __STL_INCLUDED__   //   #define this so the compiler knows it has been included
 #include <irrlicht.h>
+#include <iostream>
+#include <string>
+#include <sstream>
 #include <vector>
 #include <fstream>
 #include <stdint.h>
+#include "collision.h"
+#include "triangle.h"
 #include "rotation.h"
+#include "gcode.h"
+#include "tests.h"
+
+
 
 using namespace irr;
 
@@ -25,7 +34,7 @@ void rotatemesh(scene::IMeshBuffer* mesh, int direction, float smallz);
 
 void makePlatform(scene::IMeshBuffer* mesh, scene::IMeshBuffer* nub);
 
-//dirnode sliceObj(std::vector<dirnode> allnodes, int selectednode, Triangle plane);
+int sliceObj(std::vector<dirnode> &allnodes, int selectednode, Triangle plane, irr::scene::ISceneManager *smgr, float smallz, int current);
 
 
 #endif

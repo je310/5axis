@@ -3,6 +3,7 @@
 #include <irrlicht.h>
 #include <vector>
 #include "triangle.h"
+#include "colours.h"
 using namespace irr;
 
 
@@ -15,5 +16,9 @@ core::vector3df findmodeloffset(scene::IAnimatedMeshSceneNode* model, float Adeg
 float findlowestvert (scene::IAnimatedMeshSceneNode* thing);
 
 void addoffset(Triangle &triangle, float smallz);
+
+void offsetPlane(Triangle &plane, int current, float offset);
+
+irr::core::vector3df findClosestPoint(irr::core::vector3df point,std::vector<dirnode> allnodes,int selectednode,float smallz);
 
 #endif

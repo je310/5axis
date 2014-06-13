@@ -246,8 +246,15 @@ Triangle findPlane(Tline &ray, std::vector<dirnode> allnodes,float smallz){
 	return savedTriangle;
 }
 
-
-int findselected(Tline &ray, std::vector<dirnode> allnodes,float smallz){
+bool isInIndexVect2(std::vector<int> lowestInd, int index){
+	for(int i  = 0; i < lowestInd.size(); i ++){
+		if(index== lowestInd.at(i)){
+			return true;
+		}
+	}
+	return false;
+}
+int findselected(Tline &ray, std::vector<dirnode> allnodes,float smallz, std::vector<int> ignore){
 	int numberOfNodes = allnodes.size();
 	int selectednode;
 	scene::IMeshBuffer *mesh; 
@@ -257,22 +264,24 @@ int findselected(Tline &ray, std::vector<dirnode> allnodes,float smallz){
 	float closest = 100000;
 
 	for(int i = 0; i < numberOfNodes; i++){
-		mesh = allnodes.at(i).node->getMesh()->getMeshBuffer(0);
-		u32 indexcount = mesh->getIndexCount();
-		u16 *indices =  mesh->getIndices();
-		u32 vertexcount = mesh->getVertexCount();
-		video::S3DVertex *vertices = (video::S3DVertex *)mesh->getVertices();
-		for(int j = 0 ; j <indexcount; j=j+3){
-			currenttriang.V0 = vertices[indices[j]].Pos;
-			currenttriang.V1 = vertices[indices[j+1]].Pos;
-			currenttriang.V2 = vertices[indices[j+2]].Pos;
-			addoffset(currenttriang, smallz);
-			hasInt = intersect3D_RayTriangle(ray,currenttriang,& Intersection);
-			if (hasInt ==1){
-				ray.end = Intersection;
-				if(linemag(ray)<closest){
-					closest = linemag(ray);
-					selectednode = i;  
+		if(!isInIndexVect2(ignore,i)){
+			mesh = allnodes.at(i).node->getMesh()->getMeshBuffer(0);
+			u32 indexcount = mesh->getIndexCount();
+			u16 *indices =  mesh->getIndices();
+			u32 vertexcount = mesh->getVertexCount();
+			video::S3DVertex *vertices = (video::S3DVertex *)mesh->getVertices();
+			for(int j = 0 ; j <indexcount; j=j+3){
+				currenttriang.V0 = vertices[indices[j]].Pos;
+				currenttriang.V1 = vertices[indices[j+1]].Pos;
+				currenttriang.V2 = vertices[indices[j+2]].Pos;
+				addoffset(currenttriang, smallz);
+				hasInt = intersect3D_RayTriangle(ray,currenttriang,& Intersection);
+				if (hasInt ==1){
+					ray.end = Intersection;
+					if(linemag(ray)<closest){
+						closest = linemag(ray);
+						selectednode = i;  
+					}
 				}
 			}
 		}

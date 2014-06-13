@@ -2,11 +2,12 @@
 #define __COL_INCLUDED__   //   #define this so the compiler knows it has been included
 
 #include <vector>
-#include <irrlicht.h>
+#include <irrlicht.h>s
 #include "list.h"
 #include "triangle.h"
 #include "stl.h"
 #include "offsets.h"
+#include "stl.h"
 //#include "tests.h"
 using namespace irr;
 
@@ -19,15 +20,9 @@ using namespace irr;
 
  
 
-struct Tline{
-	core::vector3df start;
-	core::vector3df end;
-};
 
-struct dirnode{
-	scene::IAnimatedMeshSceneNode* node;
-	int direction;
-};
+
+
 
 
 
@@ -41,7 +36,7 @@ Tline validateLine(Tline myline);
 
 bool checkcollision(std::vector<core::vector3df> mycubes, Tline myline);
 
-int findselected(Tline &ray, std::vector<dirnode> allnodes,float smallz);
+int findselected(Tline &ray, std::vector<dirnode> allnodes,float smallz, std::vector<int> ignore);
 Triangle findPlane(Tline &ray, std::vector<dirnode> allnodes,float smallz);
 
 
